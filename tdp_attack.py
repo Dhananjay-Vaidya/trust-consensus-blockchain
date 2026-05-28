@@ -58,16 +58,9 @@ class TimeDelayedPoisoning:
         self.malicious_indices = set(random.sample(all_indices, num_malicious))
         self.honest_indices = set(all_indices) - self.malicious_indices
         
-        print(f"\n╔═══════════════════════════════════════════════════════════╗")
-        print(f"║     ⏰ STRENGTHENED TIME-DELAYED POISONING (TDP) ⏰       ║")
-        print(f"╠═══════════════════════════════════════════════════════════╣")
-        print(f"║  Sleeper Agents: {len(self.malicious_indices):2d} / {num_nodes} ({malicious_ratio*100:.0f}%)                    ║")
-        print(f"║  Activation Episode: {activation_episode} (EARLIER)                    ║")
-        print(f"║  Attack Intensity: {attack_intensity:.2f} (INCREASED)                   ║")
-        print(f"║  Target Ratio: {self.target_ratio} (35% of honest nodes)            ║")
-        print(f"║  Current Phase: DORMANT (building trust)                  ║")
-        print(f"║  Target F1 Post-Activation: 0.60-0.75                     ║")
-        print(f"╚═══════════════════════════════════════════════════════════╝")
+        print(f"\n[TDP] Initialized: {len(self.malicious_indices)} sleepers / {num_nodes} nodes "
+              f"({malicious_ratio*100:.0f}%) | "
+              f"activation={activation_episode} | intensity={attack_intensity:.2f}")
         
     def execute_attack_on_trust(self, trust_manager, malicious_nodes, current_step, current_episode):
         """Execute TDP attack directly on trust_manager."""
@@ -119,11 +112,8 @@ class TimeDelayedPoisoning:
         - Stronger penalties and boosts
         """
         if not self.activated:
-            print(f"\n╔═══════════════════════════════════════════════════════════╗")
-            print(f"║  ⚠️  TDP SLEEPER AGENTS ACTIVATED at Episode {current_episode}! ⚠️   ║")
-            print(f"║  Attack intensity: {self.attack_intensity}                              ║")
-            print(f"║  Built trust over {current_episode} episodes                      ║")
-            print(f"╚═══════════════════════════════════════════════════════════╝\n")
+            print(f"[TDP] SLEEPER AGENTS ACTIVATED at Episode {current_episode}! "
+                  f"intensity={self.attack_intensity:.2f}")
             self.activated = True
         
         # ATTACK MORE FREQUENTLY

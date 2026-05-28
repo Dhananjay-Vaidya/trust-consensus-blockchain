@@ -31,7 +31,7 @@ def plot_blockchain_length(episodes, blockchain_lengths, agent_type, attack):
     plt.figure(figsize=(8, 6))
     plt.plot(episodes, blockchain_lengths, marker='o', linestyle='-', color='purple', label='Blockchain Length')
     plt.xlabel('Episode')
-    plt.ylabel('Blockchain Length (number of blocks)')
+    plt.ylabel('Confirmed blocks')
     plt.title(f'Blockchain Growth Over Episodes ({agent_type.upper()})')
     plt.legend()
     plt.grid(True)

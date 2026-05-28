@@ -1,0 +1,27 @@
+name: "Industrial IoT / Smart Factory"
+description: "PLC network under Byzantine fault injection"
+
+network:
+  num_nodes: 16
+  malicious_fraction: 0.25
+
+abac:
+  node_roles:
+    - "plc_sensor"
+    - "plc_actuator"
+    - "scada_server"
+    - "safety_controller"
+  role_weights: [0.40, 0.30, 0.20, 0.10]
+  policies:
+    sensor_report:   ["plc_sensor"]
+    actuate_command: ["scada_server", "safety_controller"]
+    safety_override: ["safety_controller"]
+
+attacks:
+  primary: "bfi"
+  description: "Byzantine faults injected by compromised PLCs (Stuxnet-class)"
+  real_world_ref: "ICS-CERT Advisory ICSA-20-105, Stuxnet BFI patterns"
+
+training:
+  episodes: 100
+  steps_per_episode: 50

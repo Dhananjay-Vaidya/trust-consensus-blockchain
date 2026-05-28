@@ -1,0 +1,29 @@
+\begin{table}[htbp]
+\centering
+\caption{Simulation Results Summary}
+\label{tab:results}
+\begin{tabular}{llcccccc}
+\toprule
+Agent & Attack & F1 Mean$\pm$Std & CI 95\% & Conv. Ep. & $p$ vs PBFT \\
+\midrule
+RL & NMA & 0.923$\pm$0.000 & [0.923, 0.923] & N/A & N/A \\
+RL & CRA & 0.500$\pm$0.000 & [0.500, 0.500] & N/A & N/A \\
+RL & AAA & 0.500$\pm$0.000 & [0.500, 0.500] & N/A & N/A \\
+RL & BFI & 1.000$\pm$0.000 & [1.000, 1.000] & 9.0 & N/A \\
+RL & TDP & 0.158$\pm$0.000 & [0.158, 0.158] & 19.0 & N/A \\
+DRL & NMA & 1.000$\pm$0.000 & [1.000, 1.000] & 8.0 & N/A \\
+DRL & CRA & 0.676$\pm$0.000 & [0.676, 0.676] & N/A & N/A \\
+DRL & AAA & 1.000$\pm$0.000 & [1.000, 1.000] & 5.0 & N/A \\
+DRL & BFI & 1.000$\pm$0.000 & [1.000, 1.000] & 10.0 & N/A \\
+DRL & TDP & 0.111$\pm$0.000 & [0.111, 0.111] & N/A & N/A \\
+MARL & NMA & 0.733$\pm$0.000 & [0.733, 0.733] & 25.0 & N/A \\
+MARL & CRA & 0.855$\pm$0.000 & [0.855, 0.855] & N/A & N/A \\
+MARL & AAA & 1.000$\pm$0.000 & [1.000, 1.000] & 3.0 & N/A \\
+MARL & BFI & 1.000$\pm$0.000 & [1.000, 1.000] & 11.0 & N/A \\
+MARL & TDP & 0.111$\pm$0.000 & [0.111, 0.111] & N/A & N/A \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item[$\dagger$] $p < 0.05$ vs PBFT baseline (Mann-Whitney U test)
+\end{tablenotes}
+\end{table}

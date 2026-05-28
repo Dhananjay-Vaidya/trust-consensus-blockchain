@@ -398,7 +398,7 @@ class SharedExperienceBuffer:
 
 class MARLAgent:
     """Industry-grade Multi-Agent Reinforcement Learning Agent"""
-    def __init__(self, state_dim, action_dim, num_agents, lr=5e-4, gamma=0.99):
+    def __init__(self, state_dim, action_dim=27, num_agents=16, lr=5e-4, gamma=0.99):
         self.device = device
         self.num_agents = num_agents
         self.state_size = state_dim
@@ -590,32 +590,14 @@ class MARLAgent:
         current_lr = self.optimizers[agent_id].param_groups[0]['lr']
         return current_lr
     
-    def get_adjustment(self, state, agent_id=0):
-        """Map actions to delegation ratio adjustments"""
-        action = self.select_action(state, agent_id, epsilon=0.05)
-        
-        # Action mapping: 0=decrease, 1=hold, 2=increase
-        if action == 0:
-            return 0.9
-        elif action == 2:
-            return 1.1
-        else:
-            return 1.0
-    
-    def train_adjustment(self, state, action, reward, next_state, done, agent_id=0):
-        """Training wrapper for continuous adjustments"""
-        # Convert continuous to discrete
-        discrete_action = 1  # Default: no change
-        if action < 0.95:
-            discrete_action = 0  # Decrease
-        elif action > 1.05:
-            discrete_action = 2  # Increase
-        
-        # Store and train
-        self.push_experience(state, discrete_action, reward, next_state, done, agent_id)
-        loss = self.train(agent_id)
-        
-        return loss
+    def get_adjustment(self, state, agent_id: int = 0) -> int:
+        """Return joint action index (0-26)."""
+        return self.select_action(state, agent_id, epsilon=0.05)
+
+    def train_adjustment(self, state, action_idx: int, reward: float, next_state, done: bool, agent_id: int = 0):
+        """Training wrapper — action_idx is a 0-26 joint action index."""
+        self.push_experience(state, action_idx, reward, next_state, done, agent_id)
+        return self.train(agent_id)
     
     def save_model(self, path, agent_id=0):
         """Save model checkpoint"""

@@ -1,0 +1,52 @@
+{"ts": 1779971218.6178856, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779971218.618041, "level": "INFO", "msg": "EPISODE 1/3"}
+{"ts": 1779971218.6181142, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779971218.6820953, "level": "INFO", "msg": "EPISODE 1 SUMMARY"}
+{"ts": 1779971218.6822476, "level": "INFO", "msg": "Final F1: 0.4667 | Episode Reward: 152.03"}
+{"ts": 1779971218.682307, "level": "INFO", "msg": "Trust Separation: 0.1167 | FP: 3 | FN: 1"}
+{"ts": 1779971218.6859088, "level": "INFO", "msg": "Confirmed Blocks: 2 | Pending TX: 31"}
+{"ts": 1779971218.6861582, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779971218.6862032, "level": "INFO", "msg": "EPISODE 2/3"}
+{"ts": 1779971218.6862295, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779971222.809255, "level": "INFO", "msg": "EPISODE 2 SUMMARY"}
+{"ts": 1779971222.8094554, "level": "INFO", "msg": "Final F1: 0.8545 | Episode Reward: 270.88"}
+{"ts": 1779971222.8095567, "level": "INFO", "msg": "Trust Separation: 0.2610 | FP: 1 | FN: 0"}
+{"ts": 1779971222.809616, "level": "INFO", "msg": "Confirmed Blocks: 3 | Pending TX: 74"}
+{"ts": 1779971222.8100252, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779971222.8101246, "level": "INFO", "msg": "EPISODE 3/3"}
+{"ts": 1779971222.810273, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779971223.5105088, "level": "INFO", "msg": "EPISODE 3 SUMMARY"}
+{"ts": 1779971223.5106354, "level": "INFO", "msg": "Final F1: 0.8545 | Episode Reward: 303.38"}
+{"ts": 1779971223.5106795, "level": "INFO", "msg": "Trust Separation: 0.2916 | FP: 1 | FN: 0"}
+{"ts": 1779971223.510709, "level": "INFO", "msg": "Confirmed Blocks: 4 | Pending TX: 45"}
+{"ts": 1779971223.5109906, "level": "INFO", "msg": "SIMULATION COMPLETE \u2014 Runtime: 4.89s"}
+{"ts": 1779971223.5138314, "level": "INFO", "msg": "Best F1: 0.8545"}
+{"ts": 1779971238.229134, "level": "INFO", "msg": "Results saved with prefix: 8_3_drl_nma_30"}
+{"ts": 1779971251.4663923, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779971251.4665308, "level": "INFO", "msg": "EPISODE 1/3"}
+{"ts": 1779971251.4665847, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779971251.6524832, "level": "INFO", "msg": "EPISODE 1 SUMMARY"}
+{"ts": 1779971251.6526103, "level": "INFO", "msg": "Final F1: 0.5636 | Episode Reward: 186.03"}
+{"ts": 1779971251.652653, "level": "INFO", "msg": "Trust Separation: 0.0602 | FP: 2 | FN: 1"}
+{"ts": 1779971251.6526825, "level": "INFO", "msg": "Confirmed Blocks: 2 | Pending TX: 39"}
+{"ts": 1779971251.652726, "level": "INFO", "msg": "FHE avg overhead this episode: 0.002 ms"}
+{"ts": 1779971251.6529553, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779971251.6529965, "level": "INFO", "msg": "EPISODE 2/3"}
+{"ts": 1779971251.653021, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779971255.271808, "level": "INFO", "msg": "EPISODE 2 SUMMARY"}
+{"ts": 1779971255.2719347, "level": "INFO", "msg": "Final F1: 0.5636 | Episode Reward: 186.15"}
+{"ts": 1779971255.2719758, "level": "INFO", "msg": "Trust Separation: 0.1121 | FP: 2 | FN: 1"}
+{"ts": 1779971255.2720037, "level": "INFO", "msg": "Confirmed Blocks: 3 | Pending TX: 49"}
+{"ts": 1779971255.2720451, "level": "INFO", "msg": "FHE avg overhead this episode: 0.002 ms"}
+{"ts": 1779971255.2723076, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779971255.2723792, "level": "INFO", "msg": "EPISODE 3/3"}
+{"ts": 1779971255.2724092, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779971258.9291391, "level": "INFO", "msg": "EPISODE 3 SUMMARY"}
+{"ts": 1779971258.929341, "level": "INFO", "msg": "Final F1: 0.6667 | Episode Reward: 240.51"}
+{"ts": 1779971258.9293978, "level": "INFO", "msg": "Trust Separation: 0.2005 | FP: 1 | FN: 1"}
+{"ts": 1779971258.9294255, "level": "INFO", "msg": "Confirmed Blocks: 4 | Pending TX: 37"}
+{"ts": 1779971258.9295032, "level": "INFO", "msg": "FHE avg overhead this episode: 0.002 ms"}
+{"ts": 1779971258.9297488, "level": "INFO", "msg": "SIMULATION COMPLETE \u2014 Runtime: 7.46s"}
+{"ts": 1779971258.9340618, "level": "INFO", "msg": "Best F1: 0.6667"}
+{"ts": 1779971268.5107048, "level": "INFO", "msg": "FHE summary \u2014 avg overhead: 0.002 ms over 3 episodes"}
+{"ts": 1779971268.5312192, "level": "INFO", "msg": "Results saved with prefix: 8_3_drl_nma_30"}

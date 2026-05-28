@@ -190,7 +190,7 @@ class NoisyLinear(nn.Module):
         return F.linear(x, weight, bias)
 
 class DDQN:
-    def __init__(self, state_dim, action_dim, lr=1e-5, gamma=0.95, buffer_capacity=10000):
+    def __init__(self, state_dim, action_dim=27, lr=1e-5, gamma=0.95, buffer_capacity=10000):
         self.device = device
         self.state_size = state_dim
         self.action_size = action_dim
@@ -276,104 +276,70 @@ class DDQN:
     def disable_cra_simulation(self):
         self.simulate_cra = False
 
-    def get_adjustment(self, state):
-        if self.simulate_cra:
-            # Simulate collusion behavior with biased action
-            return 1.1  # Always boost trust (collusion behavior)
+    def select_action(self, state) -> int:
+        """Epsilon-greedy selection over 27-action joint space."""
         if random.random() < self.epsilon:
-            return random.choice([0.9, 1.0, 1.1])
-        else:
-            state_tensor = torch.tensor(state, dtype=torch.float32, device=self.device).unsqueeze(0)
-            qvals = self.model(state_tensor)
-            action_index = qvals.argmax().item()
-            return [0.9, 1.0, 1.1][action_index]
+            return random.randrange(self.action_size)
+        state_tensor = torch.tensor(state, dtype=torch.float32, device=self.device).unsqueeze(0)
+        return self.model(state_tensor).argmax().item()
 
-    def train_adjustment(self, state, adjustment, reward, next_state, done):
-        """
-        Enhanced training with:
-        - Gradient clipping
-        - TD error calculation for prioritized replay
-        - Importance sampling weights
-        - Noisy network reset
-        """
-        # Convert adjustment to discrete action
-        action_index = [0.9, 1.0, 1.1].index(adjustment)
-        
-        # Calculate initial TD error for prioritization
+    def get_adjustment(self, state) -> int:
+        """Return joint action index (0-26)."""
+        if self.simulate_cra:
+            return 2  # Index for (dr=1.1, td=1.0, ct=0.0) — boost trust
+        return self.select_action(state)
+
+    def train_adjustment(self, state, action_idx: int, reward: float, next_state, done: bool):
+        """Train on a (state, action_idx, reward, next_state, done) tuple."""
         with torch.no_grad():
             state_tensor = torch.tensor(state, dtype=torch.float32, device=self.device).unsqueeze(0)
             next_state_tensor = torch.tensor(next_state, dtype=torch.float32, device=self.device).unsqueeze(0)
-            
-            current_q_estimate = self.model(state_tensor)[0, action_index]
-            
-            # Double DQN: use online network to select action, target network to evaluate
+            current_q_estimate = self.model(state_tensor)[0, action_idx]
             next_action = self.model(next_state_tensor).argmax(1).item()
             next_q = self.target_model(next_state_tensor)[0, next_action]
-            
             target = reward + (1 - done) * self.gamma * next_q
             td_error = abs(target.item() - current_q_estimate.item())
-        
-        # Add transition to replay buffer
-        self.memory.add(td_error, (state, action_index, reward, next_state, done))
-        
-        # Only train if we have enough samples
+
+        self.memory.add(td_error, (state, action_idx, reward, next_state, done))
+
         if len(self.memory) < self.batch_size:
             return None
-        
-        # Sample batch with prioritization
+
         experiences, indices, weights = self.memory.sample(self.batch_size)
-        
-        # Prepare batch tensors
+
         states = torch.tensor(np.array([exp[0] for exp in experiences]), dtype=torch.float32, device=self.device)
         actions = torch.tensor(np.array([exp[1] for exp in experiences]), dtype=torch.long, device=self.device)
         rewards = torch.tensor(np.array([exp[2] for exp in experiences]), dtype=torch.float32, device=self.device)
         next_states = torch.tensor(np.array([exp[3] for exp in experiences]), dtype=torch.float32, device=self.device)
         dones = torch.tensor(np.array([exp[4] for exp in experiences]), dtype=torch.float32, device=self.device)
-        
-        # Current Q-values
+
         current_q = self.model(states).gather(1, actions.unsqueeze(1)).squeeze(1)
-        
-        # Double DQN target calculation
+
         with torch.no_grad():
-            # Use online network to select best actions
             next_actions = self.model(next_states).argmax(1)
-            # Use target network to evaluate those actions
             next_q_values = self.target_model(next_states).gather(1, next_actions.unsqueeze(1)).squeeze(1)
             target_q = rewards + (1 - dones) * self.gamma * next_q_values
-        
-        # Calculate TD errors for priority updates
+
         td_errors = (target_q - current_q).detach()
-        
-        # Weighted loss using importance sampling
         weights_tensor = torch.tensor(weights, dtype=torch.float32, device=self.device)
         loss = F.smooth_l1_loss(current_q, target_q, reduction='none')
         weighted_loss = (loss * weights_tensor).mean()
-        
-        # Backpropagation with gradient clipping
+
         self.optimizer.zero_grad()
         weighted_loss.backward()
-        
-        # Gradient clipping for stability (critical for DRL)
         torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=10.0)
-        
         self.optimizer.step()
-        
-        # Update replay buffer priorities
-        td_errors_np = td_errors.cpu().numpy()
-        self.memory.update_priorities(indices, td_errors_np)
-        
-        # Reset noise in noisy networks
+
+        self.memory.update_priorities(indices, td_errors.cpu().numpy())
         self.model.reset_noise()
         self.target_model.reset_noise()
-        
-        # Update target network periodically
+
         self.training_steps += 1
         if self.training_steps % self.update_frequency == 0:
             self.target_model.load_state_dict(self.model.state_dict())
-        
-        # Decay epsilon (even with noisy nets, keep some epsilon-greedy)
+
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
-        
+
         return weighted_loss.item()
 

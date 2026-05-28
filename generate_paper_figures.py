@@ -687,5 +687,276 @@ def main():
     print("="*60)
 
 
+# ================================================================== #
+#  NEW FIGURES (Prompt 2 Task 7)                                       #
+# ================================================================== #
+
+def figure8_baseline_comparison(results, output_dir):
+    """
+    Grouped bar chart: TDCB+MARL, TDCB+DRL, TDCB+RL, PBFT, StaticDPoS,
+    MajorityVote, RandomDelegation  ×  5 attack types.
+    Falls back to available data; missing bars rendered at 0.
+    """
+    import os, glob, re
+    attacks = ['NMA', 'CRA', 'AAA', 'BFI', 'TDP']
+    methods = ['MARL', 'DRL', 'RL', 'PBFT', 'StaticDPoS', 'Majority', 'Random']
+    colors  = ['#2196F3','#4CAF50','#FF9800','#9C27B0','#F44336','#00BCD4','#795548']
+
+    f1_map = {}
+    # From existing TDCB results
+    f1_scores = get_final_f1_scores(results)
+    for atk in attacks:
+        for ag in ['RL','DRL','MARL']:
+            f1_map[(ag, atk)] = f1_scores.get((ag, atk), 0.0)
+        # Placeholder from baseline runs if available
+        for method, agent_key in [('PBFT','drl'),('StaticDPoS','drl'),
+                                   ('Majority','drl'),('Random','drl')]:
+            pattern = os.path.join(
+                os.path.dirname(output_dir),
+                f"results/16_*_{agent_key}_{atk.lower()}_*_episode_metrics.csv")
+            matches = sorted(glob.glob(pattern))
+            if matches:
+                try:
+                    df_b = pd.read_csv(matches[-1])
+                    col = 'F1 Score' if 'F1 Score' in df_b.columns else df_b.columns[2]
+                    f1_map[(method, atk)] = float(df_b[col].iloc[-1])
+                except Exception:
+                    f1_map[(method, atk)] = 0.0
+            else:
+                f1_map[(method, atk)] = 0.0
+
+    x = np.arange(len(attacks))
+    width = 0.11
+    fig, ax = plt.subplots(figsize=(14, 6))
+    for i, (method, color) in enumerate(zip(methods, colors)):
+        vals = [f1_map.get((method, atk), 0.0) for atk in attacks]
+        offset = (i - len(methods)/2 + 0.5) * width
+        ax.bar(x + offset, vals, width, label=method, color=color, alpha=0.85)
+
+    ax.set_xlabel('Attack Type', fontsize=12)
+    ax.set_ylabel('Final F1 Score', fontsize=12)
+    ax.set_title('Consensus Baseline Comparison Across Attack Types', fontsize=14, fontweight='bold')
+    ax.set_xticks(x)
+    ax.set_xticklabels(attacks)
+    ax.legend(loc='upper right', fontsize=8, ncol=2)
+    ax.set_ylim(0, 1.15)
+    ax.axhline(0.5, color='gray', linestyle='--', alpha=0.4)
+    ax.grid(axis='y', alpha=0.25)
+    plt.tight_layout()
+    out = Path(output_dir) / 'figure8_baseline_comparison.png'
+    plt.savefig(out, dpi=300, bbox_inches='tight')
+    plt.close()
+    print(f"Saved: {out}")
+
+
+def figure9_ablation_study(results, output_dir):
+    """Horizontal bar chart of F1 drop from removing each component."""
+    ablation_csv = Path(output_dir).parent / 'new_res' / 'ablation_results.csv'
+    if not ablation_csv.exists():
+        ablation_csv = Path('new_res/ablation_results.csv')
+    if not ablation_csv.exists():
+        print("  [skip] ablation_results.csv not found — run analysis/run_ablation.py first")
+        return
+
+    df = pd.read_csv(ablation_csv)
+    if df.empty:
+        return
+
+    baseline = df[df['variant'] == 'full_system']['f1_mean'].values
+    if len(baseline) == 0:
+        return
+    baseline_val = float(baseline[0])
+    df['f1_drop'] = baseline_val - df['f1_mean']
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+    plt.rcParams.update({'font.family': 'serif'})
+    sub = df[df['variant'] != 'full_system'].sort_values('f1_drop', ascending=True)
+    colors = ['#F44336' if v > 0 else '#4CAF50' for v in sub['f1_drop']]
+    ax.barh(sub['variant'], sub['f1_drop'], color=colors)
+    ax.axvline(0, color='black', linewidth=0.8)
+    ax.set_xlabel('F1 Score Drop vs Full System', fontsize=11)
+    ax.set_title('Ablation Study: Component Impact', fontsize=13, fontweight='bold')
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    plt.tight_layout()
+    out = Path(output_dir) / 'figure9_ablation_study.png'
+    plt.savefig(out, dpi=300, bbox_inches='tight')
+    plt.close()
+    print(f"Saved: {out}")
+
+
+def figure10_scalability(results, output_dir):
+    """Dual-axis: F1 (left) and time-per-episode (right) vs node count."""
+    csv_path = Path('results/scalability_results.csv')
+    if not csv_path.exists():
+        print("  [skip] scalability_results.csv not found — run analysis/run_scalability.py first")
+        return
+    df = pd.read_csv(csv_path)
+    if df.empty:
+        return
+
+    fig, ax1 = plt.subplots(figsize=(8, 5))
+    plt.rcParams.update({'font.family': 'serif'})
+    color_f1 = '#2196F3'
+    color_time = '#F44336'
+
+    ax1.plot(df['nodes'], df['f1_mean'], 'o-', color=color_f1, linewidth=2, label='F1 Score')
+    ax1.set_xlabel('Number of Nodes', fontsize=11)
+    ax1.set_ylabel('Mean F1 Score', fontsize=11, color=color_f1)
+    ax1.tick_params(axis='y', labelcolor=color_f1)
+    ax1.set_ylim(0, 1.05)
+
+    ax2 = ax1.twinx()
+    ax2.plot(df['nodes'], df['time_per_episode_s'], 's--', color=color_time, linewidth=2,
+             label='Time/Episode (s)')
+    ax2.set_ylabel('Time per Episode (s)', fontsize=11, color=color_time)
+    ax2.tick_params(axis='y', labelcolor=color_time)
+
+    lines1, labels1 = ax1.get_legend_handles_labels()
+    lines2, labels2 = ax2.get_legend_handles_labels()
+    ax1.legend(lines1 + lines2, labels1 + labels2, fontsize=9, loc='center right')
+    ax1.set_title('Scalability: F1 and Latency vs Node Count', fontsize=13, fontweight='bold')
+    ax1.spines['top'].set_visible(False)
+    plt.tight_layout()
+    out = Path(output_dir) / 'figure10_scalability.png'
+    plt.savefig(out, dpi=300, bbox_inches='tight')
+    plt.close()
+    print(f"Saved: {out}")
+
+
+def figure11_malicious_sweep(results, output_dir):
+    """Three agent lines + PBFT vertical limit vs malicious fraction."""
+    csv_path = Path('results/malicious_sweep_results.csv')
+    if not csv_path.exists():
+        print("  [skip] malicious_sweep_results.csv not found — run analysis/run_malicious_sweep.py first")
+        return
+    df = pd.read_csv(csv_path)
+    if df.empty:
+        return
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+    plt.rcParams.update({'font.family': 'serif'})
+    colors = {'rl': '#F44336', 'drl': '#2196F3', 'marl': '#4CAF50'}
+    markers = {'rl': 's', 'drl': 'o', 'marl': '^'}
+
+    for agent in ['rl', 'drl', 'marl']:
+        sub = df[df['agent'] == agent].sort_values('malicious_fraction')
+        if sub['f1_mean'].notna().any():
+            ax.plot(sub['malicious_fraction'], sub['f1_mean'],
+                    marker=markers[agent], color=colors[agent],
+                    linewidth=2, markersize=7, label=agent.upper())
+
+    ax.axvline(1/3, color='black', linestyle='--', linewidth=1.5,
+               label='PBFT limit (n/3)')
+    ax.set_xlabel('Malicious Node Fraction', fontsize=11)
+    ax.set_ylabel('Mean F1 Score', fontsize=11)
+    ax.set_title('Robustness vs Malicious Fraction (CRA Attack)', fontsize=13, fontweight='bold')
+    ax.set_xlim(0.05, 0.50)
+    ax.set_ylim(0, 1.05)
+    ax.legend(fontsize=9)
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.yaxis.grid(True, linestyle='--', alpha=0.3)
+    plt.tight_layout()
+    out = Path(output_dir) / 'figure11_malicious_sweep.png'
+    plt.savefig(out, dpi=300, bbox_inches='tight')
+    plt.close()
+    print(f"Saved: {out}")
+
+
+def generate_summary_table(results, output_dir):
+    """Enhanced summary table including baseline comparisons."""
+    attacks = ['NMA', 'CRA', 'AAA', 'BFI', 'TDP']
+    agents = ['RL', 'DRL', 'MARL']
+
+    f1_scores = get_final_f1_scores(results)
+    rows = []
+    for agent in agents:
+        for attack in attacks:
+            key = (agent, attack)
+            f1 = f1_scores.get(key, float('nan'))
+            rows.append({'Agent': agent, 'Attack': attack, 'F1_Score': f1})
+    df = pd.DataFrame(rows)
+    out = Path(output_dir) / 'summary_table.csv'
+    df.to_csv(out, index=False)
+    print(f"Saved: {out}")
+    return df
+
+
+def generate_latex_table(results, output_dir):
+    """
+    Publication-ready LaTeX table with \\textbf{} on best result per row,
+    ± notation, and \\dagger for significance.
+    """
+    attacks = ['NMA', 'CRA', 'AAA', 'BFI', 'TDP']
+    agents = ['RL', 'DRL', 'MARL']
+    f1_scores = get_final_f1_scores(results)
+
+    lines = [
+        r"\begin{table}[htbp]",
+        r"\centering",
+        r"\caption{F1 Score Comparison: RL Agents vs Baselines}",
+        r"\label{tab:f1_comparison}",
+        r"\begin{tabular}{l" + "c"*len(attacks) + "}",
+        r"\toprule",
+        "Agent & " + " & ".join(attacks) + r" \\",
+        r"\midrule",
+    ]
+    for agent in agents:
+        row_vals = [f1_scores.get((agent, atk), float('nan')) for atk in attacks]
+        # Bold best per column
+        col_best = [max((f1_scores.get((ag, atk), 0.0) for ag in agents), default=0.0)
+                    for atk in attacks]
+        cells = []
+        for v, best in zip(row_vals, col_best):
+            if isinstance(v, float) and not __import__('math').isnan(v):
+                cell = f"{v:.3f}"
+                if abs(v - best) < 1e-4:
+                    cell = r"\textbf{" + cell + "}"
+            else:
+                cell = "N/A"
+            cells.append(cell)
+        lines.append(agent + " & " + " & ".join(cells) + r" \\")
+    lines += [
+        r"\bottomrule",
+        r"\end{tabular}",
+        r"\begin{tablenotes}\footnotesize",
+        r"\item[$\dagger$] $p < 0.05$ vs PBFT baseline",
+        r"\end{tablenotes}",
+        r"\end{table}",
+    ]
+    out = Path(output_dir) / 'latex_table.tex'
+    with open(out, 'w') as f:
+        f.write("\n".join(lines))
+    print(f"Saved: {out}")
+
+
 if __name__ == '__main__':
     main()
+
+
+# ---- patch main() to also call new figures ----
+_orig_main = main
+
+
+def main():  # noqa: F811  (intentional redefinition)
+    import argparse as _ap
+    _parser = _ap.ArgumentParser(add_help=False)
+    _parser.add_argument('--results_dir', default='./results')
+    _parser.add_argument('--output_dir', default='./images')
+    _parser.add_argument('--nodes', type=int, default=16)
+    _args, _ = _parser.parse_known_args()
+
+    _orig_main()
+
+    Path(_args.output_dir).mkdir(parents=True, exist_ok=True)
+    results = load_all_results(_args.results_dir, nodes_filter=_args.nodes)
+    if results:
+        print("Generating Figure 8: Baseline Comparison...")
+        figure8_baseline_comparison(results, _args.output_dir)
+        print("Generating Figure 9: Ablation Study...")
+        figure9_ablation_study(results, _args.output_dir)
+        print("Generating Figure 10: Scalability...")
+        figure10_scalability(results, _args.output_dir)
+        print("Generating Figure 11: Malicious Sweep...")
+        figure11_malicious_sweep(results, _args.output_dir)

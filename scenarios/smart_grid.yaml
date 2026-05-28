@@ -1,0 +1,27 @@
+name: "Smart Grid IoT"
+description: "Energy meter network with demand-response fraud simulation"
+
+network:
+  num_nodes: 32
+  malicious_fraction: 0.20
+
+abac:
+  node_roles:
+    - "smart_meter"
+    - "aggregator"
+    - "grid_controller"
+    - "substation"
+  role_weights: [0.55, 0.20, 0.15, 0.10]
+  policies:
+    energy_read:   ["smart_meter", "aggregator"]
+    grid_command:  ["grid_controller"]
+    audit_log:     ["aggregator", "grid_controller", "substation"]
+
+attacks:
+  primary: "cra"
+  description: "Colluding meters falsely reporting demand spikes"
+  real_world_ref: "NERC CIP-007 threat model, coordinated metering fraud"
+
+training:
+  episodes: 100
+  steps_per_episode: 50

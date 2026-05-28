@@ -334,7 +334,7 @@ class PrioritizedReplayBuffer:
 
 class RLAgent:
     """Industry-grade Reinforcement Learning Agent with prioritized replay"""
-    def __init__(self, state_dim, action_dim, lr=5e-4, gamma=0.99):
+    def __init__(self, state_dim, action_dim=27, lr=5e-4, gamma=0.99):
         self.device = device
         self.state_size = state_dim
         self.action_size = action_dim
@@ -484,31 +484,13 @@ class RLAgent:
         self.target_model.load_state_dict(self.model.state_dict())
     
     def get_adjustment(self, state):
-        """Map discrete actions to delegation ratio adjustments"""
-        action = self.select_action(state, epsilon=0.05)
-        
-        # Action mapping: 0=decrease, 1=hold, 2=increase
-        if action == 0:
-            return 0.9  # Decrease
-        elif action == 2:
-            return 1.1  # Increase
-        else:
-            return 1.0  # No change
-    
-    def train_adjustment(self, state, action, reward, next_state, done):
-        """Training wrapper for continuous adjustments"""
-        # Convert continuous to discrete
-        discrete_action = 1  # Default: no change
-        if action < 0.95:
-            discrete_action = 0  # Decrease
-        elif action > 1.05:
-            discrete_action = 2  # Increase
-        
-        # Store and train
-        self.push_experience(state, discrete_action, reward, next_state, done)
-        loss = self.train()
-        
-        return loss
+        """Return action index (0-26) for the expanded action space."""
+        return self.select_action(state, epsilon=0.05)
+
+    def train_adjustment(self, state, action_idx, reward, next_state, done):
+        """Training wrapper — action_idx is already a discrete 0-26 index."""
+        self.push_experience(state, action_idx, reward, next_state, done)
+        return self.train()
     
     def save_model(self, path):
         """Save model checkpoint"""

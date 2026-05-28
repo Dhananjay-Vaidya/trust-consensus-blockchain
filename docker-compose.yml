@@ -1,0 +1,25 @@
+version: "3.9"
+services:
+  simulation:
+    build: .
+    volumes:
+      - ./results:/app/results
+      - ./checkpoints:/app/checkpoints
+      - ./images:/app/images
+    command: python main.py --agent drl --attack nma --nodes 16 --episodes 50 --seed 42
+
+  dashboard:
+    build: ./dashboard
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./results:/app/results
+      - ./checkpoints:/app/checkpoints
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload

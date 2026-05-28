@@ -1,0 +1,27 @@
+name: "Healthcare IoT"
+description: "Patient monitoring network under data poisoning"
+
+network:
+  num_nodes: 24
+  malicious_fraction: 0.15
+
+abac:
+  node_roles:
+    - "patient_sensor"
+    - "nurse_station"
+    - "doctor_terminal"
+    - "hospital_server"
+  role_weights: [0.50, 0.25, 0.15, 0.10]
+  policies:
+    vitals_write:  ["patient_sensor"]
+    vitals_read:   ["nurse_station", "doctor_terminal"]
+    admin_access:  ["hospital_server", "doctor_terminal"]
+
+attacks:
+  primary: "tdp"
+  description: "Sleeper malware in compromised sensors activates during shift change"
+  real_world_ref: "MITRE ATT&CK for ICS T0839, T0840"
+
+training:
+  episodes: 100
+  steps_per_episode: 50

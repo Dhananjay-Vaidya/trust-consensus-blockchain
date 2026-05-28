@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #0f1117;
+  color: #e2e8f0;
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Scrollbar styling for dark theme */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0f1117; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+
+/* Count-up animation */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.count-up { animation: countUp 0.3s ease-out; }
+
+/* Byzantine flash animation */
+@keyframes byzantineFlash {
+  0%   { filter: brightness(1); }
+  30%  { filter: brightness(3) saturate(0); }
+  100% { filter: brightness(1); }
+}
+.byzantine-flash { animation: byzantineFlash 0.5s ease-out; }
+
+/* Pulse for running status */
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+.status-pulse { animation: statusPulse 1.4s ease-in-out infinite; }

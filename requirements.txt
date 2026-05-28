@@ -1,20 +1,15 @@
-# Core ML/DL
 torch>=2.0.0
 numpy>=1.24.0
-
-# Data processing
+scipy>=1.10.0
+scikit-learn>=1.2.0
 pandas>=2.0.0
-
-# Visualization
 matplotlib>=3.7.0
 seaborn>=0.12.0
-
-# Scientific computing
-scipy>=1.10.0
-
-# Progress bars
+cryptography>=40.0.0
 tqdm>=4.65.0
-
-# Utilities
-argparse
-pathlib
+pyyaml>=6.0
+pytest>=7.3.0
+fastapi>=0.100.0
+uvicorn[standard]>=0.22.0
+websockets>=11.0
+psutil>=5.9.0

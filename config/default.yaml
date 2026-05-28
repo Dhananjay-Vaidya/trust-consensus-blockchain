@@ -1,0 +1,47 @@
+network:
+  num_nodes: 16
+  malicious_fraction: 0.30
+  batch_size: 256
+
+trust:
+  decay_rate: 0.95
+  consensus_threshold: 0.6
+  min_trust: 0.01
+  max_trust: 1.0
+  threshold: 0.45
+  noise_level: 0.08
+  initial_variance: 0.12
+  valid_boost: 3.0
+  invalid_penalty: 2.0
+  malicious_penalty: 4.0
+  malicious_alpha_decay: 0.92
+  ground_truth_update_interval: 15
+
+training:
+  episodes: 50
+  steps_per_episode: 100
+  batch_size: 64
+  gamma: 0.99
+  lr: 0.001
+  action_space_size: 27
+
+attacks:
+  cra_intensity: 0.85
+  cra_attack_frequency: 2
+  tdp_activation_episode: 25
+  tdp_attack_intensity: 0.75
+
+mining:
+  mine_every_n_steps: 5
+
+fhe:
+  enabled: false
+
+rewards:
+  f1_reward_weight: 0.7
+  step_reward_weight: 0.3
+  fn_penalty_weight: 3.0
+
+normalization:
+  chain_norm: 100.0
+  consensus_norm: 20.0
