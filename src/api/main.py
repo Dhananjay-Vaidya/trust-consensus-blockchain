@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from src.api.routers import health, results, simulation
+from src.api.routers import export, health, results, simulation
 
 app = FastAPI(
     title="Blockchain IoT Trust Simulation API",
@@ -29,6 +29,7 @@ app.add_middleware(
 app.include_router(health.router)
 app.include_router(simulation.router)
 app.include_router(results.router)
+app.include_router(export.router)
 
 dashboard_dist = Path("dashboard/dist")
 assets_dir = dashboard_dist / "assets"

@@ -1,145 +1,122 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
+# ------------------------------------------------------------
+# OS and editor files
+# ------------------------------------------------------------
+.DS_Store
+.DS_Store?
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+._*
+.Spotlight-V100/
+.Trashes/
 
-# C extensions
-*.so
-
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# PyInstaller
-*.manifest
-*.spec
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-.hypothesis/
-.pytest_cache/
-
-# Translations
-*.mo
-*.pot
-
-# Django stuff:
-*.log
-local_settings.py
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# pyenv
-.python-version
-
-# celery beat schedule file
-celerybeat-schedule
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-
-# IDE
 .idea/
 .vscode/
 *.swp
 *.swo
 *~
 
-# OS
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+# ------------------------------------------------------------
+# Python caches, virtualenvs, packaging
+# ------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+*.so
 
-# Project specific
+.python-version
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.hypothesis/
+.pyre/
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+nosetests.xml
+
+build/
+dist/
+site/
+.eggs/
+*.egg
+*.egg-info/
+pip-wheel-metadata/
+
+# ------------------------------------------------------------
+# Logs, local env, temp files
+# ------------------------------------------------------------
+*.log
+*.out
+*.err
+*.pid
 *.tmp
 *.temp
 *.bak
-*.seed
 
-# Generated experiment artefacts
-experiments/results/**/*.jsonl
-experiments/results/**/*.csv
-experiments/figures/**/*.png
-experiments/figures/**/*.pdf
-experiments/tables/**/*.csv
-experiments/tables/**/*.tex
-experiments/checkpoints/**/*.pth
+.env
+.env.*
+!.env.example
 
-# Frontend/vendor
+# ------------------------------------------------------------
+# Frontend / Node / Vite
+# ------------------------------------------------------------
 dashboard/node_modules/
 dashboard/dist/
+dashboard/.vite/
+dashboard/node_modules/.vite/
+dashboard/*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-# Python local caches
-.pytest_cache/
-__pycache__/
+# ------------------------------------------------------------
+# Jupyter / notebooks
+# ------------------------------------------------------------
+.ipynb_checkpoints/
 
-# Logs
-*.log
+# ------------------------------------------------------------
+# Experiment outputs and generated research artifacts
+# Keep source code and scenario/config files tracked.
+# ------------------------------------------------------------
+experiments/results/
+experiments/figures/
+experiments/tables/
+experiments/checkpoints/
+
+# Legacy generated folders from the pre-refactor layout
+results/
+images/
+new_res/
+checkpoints/
+
+# Generated model artifacts
+*.pth
+*.pt
+*.ckpt
+
+# Generated data / exports
+*.csv
+*.jsonl
+*.tsv
+
+# Generated figure / document artifacts
+*.png
+*.pdf
+*.svg
+*.eps
 
 # LaTeX auxiliary files
 *.aux
@@ -147,11 +124,18 @@ __pycache__/
 *.blg
 *.fdb_latexmk
 *.fls
-*.out
-*.synctex.gz
-*.toc
 *.lof
 *.lot
 *.nav
+*.out
 *.snm
+*.synctex.gz
+*.toc
 *.vrb
+
+# ------------------------------------------------------------
+# Project-specific local/runtime files
+# ------------------------------------------------------------
+instance/
+.webassets-cache
+

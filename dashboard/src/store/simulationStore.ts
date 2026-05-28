@@ -32,6 +32,8 @@ interface SimulationStore {
   webSocketState: 'idle' | 'connecting' | 'open' | 'closed' | 'error';
   selectedComparisonRuns: string[];
   activeRuns: ResultRunMetadata[];
+  selectedNodeId: string | null;
+
   setConfig: (partial: Partial<SimulationConfig>) => void;
   setWebSocketState: (state: SimulationStore['webSocketState']) => void;
   startSimulation: () => Promise<void>;
@@ -41,6 +43,7 @@ interface SimulationStore {
   handleStepEvent: (event: StepEvent) => void;
   handleEpisodeEnd: (event: StepEvent) => void;
   handleSimulationEnd: (event: StepEvent) => void;
+  selectNode: (nodeId: string | null) => void;
 }
 
 export const useSimulationStore = create<SimulationStore>((set, get) => ({
@@ -59,9 +62,11 @@ export const useSimulationStore = create<SimulationStore>((set, get) => ({
   replayRunId: null,
   selectedComparisonRuns: [],
   activeRuns: [],
+  selectedNodeId: null,
 
   setConfig: (partial) => set((state) => ({ config: { ...state.config, ...partial } })),
   setWebSocketState: (webSocketState) => set({ webSocketState }),
+  selectNode: (nodeId) => set({ selectedNodeId: nodeId }),
 
   startSimulation: async () => {
     const config = get().config;
@@ -76,6 +81,7 @@ export const useSimulationStore = create<SimulationStore>((set, get) => ({
       isDetected: {},
       delegateNodes: [],
       replayRunId: null,
+      selectedNodeId: null,
     });
     const response = await apiClient.post('/simulation/start', config);
     set({ runId: response.data.run_id });
@@ -108,7 +114,9 @@ export const useSimulationStore = create<SimulationStore>((set, get) => ({
     set((state) => ({
       selectedComparisonRuns: state.selectedComparisonRuns.includes(runId)
         ? state.selectedComparisonRuns.filter((value) => value !== runId)
-        : [...state.selectedComparisonRuns, runId],
+        : state.selectedComparisonRuns.length < 6
+          ? [...state.selectedComparisonRuns, runId]
+          : state.selectedComparisonRuns,
     })),
 
   handleStepEvent: (event) =>

@@ -123,3 +123,55 @@ async def replay_simulation(websocket: WebSocket, run_id: str, speed_multiplier:
             await websocket.close()
         except Exception:
             pass
+
+
+@router.post(
+    "/{run_id}/inject_attack",
+    summary="Inject an attack mid-simulation",
+    description="Immediately apply an attack in the running simulation's next step.",
+)
+async def inject_attack(run_id: str, body: dict):
+    """Inject an attack into a running simulation."""
+    state = runner._runs.get(run_id)
+    if not state:
+        raise HTTPException(status_code=404, detail="Run not found")
+    if state.get("status") != "running":
+        raise HTTPException(status_code=409, detail="Simulation is not running")
+    attack = body.get("attack", "cra")
+    state["inject_attack"] = attack
+    return {"injected": True, "attack": attack, "episode": state["episode"], "step": 0}
+
+
+@router.post(
+    "/{run_id}/set_attack",
+    summary="Switch attack type mid-simulation",
+    description="Change the active attack type for subsequent steps.",
+)
+async def set_attack(run_id: str, body: dict):
+    """Switch the active attack type."""
+    state = runner._runs.get(run_id)
+    if not state:
+        raise HTTPException(status_code=404, detail="Run not found")
+    new_attack = body.get("attack", "none")
+    state["override_attack"] = new_attack
+    return {"updated": True, "new_attack": new_attack}
+
+
+@router.post("/{run_id}/pause", summary="Pause a running simulation")
+async def pause_simulation(run_id: str):
+    """Set a pause flag on the running simulation."""
+    state = runner._runs.get(run_id)
+    if not state:
+        raise HTTPException(status_code=404, detail="Run not found")
+    state["paused"] = True
+    return {"paused": True}
+
+
+@router.post("/{run_id}/resume", summary="Resume a paused simulation")
+async def resume_simulation(run_id: str):
+    """Clear the pause flag."""
+    state = runner._runs.get(run_id)
+    if not state:
+        raise HTTPException(status_code=404, detail="Run not found")
+    state["paused"] = False
+    return {"resumed": True}

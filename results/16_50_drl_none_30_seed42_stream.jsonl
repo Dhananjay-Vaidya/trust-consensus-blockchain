@@ -316,3 +316,37 @@
 {"ts": 1779987811.2562284, "level": "INFO", "msg": "============================================================"}
 {"ts": 1779987811.2562659, "level": "INFO", "msg": "EPISODE 46/50"}
 {"ts": 1779987811.2562897, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779993175.1193166, "level": "INFO", "msg": "EPISODE 46 SUMMARY"}
+{"ts": 1779993175.1194892, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7297.95"}
+{"ts": 1779993175.1195376, "level": "INFO", "msg": "Trust Separation: 0.9798 | FP: 0 | FN: 0"}
+{"ts": 1779993175.1195712, "level": "INFO", "msg": "Confirmed Blocks: 921 | Pending TX: 78"}
+{"ts": 1779993175.1198635, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779993175.1199105, "level": "INFO", "msg": "EPISODE 47/50"}
+{"ts": 1779993175.119937, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779993307.6732626, "level": "INFO", "msg": "EPISODE 47 SUMMARY"}
+{"ts": 1779993307.673442, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7298.00"}
+{"ts": 1779993307.6734853, "level": "INFO", "msg": "Trust Separation: 0.9798 | FP: 0 | FN: 0"}
+{"ts": 1779993307.6735141, "level": "INFO", "msg": "Confirmed Blocks: 941 | Pending TX: 77"}
+{"ts": 1779993307.673802, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779993307.673848, "level": "INFO", "msg": "EPISODE 48/50"}
+{"ts": 1779993307.6738718, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779993479.717123, "level": "INFO", "msg": "EPISODE 48 SUMMARY"}
+{"ts": 1779993479.7176378, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7298.00"}
+{"ts": 1779993479.717889, "level": "INFO", "msg": "Trust Separation: 0.9799 | FP: 0 | FN: 0"}
+{"ts": 1779993479.7179928, "level": "INFO", "msg": "Confirmed Blocks: 961 | Pending TX: 96"}
+{"ts": 1779993479.7189882, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779993479.7191947, "level": "INFO", "msg": "EPISODE 49/50"}
+{"ts": 1779993479.7192552, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779993588.0487316, "level": "INFO", "msg": "EPISODE 49 SUMMARY"}
+{"ts": 1779993588.0489256, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7298.00"}
+{"ts": 1779993588.0489643, "level": "INFO", "msg": "Trust Separation: 0.9799 | FP: 0 | FN: 0"}
+{"ts": 1779993588.048992, "level": "INFO", "msg": "Confirmed Blocks: 981 | Pending TX: 109"}
+{"ts": 1779993588.0492558, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779993588.0492947, "level": "INFO", "msg": "EPISODE 50/50"}
+{"ts": 1779993588.0493178, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779993685.2397342, "level": "INFO", "msg": "EPISODE 50 SUMMARY"}
+{"ts": 1779993685.2401836, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7298.02"}
+{"ts": 1779993685.2403765, "level": "INFO", "msg": "Trust Separation: 0.9800 | FP: 0 | FN: 0"}
+{"ts": 1779993685.240497, "level": "INFO", "msg": "Confirmed Blocks: 1001 | Pending TX: 120"}
+{"ts": 1779993685.2479105, "level": "INFO", "msg": "SIMULATION COMPLETE \u2014 Runtime: 13522.85s"}
+{"ts": 1779993685.2575796, "level": "INFO", "msg": "Best F1: 1.0000"}
