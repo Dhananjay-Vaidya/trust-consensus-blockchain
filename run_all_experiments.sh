@@ -8,13 +8,13 @@ NODES=16
 EPISODES=100
 STEPS=30
 
-mkdir -p results
+mkdir -p experiments/results
 
 # ---- Main RL agent experiments ----
 for seed in $SEEDS; do
   for agent in $AGENTS; do
     for attack in $ATTACKS; do
-      OUT="results/${NODES}_${EPISODES}_${agent}_${attack}_30_seed${seed}_episode_metrics.csv"
+      OUT="experiments/results/${NODES}_${EPISODES}_${agent}_${attack}_30_seed${seed}_episode_metrics.csv"
       if [ -f "$OUT" ]; then
         echo "[SKIP] $OUT already exists"
         continue
@@ -34,7 +34,7 @@ done
 # ---- Baseline consensus experiments (seed=42 only) ----
 for consensus in pbft static_dpos majority random; do
   for attack in $ATTACKS; do
-    OUT="results/${NODES}_${EPISODES}_drl_${attack}_30_consensus_${consensus}_episode_metrics.csv"
+    OUT="experiments/results/${NODES}_${EPISODES}_drl_${attack}_30_consensus_${consensus}_episode_metrics.csv"
     if [ -f "$OUT" ]; then
       echo "[SKIP] $OUT already exists"
       continue

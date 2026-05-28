@@ -1,103 +1,103 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
 import { useSimulationStore } from '../store/simulationStore';
 import type { StepEvent } from '../types';
 
 const MAX_RETRIES = 5;
 const BASE_DELAY_MS = 500;
 
-export function useSimulationWebSocket(runId: string | null) {
-  const { handleStepEvent, handleEpisodeEnd, setWs, setStatus } =
-    useSimulationStore();
+export function useSimulationWebSocket(runId: string | null, mode: 'live' | 'replay' = 'live') {
+  const {
+    handleStepEvent,
+    handleEpisodeEnd,
+    handleSimulationEnd,
+    setWebSocketState,
+  } = useSimulationStore();
   const wsRef = useRef<WebSocket | null>(null);
-  const retryRef = useRef(0);
-  const stopRef = useRef(false);
-  const [lastEvent, setLastEvent] = useState<StepEvent | null>(null);
-  const [reconnectCount, setReconnectCount] = useState(0);
-  const [wsStatus, setWsStatus] = useState<
-    'idle' | 'connecting' | 'open' | 'closed' | 'error'
-  >('idle');
+  const retriesRef = useRef(0);
+  const closedRef = useRef(false);
+  const [connectionState, setConnectionState] = useState<'idle' | 'connecting' | 'open' | 'closed' | 'error'>('idle');
+
+  const socketUrl = useMemo(() => {
+    if (!runId) return null;
+    const isHttps = window.location.protocol === 'https:';
+    const protocol = isHttps ? 'wss' : 'ws';
+    const host = import.meta.env.DEV
+      ? 'localhost:8000'
+      : window.location.host;
+    const suffix = mode === 'live' ? 'stream' : 'replay';
+    return `${protocol}://${host}/simulation/${runId}/${suffix}`;
+  }, [mode, runId]);
 
   useEffect(() => {
-    if (!runId) return;
+    if (!socketUrl || !runId) return;
 
-    stopRef.current = false;
-    retryRef.current = 0;
+    closedRef.current = false;
+    retriesRef.current = 0;
 
-    function connect() {
-      if (stopRef.current) return;
+    const connect = () => {
+      if (closedRef.current) return;
+      setConnectionState('connecting');
+      setWebSocketState('connecting');
 
-      const proto = window.location.protocol === 'https:' ? 'wss' : 'ws';
-      // In dev (Vite proxy) the same host works; in prod the API is same-origin
-      const host = window.location.host;
-      const url = `${proto}://${host}/simulation/${runId}/stream`;
+      const socket = new WebSocket(socketUrl);
+      wsRef.current = socket;
 
-      setWsStatus('connecting');
-      const ws = new WebSocket(url);
-      wsRef.current = ws;
-      setWs(ws);
-
-      ws.onopen = () => {
-        setWsStatus('open');
-        retryRef.current = 0;
-        setReconnectCount((c) => c + 1);
+      socket.onopen = () => {
+        retriesRef.current = 0;
+        setConnectionState('open');
+        setWebSocketState('open');
       };
 
-      ws.onmessage = (e) => {
-        try {
-          const event: StepEvent = JSON.parse(e.data);
-          setLastEvent(event);
-
-          if (event.type === 'step') {
-            handleStepEvent(event);
-          } else if (event.type === 'episode_end') {
-            handleEpisodeEnd(event);
-          } else if (event.type === 'simulation_end') {
-            setStatus('completed');
-            setWsStatus('closed');
-            ws.close();
-          } else if (event.type === 'error') {
-            setStatus('error');
-            setWsStatus('error');
-            console.error('[WS] simulation error:', event.action_description);
-            ws.close();
-          }
-        } catch (err) {
-          console.warn('[WS] parse error', err);
+      socket.onmessage = (message) => {
+        const event = JSON.parse(message.data) as StepEvent;
+        if (event.type === 'step') {
+          handleStepEvent(event);
+        } else if (event.type === 'episode_end') {
+          handleEpisodeEnd(event);
+        } else if (event.type === 'simulation_end') {
+          handleSimulationEnd(event);
+          setConnectionState('closed');
+          setWebSocketState('closed');
+        } else if (event.type === 'error') {
+          handleSimulationEnd(event);
+          setConnectionState('error');
+          setWebSocketState('error');
         }
       };
 
-      ws.onerror = () => {
-        setWsStatus('error');
+      socket.onerror = () => {
+        setConnectionState('error');
+        setWebSocketState('error');
       };
 
-      ws.onclose = () => {
-        setWs(null);
-        if (stopRef.current) {
-          setWsStatus('closed');
+      socket.onclose = () => {
+        if (closedRef.current) {
+          setConnectionState('closed');
+          setWebSocketState('closed');
           return;
         }
-        if (retryRef.current < MAX_RETRIES) {
-          const delay = BASE_DELAY_MS * Math.pow(2, retryRef.current);
-          retryRef.current += 1;
-          setTimeout(connect, delay);
+
+        if (retriesRef.current < MAX_RETRIES) {
+          const delay = BASE_DELAY_MS * 2 ** retriesRef.current;
+          retriesRef.current += 1;
+          window.setTimeout(connect, delay);
         } else {
-          setWsStatus('closed');
-          setStatus('error');
+          setConnectionState('closed');
+          setWebSocketState('closed');
         }
       };
-    }
+    };
 
     connect();
 
     return () => {
-      stopRef.current = true;
-      if (wsRef.current) {
-        wsRef.current.close();
-        wsRef.current = null;
-      }
-      setWs(null);
+      closedRef.current = true;
+      wsRef.current?.close();
+      wsRef.current = null;
+      setWebSocketState('closed');
     };
-  }, [runId]);
+  }, [handleEpisodeEnd, handleSimulationEnd, handleStepEvent, runId, setWebSocketState, socketUrl]);
 
-  return { status: wsStatus, lastEvent, reconnectCount };
+  return { connectionState };
 }

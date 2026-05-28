@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../experiments/results:/app/experiments/results
+      - ../experiments/checkpoints:/app/experiments/checkpoints
+      - ../experiments/figures:/app/experiments/figures
+      - ../experiments/tables:/app/experiments/tables
+
+  simulation:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile
+    volumes:
+      - ../experiments/results:/app/experiments/results
+      - ../experiments/checkpoints:/app/experiments/checkpoints
+      - ../experiments/figures:/app/experiments/figures
+    command: python main.py --agent drl --attack nma --nodes 16 --episodes 50 --seed 42

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
-import axios from 'axios';
-import type { SimulationConfig, StepEvent, EpisodeSummary } from '../types';
+
+import { apiClient } from '../api/client';
+import type { EpisodeSummary, ResultRunMetadata, SimulationConfig, StepEvent } from '../types';
 
 const DEFAULT_CONFIG: SimulationConfig = {
   agent: 'marl',
@@ -9,7 +10,7 @@ const DEFAULT_CONFIG: SimulationConfig = {
   nodes: 16,
   episodes: 50,
   steps_per_episode: 30,
-  malicious_fraction: 0.30,
+  malicious_fraction: 0.3,
   seed: 42,
   fhe_enabled: false,
   scenario: null,
@@ -17,7 +18,8 @@ const DEFAULT_CONFIG: SimulationConfig = {
 
 interface SimulationStore {
   runId: string | null;
-  status: 'idle' | 'running' | 'completed' | 'error';
+  replayRunId: string | null;
+  status: 'idle' | 'running' | 'completed' | 'error' | 'stopped';
   config: SimulationConfig;
   currentEpisode: number;
   totalEpisodes: number;
@@ -27,17 +29,18 @@ interface SimulationStore {
   isMalicious: Record<string, boolean>;
   isDetected: Record<string, boolean>;
   delegateNodes: string[];
-  ws: WebSocket | null;
-
-  // Actions
-  setConfig: (config: Partial<SimulationConfig>) => void;
+  webSocketState: 'idle' | 'connecting' | 'open' | 'closed' | 'error';
+  selectedComparisonRuns: string[];
+  activeRuns: ResultRunMetadata[];
+  setConfig: (partial: Partial<SimulationConfig>) => void;
+  setWebSocketState: (state: SimulationStore['webSocketState']) => void;
   startSimulation: () => Promise<void>;
-  stopSimulation: () => void;
+  stopSimulation: () => Promise<void>;
+  beginReplay: (runId: string) => void;
+  toggleComparisonRun: (runId: string) => void;
   handleStepEvent: (event: StepEvent) => void;
   handleEpisodeEnd: (event: StepEvent) => void;
-  setWs: (ws: WebSocket | null) => void;
-  setStatus: (status: SimulationStore['status']) => void;
-  reset: () => void;
+  handleSimulationEnd: (event: StepEvent) => void;
 }
 
 export const useSimulationStore = create<SimulationStore>((set, get) => ({
@@ -52,76 +55,97 @@ export const useSimulationStore = create<SimulationStore>((set, get) => ({
   isMalicious: {},
   isDetected: {},
   delegateNodes: [],
-  ws: null,
+  webSocketState: 'idle',
+  replayRunId: null,
+  selectedComparisonRuns: [],
+  activeRuns: [],
 
-  setConfig: (partial) =>
-    set((s) => ({ config: { ...s.config, ...partial } })),
+  setConfig: (partial) => set((state) => ({ config: { ...state.config, ...partial } })),
+  setWebSocketState: (webSocketState) => set({ webSocketState }),
 
   startSimulation: async () => {
-    const { config } = get();
-    set({ status: 'running', episodeHistory: [], latestStep: null,
-          currentEpisode: 0, totalEpisodes: config.episodes });
-    try {
-      const res = await axios.post('/simulation/start', config);
-      set({ runId: res.data.run_id });
-    } catch (e) {
-      set({ status: 'error', runId: null });
-    }
-  },
-
-  stopSimulation: () => {
-    const { runId, ws } = get();
-    if (ws) { ws.close(); }
-    if (runId) {
-      axios.post(`/simulation/${runId}/stop`).catch(() => {});
-    }
-    set({ status: 'completed', ws: null });
-  },
-
-  handleStepEvent: (event) => {
+    const config = get().config;
     set({
-      latestStep: event,
-      currentEpisode: event.episode,
-      trustScores: event.trust_scores,
-      isMalicious: event.is_malicious,
-      isDetected: event.is_detected,
-      delegateNodes: event.delegate_nodes,
-    });
-  },
-
-  handleEpisodeEnd: (event) => {
-    const summary: EpisodeSummary = {
-      episode: event.episode,
-      f1_score: event.f1_score,
-      precision: event.precision,
-      recall: event.recall,
-      reward: event.reward,
-      blockchain_length: event.blockchain_length,
-      byzantine_detections: event.byzantine_detections,
-      transactions_verified: event.transactions_verified,
-      trust_separation: event.trust_separation,
-    };
-    set((s) => ({
-      episodeHistory: [...s.episodeHistory, summary],
-      currentEpisode: event.episode + 1,
-    }));
-  },
-
-  setWs: (ws) => set({ ws }),
-  setStatus: (status) => set({ status }),
-
-  reset: () =>
-    set({
-      runId: null,
-      status: 'idle',
+      status: 'running',
       currentEpisode: 0,
-      totalEpisodes: 0,
+      totalEpisodes: config.episodes,
       latestStep: null,
       episodeHistory: [],
       trustScores: {},
       isMalicious: {},
       isDetected: {},
       delegateNodes: [],
-      ws: null,
+      replayRunId: null,
+    });
+    const response = await apiClient.post('/simulation/start', config);
+    set({ runId: response.data.run_id });
+  },
+
+  stopSimulation: async () => {
+    const runId = get().runId;
+    if (runId) {
+      await apiClient.post(`/simulation/${runId}/stop`);
+    }
+    set({ status: 'stopped' });
+  },
+
+  beginReplay: (runId) => {
+    set({
+      runId,
+      replayRunId: runId,
+      status: 'running',
+      currentEpisode: 0,
+      latestStep: null,
+      episodeHistory: [],
+      trustScores: {},
+      isMalicious: {},
+      isDetected: {},
+      delegateNodes: [],
+    });
+  },
+
+  toggleComparisonRun: (runId) =>
+    set((state) => ({
+      selectedComparisonRuns: state.selectedComparisonRuns.includes(runId)
+        ? state.selectedComparisonRuns.filter((value) => value !== runId)
+        : [...state.selectedComparisonRuns, runId],
+    })),
+
+  handleStepEvent: (event) =>
+    set({
+      latestStep: event,
+      currentEpisode: event.episode + 1,
+      trustScores: event.trust_scores,
+      isMalicious: event.is_malicious,
+      isDetected: event.is_detected,
+      delegateNodes: event.delegate_nodes,
     }),
+
+  handleEpisodeEnd: (event) =>
+    set((state) => ({
+      latestStep: event,
+      currentEpisode: event.episode + 1,
+      trustScores: event.trust_scores,
+      isMalicious: event.is_malicious,
+      isDetected: event.is_detected,
+      delegateNodes: event.delegate_nodes,
+      episodeHistory: [
+        ...state.episodeHistory,
+        {
+          run_id: event.run_id,
+          episode: event.episode,
+          f1_score: event.f1_score,
+          precision: event.precision,
+          recall: event.recall,
+          reward: event.reward,
+          blockchain_length: event.blockchain_length,
+          byzantine_detections: event.byzantine_detections,
+          transactions_verified: event.transactions_verified,
+          trust_separation: event.trust_separation,
+          fhe_overhead_ms: event.fhe_overhead_ms,
+        },
+      ],
+    })),
+
+  handleSimulationEnd: () => set({ status: 'completed', webSocketState: 'closed' }),
 }));

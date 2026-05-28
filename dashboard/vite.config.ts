@@ -5,9 +5,19 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/simulation': 'http://localhost:8000',
-      '/results': 'http://localhost:8000',
-      '/health': 'http://localhost:8000',
+      '/simulation': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        ws: true,
+      },
+      '/results': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+      },
+      '/health': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+      },
     },
   },
 });

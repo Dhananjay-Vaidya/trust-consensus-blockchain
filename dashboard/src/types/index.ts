@@ -11,6 +11,39 @@ export interface SimulationConfig {
   scenario: string | null;
 }
 
+export interface RunMetadata {
+  run_id: string;
+  agent: string;
+  attack: string;
+  consensus: string;
+  nodes: number;
+  episodes: number;
+  steps_per_episode: number;
+  malicious_fraction: number;
+  started_at: number | null;
+  completed_at: number | null;
+  status: 'idle' | 'running' | 'completed' | 'error' | 'stopped';
+}
+
+export interface SimulationStartResponse {
+  run_id: string;
+  status: 'running';
+  metadata: RunMetadata;
+}
+
+export interface SimulationStatus {
+  run_id: string;
+  status: 'idle' | 'running' | 'completed' | 'error' | 'stopped';
+  episode: number;
+  total_episodes: number;
+  progress_pct: number;
+  current_f1: number;
+  current_reward: number;
+  started_at: number | null;
+  elapsed_seconds: number;
+  error?: string | null;
+}
+
 export interface StepEvent {
   type: 'step' | 'episode_end' | 'simulation_end' | 'error';
   run_id: string;
@@ -36,6 +69,7 @@ export interface StepEvent {
 }
 
 export interface EpisodeSummary {
+  run_id: string;
   episode: number;
   f1_score: number;
   precision: number;
@@ -45,21 +79,10 @@ export interface EpisodeSummary {
   byzantine_detections: number;
   transactions_verified: number;
   trust_separation: number;
+  fhe_overhead_ms: number | null;
 }
 
-export interface SimulationStatus {
-  run_id: string;
-  status: 'idle' | 'running' | 'completed' | 'error';
-  episode: number;
-  total_episodes: number;
-  progress_pct: number;
-  current_f1: number;
-  current_reward: number;
-  started_at: number | null;
-  elapsed_seconds: number;
-}
-
-export interface ResultRow {
+export interface ResultRunMetadata {
   run_id: string;
   agent: string;
   attack: string;
@@ -68,4 +91,10 @@ export interface ResultRow {
   episodes: number;
   completed_at: number;
   filename: string;
+}
+
+export interface CompareRunsPayload {
+  metric: string;
+  series: Record<string, number[]>;
+  finals: Record<string, number | null>;
 }

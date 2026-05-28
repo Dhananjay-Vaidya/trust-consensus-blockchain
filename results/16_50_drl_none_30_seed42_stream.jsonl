@@ -106,3 +106,213 @@
 {"ts": 1779982610.6108186, "level": "INFO", "msg": "============================================================"}
 {"ts": 1779982610.610866, "level": "INFO", "msg": "EPISODE 16/50"}
 {"ts": 1779982610.6108923, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779982794.7776582, "level": "INFO", "msg": "EPISODE 16 SUMMARY"}
+{"ts": 1779982794.7778022, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7292.86"}
+{"ts": 1779982794.7778435, "level": "INFO", "msg": "Trust Separation: 0.9626 | FP: 0 | FN: 0"}
+{"ts": 1779982794.7778718, "level": "INFO", "msg": "Confirmed Blocks: 321 | Pending TX: 80"}
+{"ts": 1779982794.7781332, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779982794.778179, "level": "INFO", "msg": "EPISODE 17/50"}
+{"ts": 1779982794.778204, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779982963.2945755, "level": "INFO", "msg": "EPISODE 17 SUMMARY"}
+{"ts": 1779982963.2947369, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7293.40"}
+{"ts": 1779982963.2947786, "level": "INFO", "msg": "Trust Separation: 0.9649 | FP: 0 | FN: 0"}
+{"ts": 1779982963.294807, "level": "INFO", "msg": "Confirmed Blocks: 341 | Pending TX: 120"}
+{"ts": 1779982963.2951941, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779982963.2952862, "level": "INFO", "msg": "EPISODE 18/50"}
+{"ts": 1779982963.2953155, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779983142.118928, "level": "INFO", "msg": "EPISODE 18 SUMMARY"}
+{"ts": 1779983142.1191568, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7293.96"}
+{"ts": 1779983142.1192448, "level": "INFO", "msg": "Trust Separation: 0.9667 | FP: 0 | FN: 0"}
+{"ts": 1779983142.119306, "level": "INFO", "msg": "Confirmed Blocks: 361 | Pending TX: 89"}
+{"ts": 1779983142.1199036, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779983142.1199763, "level": "INFO", "msg": "EPISODE 19/50"}
+{"ts": 1779983142.120069, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779983336.836618, "level": "INFO", "msg": "EPISODE 19 SUMMARY"}
+{"ts": 1779983336.836835, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7294.46"}
+{"ts": 1779983336.836894, "level": "INFO", "msg": "Trust Separation: 0.9685 | FP: 0 | FN: 0"}
+{"ts": 1779983336.8369234, "level": "INFO", "msg": "Confirmed Blocks: 381 | Pending TX: 92"}
+{"ts": 1779983336.8371918, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779983336.837237, "level": "INFO", "msg": "EPISODE 20/50"}
+{"ts": 1779983336.8372607, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779983488.7784715, "level": "INFO", "msg": "EPISODE 20 SUMMARY"}
+{"ts": 1779983488.778693, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7294.91"}
+{"ts": 1779983488.7787514, "level": "INFO", "msg": "Trust Separation: 0.9694 | FP: 0 | FN: 0"}
+{"ts": 1779983488.778787, "level": "INFO", "msg": "Confirmed Blocks: 401 | Pending TX: 88"}
+{"ts": 1779983488.7790759, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779983488.7791233, "level": "INFO", "msg": "EPISODE 21/50"}
+{"ts": 1779983488.7791471, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779983680.2127774, "level": "INFO", "msg": "EPISODE 21 SUMMARY"}
+{"ts": 1779983680.2129402, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7295.17"}
+{"ts": 1779983680.2129824, "level": "INFO", "msg": "Trust Separation: 0.9703 | FP: 0 | FN: 0"}
+{"ts": 1779983680.21301, "level": "INFO", "msg": "Confirmed Blocks: 421 | Pending TX: 112"}
+{"ts": 1779983680.2132542, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779983680.2132971, "level": "INFO", "msg": "EPISODE 22/50"}
+{"ts": 1779983680.213322, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779983792.793423, "level": "INFO", "msg": "EPISODE 22 SUMMARY"}
+{"ts": 1779983792.7935643, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7295.40"}
+{"ts": 1779983792.7936046, "level": "INFO", "msg": "Trust Separation: 0.9714 | FP: 0 | FN: 0"}
+{"ts": 1779983792.7936325, "level": "INFO", "msg": "Confirmed Blocks: 441 | Pending TX: 101"}
+{"ts": 1779983792.7938678, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779983792.7939134, "level": "INFO", "msg": "EPISODE 23/50"}
+{"ts": 1779983792.793938, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779983983.1592348, "level": "INFO", "msg": "EPISODE 23 SUMMARY"}
+{"ts": 1779983983.1593907, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7295.77"}
+{"ts": 1779983983.1594324, "level": "INFO", "msg": "Trust Separation: 0.9727 | FP: 0 | FN: 0"}
+{"ts": 1779983983.159469, "level": "INFO", "msg": "Confirmed Blocks: 461 | Pending TX: 89"}
+{"ts": 1779983983.1597583, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779983983.1598077, "level": "INFO", "msg": "EPISODE 24/50"}
+{"ts": 1779983983.1598332, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779984095.2588983, "level": "INFO", "msg": "EPISODE 24 SUMMARY"}
+{"ts": 1779984095.2590322, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7296.08"}
+{"ts": 1779984095.259076, "level": "INFO", "msg": "Trust Separation: 0.9737 | FP: 0 | FN: 0"}
+{"ts": 1779984095.2591088, "level": "INFO", "msg": "Confirmed Blocks: 481 | Pending TX: 103"}
+{"ts": 1779984095.259365, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779984095.2594125, "level": "INFO", "msg": "EPISODE 25/50"}
+{"ts": 1779984095.2594402, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779984197.7618186, "level": "INFO", "msg": "EPISODE 25 SUMMARY"}
+{"ts": 1779984197.761978, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7296.34"}
+{"ts": 1779984197.762023, "level": "INFO", "msg": "Trust Separation: 0.9746 | FP: 0 | FN: 0"}
+{"ts": 1779984197.7621207, "level": "INFO", "msg": "Confirmed Blocks: 501 | Pending TX: 90"}
+{"ts": 1779984197.7623885, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779984197.7624266, "level": "INFO", "msg": "EPISODE 26/50"}
+{"ts": 1779984197.7624514, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779984306.4772995, "level": "INFO", "msg": "EPISODE 26 SUMMARY"}
+{"ts": 1779984306.4774437, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7296.59"}
+{"ts": 1779984306.4774914, "level": "INFO", "msg": "Trust Separation: 0.9754 | FP: 0 | FN: 0"}
+{"ts": 1779984306.4775248, "level": "INFO", "msg": "Confirmed Blocks: 521 | Pending TX: 123"}
+{"ts": 1779984306.4777741, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779984306.4778204, "level": "INFO", "msg": "EPISODE 27/50"}
+{"ts": 1779984306.4778452, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779984410.6723912, "level": "INFO", "msg": "EPISODE 27 SUMMARY"}
+{"ts": 1779984410.6725867, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7296.80"}
+{"ts": 1779984410.6726837, "level": "INFO", "msg": "Trust Separation: 0.9761 | FP: 0 | FN: 0"}
+{"ts": 1779984410.6727166, "level": "INFO", "msg": "Confirmed Blocks: 541 | Pending TX: 128"}
+{"ts": 1779984410.6730502, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779984410.6731095, "level": "INFO", "msg": "EPISODE 28/50"}
+{"ts": 1779984410.673137, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779984619.9469268, "level": "INFO", "msg": "EPISODE 28 SUMMARY"}
+{"ts": 1779984619.947328, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7296.97"}
+{"ts": 1779984619.9474742, "level": "INFO", "msg": "Trust Separation: 0.9766 | FP: 0 | FN: 0"}
+{"ts": 1779984619.9475348, "level": "INFO", "msg": "Confirmed Blocks: 561 | Pending TX: 79"}
+{"ts": 1779984619.9481502, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779984619.9482012, "level": "INFO", "msg": "EPISODE 29/50"}
+{"ts": 1779984619.94823, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779984781.2405076, "level": "INFO", "msg": "EPISODE 29 SUMMARY"}
+{"ts": 1779984781.240661, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7297.12"}
+{"ts": 1779984781.2407036, "level": "INFO", "msg": "Trust Separation: 0.9772 | FP: 0 | FN: 0"}
+{"ts": 1779984781.2407327, "level": "INFO", "msg": "Confirmed Blocks: 581 | Pending TX: 129"}
+{"ts": 1779984781.2409859, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779984781.2410238, "level": "INFO", "msg": "EPISODE 30/50"}
+{"ts": 1779984781.2411237, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779984987.5080605, "level": "INFO", "msg": "EPISODE 30 SUMMARY"}
+{"ts": 1779984987.5084417, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7297.29"}
+{"ts": 1779984987.508664, "level": "INFO", "msg": "Trust Separation: 0.9774 | FP: 0 | FN: 0"}
+{"ts": 1779984987.5088623, "level": "INFO", "msg": "Confirmed Blocks: 601 | Pending TX: 111"}
+{"ts": 1779984987.509813, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779984987.510018, "level": "INFO", "msg": "EPISODE 31/50"}
+{"ts": 1779984987.5102181, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779985768.2860665, "level": "INFO", "msg": "EPISODE 31 SUMMARY"}
+{"ts": 1779985768.2867248, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7297.34"}
+{"ts": 1779985768.2868686, "level": "INFO", "msg": "Trust Separation: 0.9778 | FP: 0 | FN: 0"}
+{"ts": 1779985768.2869384, "level": "INFO", "msg": "Confirmed Blocks: 621 | Pending TX: 115"}
+{"ts": 1779985768.2879136, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779985768.288048, "level": "INFO", "msg": "EPISODE 32/50"}
+{"ts": 1779985768.2881043, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779985966.7703414, "level": "INFO", "msg": "EPISODE 32 SUMMARY"}
+{"ts": 1779985966.7706327, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7297.47"}
+{"ts": 1779985966.770724, "level": "INFO", "msg": "Trust Separation: 0.9783 | FP: 0 | FN: 0"}
+{"ts": 1779985966.7708, "level": "INFO", "msg": "Confirmed Blocks: 641 | Pending TX: 110"}
+{"ts": 1779985966.7712517, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779985966.7714338, "level": "INFO", "msg": "EPISODE 33/50"}
+{"ts": 1779985966.7715929, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779986153.4190445, "level": "INFO", "msg": "EPISODE 33 SUMMARY"}
+{"ts": 1779986153.4192154, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7297.62"}
+{"ts": 1779986153.4192605, "level": "INFO", "msg": "Trust Separation: 0.9789 | FP: 0 | FN: 0"}
+{"ts": 1779986153.4192936, "level": "INFO", "msg": "Confirmed Blocks: 661 | Pending TX: 88"}
+{"ts": 1779986153.419697, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779986153.4197478, "level": "INFO", "msg": "EPISODE 34/50"}
+{"ts": 1779986153.4197721, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779986330.7354107, "level": "INFO", "msg": "EPISODE 34 SUMMARY"}
+{"ts": 1779986330.7357025, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7297.74"}
+{"ts": 1779986330.7358327, "level": "INFO", "msg": "Trust Separation: 0.9790 | FP: 0 | FN: 0"}
+{"ts": 1779986330.7359388, "level": "INFO", "msg": "Confirmed Blocks: 681 | Pending TX: 77"}
+{"ts": 1779986330.7367191, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779986330.7368724, "level": "INFO", "msg": "EPISODE 35/50"}
+{"ts": 1779986330.7369606, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779986456.8492215, "level": "INFO", "msg": "EPISODE 35 SUMMARY"}
+{"ts": 1779986456.8493714, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7297.80"}
+{"ts": 1779986456.8494108, "level": "INFO", "msg": "Trust Separation: 0.9794 | FP: 0 | FN: 0"}
+{"ts": 1779986456.8494518, "level": "INFO", "msg": "Confirmed Blocks: 701 | Pending TX: 130"}
+{"ts": 1779986456.8497307, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779986456.8497698, "level": "INFO", "msg": "EPISODE 36/50"}
+{"ts": 1779986456.8497934, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779986612.4201248, "level": "INFO", "msg": "EPISODE 36 SUMMARY"}
+{"ts": 1779986612.4203959, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7297.83"}
+{"ts": 1779986612.420446, "level": "INFO", "msg": "Trust Separation: 0.9794 | FP: 0 | FN: 0"}
+{"ts": 1779986612.4204748, "level": "INFO", "msg": "Confirmed Blocks: 721 | Pending TX: 86"}
+{"ts": 1779986612.420746, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779986612.4207914, "level": "INFO", "msg": "EPISODE 37/50"}
+{"ts": 1779986612.4208155, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779986769.9456644, "level": "INFO", "msg": "EPISODE 37 SUMMARY"}
+{"ts": 1779986769.945857, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7297.90"}
+{"ts": 1779986769.9460156, "level": "INFO", "msg": "Trust Separation: 0.9796 | FP: 0 | FN: 0"}
+{"ts": 1779986769.9461067, "level": "INFO", "msg": "Confirmed Blocks: 741 | Pending TX: 92"}
+{"ts": 1779986769.9466426, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779986769.9467382, "level": "INFO", "msg": "EPISODE 38/50"}
+{"ts": 1779986769.9468186, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779986919.4941304, "level": "INFO", "msg": "EPISODE 38 SUMMARY"}
+{"ts": 1779986919.4943144, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7297.94"}
+{"ts": 1779986919.4943652, "level": "INFO", "msg": "Trust Separation: 0.9797 | FP: 0 | FN: 0"}
+{"ts": 1779986919.4943933, "level": "INFO", "msg": "Confirmed Blocks: 761 | Pending TX: 96"}
+{"ts": 1779986919.4946542, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779986919.494698, "level": "INFO", "msg": "EPISODE 39/50"}
+{"ts": 1779986919.494723, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779987031.6977763, "level": "INFO", "msg": "EPISODE 39 SUMMARY"}
+{"ts": 1779987031.6979198, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7297.96"}
+{"ts": 1779987031.6979642, "level": "INFO", "msg": "Trust Separation: 0.9797 | FP: 0 | FN: 0"}
+{"ts": 1779987031.6979918, "level": "INFO", "msg": "Confirmed Blocks: 781 | Pending TX: 90"}
+{"ts": 1779987031.6982236, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779987031.6982703, "level": "INFO", "msg": "EPISODE 40/50"}
+{"ts": 1779987031.6982949, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779987122.116326, "level": "INFO", "msg": "EPISODE 40 SUMMARY"}
+{"ts": 1779987122.1165404, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7297.95"}
+{"ts": 1779987122.1165926, "level": "INFO", "msg": "Trust Separation: 0.9798 | FP: 0 | FN: 0"}
+{"ts": 1779987122.1166213, "level": "INFO", "msg": "Confirmed Blocks: 801 | Pending TX: 114"}
+{"ts": 1779987122.1168752, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779987122.1169171, "level": "INFO", "msg": "EPISODE 41/50"}
+{"ts": 1779987122.1169422, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779987291.582751, "level": "INFO", "msg": "EPISODE 41 SUMMARY"}
+{"ts": 1779987291.5829568, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7297.97"}
+{"ts": 1779987291.5830133, "level": "INFO", "msg": "Trust Separation: 0.9799 | FP: 0 | FN: 0"}
+{"ts": 1779987291.5830433, "level": "INFO", "msg": "Confirmed Blocks: 821 | Pending TX: 109"}
+{"ts": 1779987291.5832949, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779987291.5833352, "level": "INFO", "msg": "EPISODE 42/50"}
+{"ts": 1779987291.5833607, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779987412.6868675, "level": "INFO", "msg": "EPISODE 42 SUMMARY"}
+{"ts": 1779987412.6870599, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7297.99"}
+{"ts": 1779987412.687119, "level": "INFO", "msg": "Trust Separation: 0.9799 | FP: 0 | FN: 0"}
+{"ts": 1779987412.687149, "level": "INFO", "msg": "Confirmed Blocks: 841 | Pending TX: 131"}
+{"ts": 1779987412.6873827, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779987412.6874254, "level": "INFO", "msg": "EPISODE 43/50"}
+{"ts": 1779987412.6874502, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779987559.9695537, "level": "INFO", "msg": "EPISODE 43 SUMMARY"}
+{"ts": 1779987559.9696953, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7297.98"}
+{"ts": 1779987559.969737, "level": "INFO", "msg": "Trust Separation: 0.9798 | FP: 0 | FN: 0"}
+{"ts": 1779987559.969765, "level": "INFO", "msg": "Confirmed Blocks: 861 | Pending TX: 105"}
+{"ts": 1779987559.9699895, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779987559.9700298, "level": "INFO", "msg": "EPISODE 44/50"}
+{"ts": 1779987559.9700544, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779987683.271958, "level": "INFO", "msg": "EPISODE 44 SUMMARY"}
+{"ts": 1779987683.2720904, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7297.98"}
+{"ts": 1779987683.2721317, "level": "INFO", "msg": "Trust Separation: 0.9798 | FP: 0 | FN: 0"}
+{"ts": 1779987683.2721586, "level": "INFO", "msg": "Confirmed Blocks: 881 | Pending TX: 108"}
+{"ts": 1779987683.2723787, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779987683.2724237, "level": "INFO", "msg": "EPISODE 45/50"}
+{"ts": 1779987683.272449, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779987811.2557254, "level": "INFO", "msg": "EPISODE 45 SUMMARY"}
+{"ts": 1779987811.2558966, "level": "INFO", "msg": "Final F1: 1.0000 | Episode Reward: 7297.97"}
+{"ts": 1779987811.2559454, "level": "INFO", "msg": "Trust Separation: 0.9797 | FP: 0 | FN: 0"}
+{"ts": 1779987811.2559779, "level": "INFO", "msg": "Confirmed Blocks: 901 | Pending TX: 67"}
+{"ts": 1779987811.2562284, "level": "INFO", "msg": "============================================================"}
+{"ts": 1779987811.2562659, "level": "INFO", "msg": "EPISODE 46/50"}
+{"ts": 1779987811.2562897, "level": "INFO", "msg": "============================================================"}

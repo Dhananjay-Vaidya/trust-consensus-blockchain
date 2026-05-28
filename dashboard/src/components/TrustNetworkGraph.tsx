@@ -1,233 +1,154 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import * as d3 from 'd3';
+
 import { useSimulationStore } from '../store/simulationStore';
 
-interface NodeInfo {
+interface GraphNode {
   id: string;
   trust: number;
   malicious: boolean;
   detected: boolean;
   delegate: boolean;
+  x?: number;
+  y?: number;
 }
 
-interface SelectedNode extends NodeInfo {}
-
-function trustColor(t: number): string {
-  // red (#ef4444) → amber (#f59e0b) → green (#10b981)
-  if (t <= 0.5) {
-    const r = d3.interpolateRgb('#ef4444', '#f59e0b')(t * 2);
-    return r;
-  }
-  return d3.interpolateRgb('#f59e0b', '#10b981')((t - 0.5) * 2);
-}
-
-function trustRadius(t: number): number {
-  return 8 + t * 12; // 8–20
+function trustColor(trust: number): string {
+  if (trust <= 0.45) return '#f87171';
+  if (trust <= 0.7) return '#fbbf24';
+  return '#34d399';
 }
 
 export function TrustNetworkGraph() {
-  const svgRef = useRef<SVGSVGElement>(null);
-  const simRef = useRef<d3.Simulation<d3.SimulationNodeDatum & { id: string }, undefined> | null>(null);
-  const { trustScores, isMalicious, isDetected, delegateNodes } = useSimulationStore();
-  const [selected, setSelected] = useState<SelectedNode | null>(null);
+  const svgRef = useRef<SVGSVGElement | null>(null);
+  const simulationRef = useRef<d3.Simulation<GraphNode, undefined> | null>(null);
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
 
-  // Build node list from trustScores keys
-  const nodeIds = Object.keys(trustScores);
+  const trustScores = useSimulationStore((state) => state.trustScores);
+  const isMalicious = useSimulationStore((state) => state.isMalicious);
+  const isDetected = useSimulationStore((state) => state.isDetected);
+  const delegateNodes = useSimulationStore((state) => state.delegateNodes);
+
+  const nodes = useMemo<GraphNode[]>(
+    () =>
+      Object.keys(trustScores).map((id) => ({
+        id,
+        trust: trustScores[id] ?? 0.5,
+        malicious: isMalicious[id] ?? false,
+        detected: isDetected[id] ?? false,
+        delegate: delegateNodes.includes(id),
+      })),
+    [delegateNodes, isDetected, isMalicious, trustScores],
+  );
 
   useEffect(() => {
-    if (!svgRef.current || nodeIds.length === 0) return;
+    if (!svgRef.current || nodes.length === 0) return;
 
+    const width = svgRef.current.clientWidth || 720;
+    const height = 420;
     const svg = d3.select(svgRef.current);
-    const width = svgRef.current.clientWidth || 700;
-    const height = 400;
+    svg.selectAll('*').remove();
 
-    // First render: build simulation and DOM
-    if (!simRef.current) {
-      svg.selectAll('*').remove();
+    const links = nodes.flatMap((source, index) =>
+      nodes.slice(index + 1).map((target) => ({ source: source.id, target: target.id })),
+    );
 
-      const defs = svg.append('defs');
-      // Glow filter for delegates
-      const filter = defs.append('filter').attr('id', 'glow');
-      filter.append('feGaussianBlur').attr('stdDeviation', 3).attr('result', 'coloredBlur');
-      const feMerge = filter.append('feMerge');
-      feMerge.append('feMergeNode').attr('in', 'coloredBlur');
-      feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+    const defs = svg.append('defs');
+    const filter = defs.append('filter').attr('id', 'delegate-glow');
+    filter.append('feGaussianBlur').attr('stdDeviation', 3).attr('result', 'blur');
+    const merge = filter.append('feMerge');
+    merge.append('feMergeNode').attr('in', 'blur');
+    merge.append('feMergeNode').attr('in', 'SourceGraphic');
 
-      svg.append('g').attr('class', 'links');
-      svg.append('g').attr('class', 'nodes');
+    const linkLayer = svg.append('g').attr('class', 'links');
+    const nodeLayer = svg.append('g').attr('class', 'nodes');
 
-      const nodes = nodeIds.map((id) => ({ id, x: width / 2, y: height / 2 }));
-      // Full mesh links
-      const links: { source: string; target: string }[] = [];
-      for (let i = 0; i < nodes.length; i++) {
-        for (let j = i + 1; j < nodes.length; j++) {
-          links.push({ source: nodes[i].id, target: nodes[j].id });
-        }
-      }
+    const simulation = d3
+      .forceSimulation(nodes)
+      .force('charge', d3.forceManyBody().strength(-220))
+      .force('center', d3.forceCenter(width / 2, height / 2))
+      .force('collision', d3.forceCollide<GraphNode>().radius((node) => 12 + node.trust * 16))
+      .force('link', d3.forceLink<GraphNode, { source: string; target: string }>(links).id((node) => node.id).distance(80));
 
-      const sim = d3.forceSimulation(nodes as (d3.SimulationNodeDatum & { id: string })[])
-        .force('charge', d3.forceManyBody().strength(-200))
-        .force('center', d3.forceCenter(width / 2, height / 2))
-        .force('link', d3.forceLink(links).id((d: any) => d.id).distance(60))
-        .force('collision', d3.forceCollide(22));
+    simulationRef.current = simulation;
 
-      simRef.current = sim;
+    const linkSelection = linkLayer
+      .selectAll('line')
+      .data(links)
+      .join('line')
+      .attr('stroke', '#223047')
+      .attr('stroke-opacity', 0.45);
 
-      // Draw links
-      svg.select('.links')
-        .selectAll('line')
-        .data(links)
-        .join('line')
-        .attr('stroke', '#334155')
-        .attr('stroke-width', 1);
+    const nodeSelection = nodeLayer
+      .selectAll('g')
+      .data(nodes)
+      .join('g')
+      .style('cursor', 'pointer')
+      .on('click', (_, node) => setSelectedNodeId((current) => (current === node.id ? null : node.id)));
 
-      // Draw nodes
-      const nodeG = svg.select('.nodes')
-        .selectAll<SVGGElement, { id: string }>('g.node')
-        .data(nodes, (d) => d.id)
-        .join('g')
-        .attr('class', 'node')
-        .style('cursor', 'pointer')
-        .on('click', (_e, d) => {
-          const info: SelectedNode = {
-            id: d.id,
-            trust: trustScores[d.id] ?? 0.5,
-            malicious: isMalicious[d.id] ?? false,
-            detected: isDetected[d.id] ?? false,
-            delegate: delegateNodes.includes(d.id),
-          };
-          setSelected((prev) => prev?.id === d.id ? null : info);
-        });
+    nodeSelection
+      .append('circle')
+      .attr('r', (node) => 10 + node.trust * 12)
+      .attr('fill', (node) => trustColor(node.trust))
+      .attr('stroke', (node) => (node.detected ? '#ffffff' : node.delegate ? '#60a5fa' : '#223047'))
+      .attr('stroke-width', (node) => (node.detected ? 3 : node.delegate ? 2 : 1))
+      .attr('filter', (node) => (node.delegate ? 'url(#delegate-glow)' : null));
 
-      nodeG.append('circle')
-        .attr('r', (d) => trustRadius(trustScores[d.id] ?? 0.5))
-        .attr('fill', (d) => trustColor(trustScores[d.id] ?? 0.5))
-        .attr('stroke', '#334155')
-        .attr('stroke-width', 1);
+    nodeSelection
+      .append('text')
+      .attr('text-anchor', 'middle')
+      .attr('dy', 26)
+      .attr('fill', '#94a3b8')
+      .attr('font-size', 10)
+      .text((node) => node.id.replace('Node_', 'N'));
 
-      nodeG.append('text')
-        .attr('dy', (d) => trustRadius(trustScores[d.id] ?? 0.5) + 12)
-        .attr('text-anchor', 'middle')
-        .attr('font-size', 9)
-        .attr('fill', '#64748b')
-        .text((d) => d.id.replace('Node_', 'N'));
+    simulation.on('tick', () => {
+      linkSelection
+        .attr('x1', (d: any) => d.source.x)
+        .attr('y1', (d: any) => d.source.y)
+        .attr('x2', (d: any) => d.target.x)
+        .attr('y2', (d: any) => d.target.y);
 
-      sim.on('tick', () => {
-        svg.select('.links').selectAll<SVGLineElement, { source: any; target: any }>('line')
-          .attr('x1', (d) => d.source.x)
-          .attr('y1', (d) => d.source.y)
-          .attr('x2', (d) => d.target.x)
-          .attr('y2', (d) => d.target.y);
+      nodeSelection.attr('transform', (node) => `translate(${node.x},${node.y})`);
+    });
 
-        svg.select('.nodes').selectAll<SVGGElement, { id: string; x: number; y: number }>('g.node')
-          .attr('transform', (d) => `translate(${d.x},${d.y})`);
-      });
-    }
+    return () => {
+      simulation.stop();
+    };
+  }, [nodes]);
 
-    // Every render: update visual properties with transitions
-    const nodeG = svg.select('.nodes').selectAll<SVGGElement, { id: string }>('g.node');
-
-    nodeG.select('circle')
-      .transition().duration(200)
-      .attr('r', (d) => trustRadius(trustScores[d.id] ?? 0.5))
-      .attr('fill', (d) => trustColor(trustScores[d.id] ?? 0.5))
-      .attr('stroke', (d) => {
-        if (isDetected[d.id]) return '#ef4444';
-        if (delegateNodes.includes(d.id)) return '#3b82f6';
-        return '#334155';
-      })
-      .attr('stroke-width', (d) => {
-        if (isDetected[d.id]) return 3;
-        if (delegateNodes.includes(d.id)) return 2;
-        return 1;
-      })
-      .attr('filter', (d) => delegateNodes.includes(d.id) ? 'url(#glow)' : null);
-
-    // Flash detected nodes
-    nodeG.filter((d) => !!isDetected[d.id])
-      .select('circle')
-      .classed('byzantine-flash', true)
-      .on('animationend', function () {
-        d3.select(this).classed('byzantine-flash', false);
-      });
-
-    // Update link opacity based on trust product
-    const nodesById: Record<string, number> = {};
-    nodeIds.forEach((id) => { nodesById[id] = trustScores[id] ?? 0.5; });
-    svg.select('.links').selectAll<SVGLineElement, { source: any; target: any }>('line')
-      .attr('stroke-opacity', (d) => {
-        const ta = nodesById[d.source.id ?? d.source] ?? 0.5;
-        const tb = nodesById[d.target.id ?? d.target] ?? 0.5;
-        return Math.sqrt(ta * tb) * 0.35;
-      });
-
-    // Gentle drift update
-    if (simRef.current) {
-      simRef.current.alpha(0.1).restart();
-    }
-  }, [trustScores, isDetected, delegateNodes]);
+  const selectedNode = nodes.find((node) => node.id === selectedNodeId) ?? null;
 
   return (
-    <div className="bg-surface rounded-xl p-4 flex flex-col gap-3">
-      <h2 className="text-text-primary font-semibold text-base">Trust Network</h2>
-      <div className="relative">
-        <svg
-          ref={svgRef}
-          className="w-full rounded-lg bg-bg"
-          style={{ height: 400 }}
-        />
-        {nodeIds.length === 0 && (
-          <div className="absolute inset-0 flex items-center justify-center text-muted text-sm">
-            Start a simulation to see the live network
-          </div>
-        )}
-      </div>
-
-      {selected && (
-        <div className="bg-bg rounded-lg p-3 text-sm space-y-1 border border-slate-700">
-          <div className="flex justify-between">
-            <span className="font-semibold text-text-primary">{selected.id}</span>
-            <button onClick={() => setSelected(null)} className="text-muted hover:text-text-primary">✕</button>
-          </div>
-          <div className="grid grid-cols-2 gap-1 text-xs">
-            <span className="text-muted">Trust Score</span>
-            <span className="text-right" style={{ color: trustColor(selected.trust) }}>
-              {(selected.trust * 100).toFixed(1)}%
-            </span>
-            <span className="text-muted">Ground Truth</span>
-            <span className={`text-right ${selected.malicious ? 'text-danger' : 'text-success'}`}>
-              {selected.malicious ? 'Malicious' : 'Honest'}
-            </span>
-            <span className="text-muted">Detected</span>
-            <span className={`text-right ${selected.detected ? 'text-warning' : 'text-muted'}`}>
-              {selected.detected ? 'Byzantine' : '—'}
-            </span>
-            <span className="text-muted">Role</span>
-            <span className={`text-right ${selected.delegate ? 'text-accent' : 'text-muted'}`}>
-              {selected.delegate ? 'Delegate' : 'Standard'}
-            </span>
-          </div>
+    <section className="panel">
+      <div className="panel-header">
+        <div>
+          <h3>Trust Network</h3>
+          <p>Live node trust graph with delegate highlighting and Byzantine detection signals.</p>
         </div>
-      )}
-
-      {/* Legend */}
-      <div className="flex flex-wrap gap-3 text-xs text-muted">
-        <span className="flex items-center gap-1">
-          <span className="inline-block w-3 h-3 rounded-full bg-success" /> High trust
-        </span>
-        <span className="flex items-center gap-1">
-          <span className="inline-block w-3 h-3 rounded-full bg-warning" /> Mid trust
-        </span>
-        <span className="flex items-center gap-1">
-          <span className="inline-block w-3 h-3 rounded-full bg-danger" /> Low trust
-        </span>
-        <span className="flex items-center gap-1">
-          <span className="inline-block w-3 h-3 rounded-full border-2 border-danger" /> Detected
-        </span>
-        <span className="flex items-center gap-1">
-          <span className="inline-block w-3 h-3 rounded-full border-2 border-accent" /> Delegate
-        </span>
       </div>
-    </div>
+      <div className="network-layout">
+        <div className="network-canvas">
+          {nodes.length === 0 ? (
+            <div className="empty-state">Start or replay a simulation to populate the network.</div>
+          ) : (
+            <svg ref={svgRef} className="network-svg" viewBox="0 0 720 420" preserveAspectRatio="xMidYMid meet" />
+          )}
+        </div>
+        <aside className="inspector-panel">
+          <h4>Node Inspector</h4>
+          {!selectedNode && <p className="subtle">Click a node to inspect trust, role, and detection state.</p>}
+          {selectedNode && (
+            <dl className="inspector-grid">
+              <div><dt>Node</dt><dd>{selectedNode.id}</dd></div>
+              <div><dt>Trust</dt><dd>{selectedNode.trust.toFixed(4)}</dd></div>
+              <div><dt>Truth</dt><dd>{selectedNode.malicious ? 'Malicious' : 'Honest'}</dd></div>
+              <div><dt>Detected</dt><dd>{selectedNode.detected ? 'Yes' : 'No'}</dd></div>
+              <div><dt>Delegate</dt><dd>{selectedNode.delegate ? 'Yes' : 'No'}</dd></div>
+            </dl>
+          )}
+        </aside>
+      </div>
+    </section>
   );
 }

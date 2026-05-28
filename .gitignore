@@ -116,17 +116,30 @@ ehthumbs.db
 Thumbs.db
 
 # Project specific
-txt
-txt2
-
-# Large model files (keep in checkpoints/ but ignore if too large)
-# Uncomment if you don't want to track checkpoints
-# checkpoints/*.pth
-
-# Temporary files
 *.tmp
 *.temp
 *.bak
+*.seed
+
+# Generated experiment artefacts
+experiments/results/**/*.jsonl
+experiments/results/**/*.csv
+experiments/figures/**/*.png
+experiments/figures/**/*.pdf
+experiments/tables/**/*.csv
+experiments/tables/**/*.tex
+experiments/checkpoints/**/*.pth
+
+# Frontend/vendor
+dashboard/node_modules/
+dashboard/dist/
+
+# Python local caches
+.pytest_cache/
+__pycache__/
+
+# Logs
+*.log
 
 # LaTeX auxiliary files
 *.aux
