@@ -30,10 +30,7 @@ Against the stealthy sleeper, removing CUSUM drops median F1 from \EthreeFullFOn
 mean delay from \EthreeFullDelay{} to \EthreeNoCusumDelay{} steps; removing the two-timescale memory (\EthreeNoTwoFOne{})
 or the share cap (\EthreeNoCapFOne{}) changes detection little; removing all three gives \EthreeNoneFOne{}
 (Table~\ref{tab:e3}). CUSUM is the active ingredient; the cap matters for the safety bound, not for detection.
-\textbf{Negative result:} the adaptive on-off attacker (AAA), which goes dormant whenever a public audit exposes a
-coalition member, evades every variant (median F1 \EthreeAaaFullFOne{}). In our implementation it also causes no
-measurable damage (median invalid-commit rate \EthreeAaaFullInvalid{}), so we do not claim robustness against
-on-off attackers that are both evasive and harmful.
+The adaptive attacker that replaces the earlier on-off attacker is evaluated in E11.
 \input{generated/tab_e3.tex}
 
 \subsection{E4: cost and accuracy of the homomorphic tally}
@@ -75,8 +72,8 @@ Fig.~\ref{fig:e7} shows the delay/false-quarantine trade-off as the alarm thresh
 \begin{figure}[t]\centering\includegraphics[width=\columnwidth]{e7_tradeoff.pdf}
 \caption{E7: detection delay vs.\ honest false quarantines for CUSUM thresholds $h$.}\label{fig:e7}\end{figure}
 
-\subsection{E8: does hiding the weights hinder bribery? (H3)}
-\textbf{H3 is not supported.} A briber that sees only the public ledger ranks delegates by how often their votes match
+\subsection{E8 (negative result): hiding the weights does not hinder bribery}
+We tested the hypothesis that hiding trust weights hinders an adaptive briber; it is not supported. A briber that sees only the public ledger ranks delegates by how often their votes match
 the committed outcome; this reaches a bribed weight share close to that of a briber who sees the weights (largest gap in median share \EeightMaxShareGap{}), and in
 \EeightSig{} of \EeightTests{} (backend $\times$ budget) comparisons did the damage (valid-reject rate) differ significantly
 after Holm correction. The ledger-based ranking beat random targeting in weight share in \EeightVotesBeatRandom{} of

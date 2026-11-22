@@ -12,7 +12,7 @@ been searched and logged.
   T2 encrypted weighted voting, homomorphic comparison, private tallying;
   T3 trust-weighted / reputation-weighted BFT and delegated consensus;
   T4 learned BFT protocol or parameter selection (e.g. BFTBrain);
-  T5 dynamic trust models for blockchain IoT (incl. anything named "DynaTrust").
+  T5 dynamic trust models for blockchain IoT.
 * **Databases:** arXiv, IEEE Xplore, ACM Digital Library, Scopus (plus IACR ePrint for T2).
 * **Inclusion:** peer-reviewed or archived preprint, 2002–2026, English, proposes or evaluates a
   mechanism on one of T1–T5. **Exclusion:** blog posts, product pages, papers without a method.
@@ -33,7 +33,6 @@ counts. What it ran:
 | 3 | 2026-11-22 | web search | `BFTBrain adaptive BFT consensus reinforcement learning NSDI 2025` | USENIX NSDI'25 page + arXiv 2408.06432 |
 | 4 | 2026-11-22 | web search | `on-off attack trust management reputation system sleeper attack detection` | ~10 hits screened; Chae et al. TPDS 2015 included; WSN/IoT on-off papers (PMC4435207, arXiv 2508.17304, arXiv 2508.14028 survey, O2Trust, Future Internet 10(1):6) **screened but not verified, not cited** |
 | 5 | 2026-11-22 | web search | `TenSEAL library homomorphic encryption tensors paper Benaissa 2021` | arXiv 2104.03152 |
-| 6 | 2026-11-22 | web search | `DynaTrust dynamic trust blockchain` | **no paper named "DynaTrust" found.** Closest: "DYNAMIC-TRUST" (IEEE Xplore doc 10909344, vehicular ITS; not verified, not cited). The task brief's "DynaTrust" reference must be resolved by the author. |
 | 7 | 2026-11-22 | web search | `Cheon Kim Kim Song "Homomorphic encryption for arithmetic of approximate numbers" ASIACRYPT 2017 DOI` | CKKS, DOI 10.1007/978-3-319-70694-8_15 |
 | 8 | 2026-11-22 | web search | `Jøsang Ismail "The Beta Reputation System" Bled eCommerce 2002` | author-hosted PDF; no DOI |
 | 9 | 2026-11-22 | web search | `Page 1954 "Continuous inspection schemes" Biometrika CUSUM DOI` | DOI 10.1093/biomet/41.1-2.100 |

@@ -21,17 +21,17 @@ and a Homomorphic Trust-Weighted Tally}
 \maketitle
 
 \begin{abstract}
-Trust-weighted delegated consensus for blockchain IoT is usually evaluated in simulators. We show that
-evaluation in a simulator whose trust updates, rewards and agent observations read ground-truth
-labels overstates detection performance, and we release an oracle-free benchmark in which trust is
-updated only from randomly sampled audits of committed transactions. On this benchmark, a Beta-reputation
-trust model fails against a sleeper (trust-drift) attack: median node-detection F1 over the attack
-window is \EoneTdpFive{} versus \EoneCraFive{} for an always-on collusion attack (honest fault rate 0.05).
-We propose SleeperGuard, which combines two-timescale Beta evidence, CUSUM change detection with
-quarantine, and a per-delegate weight-share cap, and we prove that the cap bounds what a coalition can
-commit. We implement the trust-weighted tally under CKKS homomorphic encryption and measure its
-agreement with the plaintext rule, its cost and what its decryptor learns. Finally, we test whether hiding
-trust weights hinders an adaptive briber. We report negative and null results alongside positive ones.
+Trust-weighted delegated consensus for blockchain IoT is usually evaluated in simulators. We show that a
+simulator whose trust updates read ground-truth labels overstates detection: re-inserting only that feedback
+raises a Beta-reputation model's F1 against a sleeper attack from \EzeroHonestTdp{} to \EzeroOracleTdp{}.
+On an oracle-free benchmark, where trust learns only from random audits, the same model never flags a sleeper
+(median F1 \EoneTdpFive{}). We propose SleeperGuard (two-timescale Beta evidence, CUSUM change detection with
+quarantine, and an exactly enforced per-delegate weight-share cap). It detects sleepers that lie often, but a
+damage-maximising coalition that lies below its alarm rate is not detected, so SleeperGuard has clear limits.
+The cap yields a safety bound on what a coalition can commit, which we prove, test with an adversarial search
+and test directly against that coalition. We also implement the trust-weighted tally under CKKS homomorphic
+encryption: it reproduces the plaintext decisions at a measured cost, but its decryptor can recover every
+vote margin. A hypothesis that hiding trust weights hinders bribery was not supported.
 \end{abstract}
 
 \section{Introduction}
@@ -46,15 +46,15 @@ decrypted, compared in plaintext and re-encrypted. The numbers in~\cite{padia202
 not measure what they claim to measure, and this paper replaces them.
 
 \textbf{Contributions.} We
-(1) show that trust-derived evaluation with oracle access overstates performance (E0) and give an
-oracle-free benchmark in which votes come from a noisy vote model and trust sees only audit evidence;
-(2) propose SleeperGuard and a capped-influence safety bound (Proposition~\ref{prop:safety}), and test
-the bound with an adversarial search (E10);
-(3) implement a homomorphic trust-weighted tally (HETally) and measure its accuracy, guard band, cost
-and leakage (E4);
-(4) test whether hiding trust weights reduces the success of an adaptive briber (E8, hypothesis H3).
-We also compare learned controllers against a tuned rule and fixed protocols under a train/calibrate/evaluate
-seed split (E9).
+(1) measure how much oracle access in a trust simulator overstates detection (E0) and give an oracle-free
+benchmark in which votes come from a noisy vote model and trust sees only audit evidence (E1);
+(2) propose SleeperGuard and report where it works and where it fails, including against a
+damage-maximising adaptive coalition chosen by search (E2, E3, E11, E12);
+(3) give an exact weight-share cap and a capped-influence safety bound (Proposition~\ref{prop:safety}),
+tested by adversarial weight search and directly against the adaptive coalition (E10);
+(4) implement a homomorphic trust-weighted tally and measure its accuracy, cost and margin leakage (E4).
+We also report two negative results: hiding the weights did not hinder an adaptive briber (E8), and learned
+controllers that maximise the observable reward do so by trading away detection (E9).
 Novelty statements in this paper are made to the best of our knowledge, per the search protocol in the
 artefact's \texttt{docs/LITERATURE.md}.
 % TODO(author): complete the database searches listed as "not searched" in docs/LITERATURE.md
@@ -89,8 +89,9 @@ environment raises legacy Beta's TDP detection F1 from \EzeroHonestTdp{} to \Eze
 \section{System and Threat Model}
 A permissioned set of $N$ nodes; each step a committee of $k$ delegates votes on $T$ transactions.
 An honest delegate misreads validity with probability $f$ (honest fault rate); adversarial delegates
-follow an attack policy: NMA (random votes), CRA (coordinated inversion), AAA (on-off, sleeping after
-being caught by a public audit), BFI (approve-all / reject-all equivocation) or TDP (honest until
+follow an attack policy: NMA (random votes), CRA (coordinated inversion), MDA (damage-maximising: all members
+lie on the same randomly chosen transactions at a lie rate and coalition size picked by search against the
+deployed defence, i.e.\ just below its alarm), BFI (approve-all / reject-all equivocation) or TDP (honest until
 $t_{\text{switch}}$, then coordinated inversion). After commit, each transaction is audited independently
 with probability $a$; audits are perfect and public. A delegate's vote on an audited transaction is
 \emph{inconsistent} if it disagrees with the audit; this is the only evidence trust receives.
@@ -152,6 +153,8 @@ needs threshold or multiparty CKKS.
 \item \textbf{Leakage.} The decryptor recovers the margins in every configuration we ran (E4), so the HE tally
 hides weights from the aggregator but not from the decryptor.
 \item \textbf{Perfect, unpredictable audits.} An adversary that predicts audits, or an imperfect auditor, is not modelled.
+\item \textbf{Sub-threshold attackers.} A coalition that knows the CUSUM parameters can lie at a rate the
+detector tolerates (E11, E12); the share cap, not detection, is then the only protection.
 \item \textbf{Calibration.} SleeperGuard's CUSUM parameters depend on the nominal honest fault rate; E7 reports
 the cost of misspecification.
 \item \textbf{Prior work read from abstracts.} The relation to~\cite{muniswamy2025trust} must be checked
@@ -160,9 +163,10 @@ against its full text.
 
 \section{Conclusion}
 Oracle access in a trust simulator changes conclusions. Measured without it, a Beta-reputation trust model
-fails against sleepers, change detection with capped influence repairs detection at a stated false-quarantine
-cost, the capped weights give a simple safety bound, and a homomorphic tally reproduces the plaintext decisions
-at a measured cost while still revealing margins to its decryptor.
+fails against sleepers; change detection recovers detection of attackers that lie often, at a stated
+false-quarantine cost, but not of attackers that lie below the alarm rate; an exactly enforced weight cap gives a
+safety bound that held against every adversary we tried within its assumptions; and a homomorphic tally
+reproduces the plaintext decisions at a measured cost while revealing margins to its decryptor.
 
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
