@@ -17,7 +17,7 @@ from src.env.honest_env import HonestEnv, Knobs, Observation
 TRAIN_SEEDS = tuple(range(0, 20))
 CALIB_SEEDS = tuple(range(20, 30))
 EVAL_SEEDS = tuple(range(100, 130))
-TRAIN_ATTACKS = ("tdp", "cra", "aaa", "nma", "bfi", "none")
+TRAIN_ATTACKS = ("tdp", "cra", "mda", "nma", "bfi", "none")
 
 
 class Controller:

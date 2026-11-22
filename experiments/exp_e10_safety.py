@@ -105,11 +105,18 @@ def main() -> None:
     write("e10_safety", d, rows, args, name="search.csv", t0=t0)
 
     t1 = time.time()
-    env_jobs = [{"cfg": dict(seed=s, steps=steps, attack="cra", honest_fault_rate=0.0,
-                             malicious_fraction=b / 16, **calibrated_sg(0.02)),
-                 "tags": dict(b=b, k=16, c=2.0, theta=0.667, predicted_safe=b * 2.0 / 16 < 0.667),
-                 "window_start": 0}
-                for b in range(1, 9) for s in seeds]
+    # Part B: the damage-maximising coalition (E11 attacker) approves invalid transactions in
+    # coordination, exact cap, with and without honest faults; b = 1..8 of k = 16 (bound: b <= 5 safe).
+    env_jobs = []
+    for b, hf, r in itertools.product(range(1, 9), (0.0, 0.05), (0.1, 0.3, 1.0)):
+        sg = calibrated_sg(max(hf, 0.02))
+        for s in seeds:
+            env_jobs.append({"cfg": dict(seed=s, steps=steps, attack="mda", attack_target="invalid",
+                                         attack_intensity=r, honest_fault_rate=hf, malicious_fraction=b / 16,
+                                         trust_backend="sleeper_guard", cap_method="exact", **sg),
+                             "tags": dict(b=b, k=16, c=2.0, theta=0.667, fault=hf, lie_rate=r,
+                                          predicted_safe=b * 2.0 / 16 < 0.667),
+                             "window_start": 0})
     env_rows = run_parallel(run_one, env_jobs, args.workers)
     write("e10_safety", d, env_rows, args, name="env.csv", t0=t1)
 

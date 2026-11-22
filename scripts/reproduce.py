@@ -28,6 +28,8 @@ STEPS = [
     ("e8", ["-m", "experiments.exp_e8_privacy"]),
     ("e9", ["-m", "experiments.exp_e9_learning", "--epochs", "10"]),
     ("e10", ["-m", "experiments.exp_e10_safety"]),
+    ("e11", ["-m", "experiments.exp_e11_adaptive"]),
+    ("e12", ["-m", "experiments.exp_e12_lierate"]),
 ]
 
 

@@ -13,6 +13,6 @@ def test_attack_module_never_touches_trust():
 
 
 def test_attack_policy_signature_has_no_trust_argument():
-    for cls in (attacks.NMA, attacks.CRA, attacks.TDP, attacks.AAA, attacks.BFI):
+    for cls in (attacks.NMA, attacks.CRA, attacks.TDP, attacks.AAA, attacks.BFI, attacks.MaxDamage):
         params = inspect.signature(cls.coalition_votes).parameters
         assert set(params) == {"self", "step", "validity", "honest_votes", "rng"}

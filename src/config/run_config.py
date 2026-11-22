@@ -14,12 +14,12 @@ import yaml
 
 from src.trust.sleeper_guard import SleeperGuardConfig
 
-AttackName = Literal["none", "nma", "cra", "aaa", "bfi", "tdp"]
+AttackName = Literal["none", "nma", "cra", "aaa", "bfi", "tdp", "mda"]
 TrustBackend = Literal["sleeper_guard", "legacy_beta", "none"]
 TallyBackend = Literal["plain", "he"]
 Selection = Literal["trust_softmax", "random", "fixed", "all"]
 
-ATTACKS = ("none", "nma", "cra", "aaa", "bfi", "tdp")
+ATTACKS = ("none", "nma", "cra", "aaa", "bfi", "tdp", "mda")
 
 
 @dataclass(frozen=True)
@@ -62,6 +62,7 @@ class RunConfig:
     t_switch: int = 300                     # TDP: sleepers turn malicious at this step
     attack_intensity: float = 1.0           # prob. a malicious delegate deviates when active
     aaa_cooldown: int = 25                  # AAA: dormant steps after observing an audit hit
+    attack_target: Literal["invalid", "both"] = "invalid"   # MDA: what the coalition lies about
 
     # ---- simulated cost model (see docs/DECISIONS.md D7) ----------------------------------
     latency_base_ms: float = 5.0

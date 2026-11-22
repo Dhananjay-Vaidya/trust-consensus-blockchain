@@ -2,7 +2,7 @@
 
 Protocol (A8):
   * train D3P, factored independent learners and tabular Q on TRAIN seeds 0-19 (attack cycled over
-    tdp/cra/aaa/nma/bfi/none), `--epochs` passes;
+    tdp/cra/mda/nma/bfi/none), `--epochs` passes;
   * tune the rule controller's two thresholds on CALIB seeds 20-29 (grid, objective = mean reward);
   * evaluate every controller FROZEN on EVAL seeds 100-129 for every attack.
 All controllers act on the SleeperGuard (calibrated) system; the protocol baselines (PBFT, static
@@ -28,7 +28,7 @@ from src.agents.simple import RuleController, TabularQController
 from src.config.run_config import RunConfig
 from src.metrics.ground_truth_metrics import summarize
 
-ATTACKS = ("tdp", "cra", "aaa", "nma", "bfi", "none")
+ATTACKS = ("tdp", "cra", "mda", "nma", "bfi", "none")
 
 
 def _eval(ctrl: Controller, base: RunConfig, seeds: List[int], name: str) -> List[Dict[str, Any]]:

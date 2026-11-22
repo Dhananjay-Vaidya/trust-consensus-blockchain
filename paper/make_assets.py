@@ -224,11 +224,6 @@ def e3() -> None:
         tag = {"full": "Full", "no_cusum": "NoCusum", "no_two_timescale": "NoTwo", "no_cap": "NoCap", "none": "None"}[v]
         macro(f"Ethree{tag}FOne", float(h.det_f1.median()), "results/raw/e3_ablation/runs.csv")
         macro(f"Ethree{tag}Delay", float(h.delay_mean.median()), "results/raw/e3_ablation/runs.csv", "{:.1f}")
-    for v in ("full", "no_cusum", "no_two_timescale", "no_cap", "none"):
-        h = df[(df.variant == v) & (df.attack == "aaa")]
-        tag = {"full": "Full", "no_cusum": "NoCusum", "no_two_timescale": "NoTwo", "no_cap": "NoCap", "none": "None"}[v]
-        macro(f"EthreeAaa{tag}FOne", float(h.det_f1.median()), "results/raw/e3_ablation/runs.csv")
-        macro(f"EthreeAaa{tag}Invalid", float(h.invalid_commit_rate.median()), "results/raw/e3_ablation/runs.csv", "{:.4f}")
 
 
 def e4() -> None:
@@ -509,9 +504,91 @@ def e10() -> None:
               "E10: adversarial search against the capped-influence bound (paper/proof.md). A violation = a commit "
               "forced with b below the bound.", "tab:e10")
     if e is not None:
-        g = e.groupby("b").invalid_commit_rate.max()
-        macro("EtenEnvMaxInvalidSafe", float(e[e.predicted_safe].invalid_commit_rate.max()), "results/raw/e10_safety/env.csv", "{:.4f}")
-        macro("EtenEnvMaxInvalidAll", float(g.max()), "results/raw/e10_safety/env.csv", "{:.4f}")
+        src = "results/raw/e10_safety/env.csv"
+        safe0 = e[e.predicted_safe & (e.fault == 0.0)]
+        safe5 = e[e.predicted_safe & (e.fault == 0.05)]
+        unsafe = e[~e.predicted_safe]
+        macro("EtenEnvRunsSafeZero", len(safe0), src)
+        macro("EtenEnvBreachSafeZero", int((safe0.invalid_commit_rate > 0).sum()), src)
+        macro("EtenEnvRunsSafeFive", len(safe5), src)
+        macro("EtenEnvBreachSafeFive", int((safe5.invalid_commit_rate > 0).sum()), src)
+        macro("EtenEnvMaxInvalidSafeFive", float(safe5.invalid_commit_rate.max()), src, "{:.4f}")
+        macro("EtenEnvBreachUnsafe", int((unsafe.invalid_commit_rate > 0).sum()), src)
+        macro("EtenEnvRunsUnsafe", len(unsafe), src)
+        macro("EtenEnvMaxInvalidUnsafe", float(unsafe.invalid_commit_rate.max()), src, "{:.4f}")
+        rows = []
+        for (b, f), g in e.groupby(["b", "fault"]):
+            rows.append({"b": b, "honest fault": f, "bound says safe": bool(b * 2 / 16 < 0.667),
+                         "runs with an invalid commit": f"{int((g.invalid_commit_rate > 0).sum())}/{len(g)}",
+                         "max invalid-commit rate": f"{g.invalid_commit_rate.max():.4f}",
+                         "median F1": f"{g.det_f1.median():.2f}"})
+        tex_table(pd.DataFrame(rows), GEN / "tab_e10_env.tex",
+                  "E10b: full environment, exact cap ($k=16$, $c=2$, $\theta=0.667$; bound safe for $b\le5$), "
+                  "damage-maximising coalition approving invalid transactions at lie rates 0.1/0.3/1.0, 30 seeds each.",
+                  "tab:e10b")
+
+
+def e11() -> None:
+    df = load("e11_adaptive")
+    if df is None:
+        return
+    best = json.loads((RAW / "e11_adaptive" / "best.json").read_text())
+    rows = []
+    for vn in ["legacy_beta", "sg_full", "sg_no_cusum", "sg_no_two_timescale", "sg_no_cap", "sg_none"]:
+        g = df[(df.variant == vn) & df.is_best]
+        bc = best[vn]
+        rows.append({"defence": vn.replace("_", " "), "attacker lie rate": bc["lie_rate"], "b": bc["b"],
+                     "target": bc["target"], "invalid-commit": med_ci(g.invalid_commit_rate),
+                     "valid-reject": med_ci(g.valid_reject_rate), "F1": med_ci(g.det_f1),
+                     "runs w/ invalid commit": f"{int((g.invalid_commit_rate > 0).sum())}/{len(g)}"})
+        tag = "".join(w.capitalize() for w in vn.replace("sg_", "sg ").replace("_", " ").split())
+        macro(f"EelevenRate{tag}", bc["lie_rate"], "results/raw/e11_adaptive/best.json")
+        macro(f"EelevenB{tag}", bc["b"], "results/raw/e11_adaptive/best.json")
+        macro(f"EelevenInvalid{tag}", float(g.invalid_commit_rate.median()), "results/raw/e11_adaptive/runs.csv", "{:.4f}")
+        macro(f"EelevenFOne{tag}", float(g.det_f1.median()), "results/raw/e11_adaptive/runs.csv")
+        macro(f"EelevenReject{tag}", float(g.valid_reject_rate.median()), "results/raw/e11_adaptive/runs.csv", "{:.3f}")
+    tex_table(pd.DataFrame(rows), GEN / "tab_e11.tex",
+              "E11: each defence against the damage-maximising coalition chosen by search on seeds 30-39 "
+              "(lie rate, coalition size b of 16, target), evaluated on seeds 100-129. Median [95\% CI].", "tab:e11")
+    sg = df[df.variant == "sg_full"]
+    macro("EelevenSgBelowBoundBreach", int((sg[sg.b <= 5].invalid_commit_rate > 0).sum()), "results/raw/e11_adaptive/runs.csv")
+    macro("EelevenSgBelowBoundRuns", int((sg.b <= 5).sum()), "results/raw/e11_adaptive/runs.csv")
+
+
+def e12() -> None:
+    df = load("e12_lierate")
+    if df is None:
+        return
+    fig, ax = plt.subplots(figsize=(3.4, 2.2))
+    ax2 = ax.twinx()
+    for be, mk, col in (("sleeper_guard", "s", OKABE[5]), ("legacy_beta", "o", OKABE[1])):
+        g = df[df.backend == be].groupby("lie_rate")
+        ax.plot(g.det_f1.median().index, g.det_f1.median().values, marker=mk, ms=3, color=col,
+                label=f"F1 {be.replace('_', ' ')}")
+        ax.fill_between(g.det_f1.median().index, g.det_f1.quantile(0.25).values, g.det_f1.quantile(0.75).values,
+                        color=col, alpha=0.15)
+    g = df[df.backend == "sleeper_guard"].groupby("lie_rate")
+    ax2.plot(g.honest_quarantines_per_1000.median().index, g.honest_quarantines_per_1000.median().values,
+             "--", marker="^", ms=3, color=OKABE[6], label="honest FQ/1000 (SG)")
+    ax.set_xlabel("coalition lie rate")
+    ax.set_ylabel("detection F1")
+    ax2.set_ylabel("honest false quarantines / 1000 node-steps")
+    ax.set_xscale("log")
+    h1, l1 = ax.get_legend_handles_labels()
+    h2, l2 = ax2.get_legend_handles_labels()
+    ax.legend(h1 + h2, l1 + l2, frameon=False, fontsize=6, loc="center right")
+    fig.tight_layout()
+    fig.savefig(FIGS / "e12_lierate.pdf")
+    plt.close(fig)
+    sg = df[df.backend == "sleeper_guard"].groupby("lie_rate").det_f1.median()
+    half = sg[sg >= 0.5]
+    macro("EtwelveHalfRate", float(half.index.min()) if len(half) else math.nan, "results/raw/e12_lierate/runs.csv")
+    macro("EtwelveFOneLow", float(sg.iloc[0]), "results/raw/e12_lierate/runs.csv")
+    macro("EtwelveLowRate", float(sg.index[0]), "results/raw/e12_lierate/runs.csv")
+    macro("EtwelveFOneHigh", float(sg.iloc[-1]), "results/raw/e12_lierate/runs.csv")
+    fq = df[df.backend == "sleeper_guard"].honest_quarantines_per_1000
+    macro("EtwelveFqMax", float(df[df.backend == "sleeper_guard"].groupby("lie_rate").honest_quarantines_per_1000.median().max()), "results/raw/e12_lierate/runs.csv")
+    _ = fq
 
 
 # ===========================================================================================
@@ -523,7 +600,7 @@ def main() -> None:
     RAW = Path(a.raw)
     GEN.mkdir(parents=True, exist_ok=True)
     FIGS.mkdir(parents=True, exist_ok=True)
-    for f in (e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10):
+    for f in (e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12):
         try:
             f()
             print(f"[assets] {f.__name__} ok")

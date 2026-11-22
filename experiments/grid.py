@@ -4,7 +4,8 @@
       honest fault 0.02/0.05/0.10.
   e2  Does SleeperGuard fix it?   legacy vs SleeperGuard (calibrated); coalition 0.1-0.4;
       t_switch {150,300,450}; attack intensity {0.25, 1.0}; honest fault 0.05.
-  e3  Ablation: full / no-CUSUM / no-two-timescale / no-cap / none; TDP x {0.25, 1.0}, AAA, CRA.
+  e3  Ablation: full / no-CUSUM / no-two-timescale / no-cap / none; TDP x {0.25, 1.0}, CRA.
+      (The adaptive attacker is E11, which searches the attack per defence variant.)
   e6  Audit budget: audit_rate 0.05-1.0, legacy vs SleeperGuard, TDP x {0.25, 1.0}.
   e7  False-positive cost: honest fault 0-0.20 under attack none and TDP; SleeperGuard calibrated
       for the true rate vs fixed at the 0.05 calibration (misspecified); plus a CUSUM-alarm sweep
@@ -58,7 +59,7 @@ def jobs_for(exp: str, seeds: List[int], steps: int) -> List[Dict[str, Any]]:
                 add(cfg, dict(backend=be, coalition=mf, t_switch=t_switch, intensity=inten))
     elif exp == "e3":
         for (atk, inten), (name, ov) in itertools.product(
-                (("tdp", 0.25), ("tdp", 1.0), ("aaa", 0.3), ("cra", 1.0)), ABLATIONS.items()):
+                (("tdp", 0.25), ("tdp", 1.0), ("cra", 1.0)), ABLATIONS.items()):
             cfg = dict(_sg(0.05), attack=atk, attack_intensity=inten, malicious_fraction=0.3125)
             cfg.update(ov)
             add(cfg, dict(variant=name, attack=atk, intensity=inten))
