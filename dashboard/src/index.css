@@ -1,2 +1,4 @@
-@import './styles/tokens.css';
-@import './styles/globals.css';
+@import "@fontsource-variable/ibm-plex-sans";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "./styles/tokens.css";
+@import "./styles/globals.css";

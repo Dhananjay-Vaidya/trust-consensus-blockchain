@@ -1,73 +1,59 @@
-# React + TypeScript + Vite
+# TDCB Lab dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React, TypeScript, and Vite research interface for the FastAPI simulation engine.
 
-Currently, two official plugins are available:
+## Run locally
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+From the repository root, start the engine:
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```powershell
+python -m uvicorn api.main:app --reload --port 8000
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+In another terminal:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```powershell
+cd dashboard
+npm ci
+npm run dev
 ```
+
+Open the local URL printed by Vite. REST requests and WebSocket streams are proxied to port 8000. No frontend environment variables are required for local development.
+
+## Production build
+
+```powershell
+npm --prefix dashboard run build
+python -m uvicorn api.main:app --port 8000
+```
+
+Open http://localhost:8000. Run the backend from the repository root so it can locate the dashboard build and experiment artifacts.
+
+## Workspace
+
+- Live simulation: configuration, interactive trust network, node inspector, measured episode charts, and event log.
+- Metrics explorer: saved CSV metrics and an episode-window scrubber.
+- Attack laboratory: attack descriptions and summaries calculated from recorded runs.
+- Scenario library: illustrative IoT presets; loading a preset opens experiment setup.
+- Experiment results: search, agent and attack filters, sorting, replay, CSV download, and comparison selection.
+- Compare runs: up to six recorded F1 trajectories and configuration summaries.
+- System architecture: interactive descriptions of the implemented simulation components.
+- Export and present: CSV/ZIP downloads, current configuration JSON, screen recording, and the paper-figure command.
+
+The results UI uses /experiments. The /results path is reserved for the backend API.
+
+## Presentation and accessibility
+
+Use **Present** in the header to hide navigation, and **Exit presentation** to restore it. Print styles remove navigation and controls.
+
+Use Alt+1 through Alt+8 to switch views. Escape closes the node inspector. Standard browser copy, refresh, and export shortcuts are preserved.
+
+The UI includes keyboard focus indicators, labeled controls, responsive layouts, reduced-motion support, and locally bundled IBM Plex fonts.
+
+## Interpreting results
+
+Charts use recorded values. Unavailable metrics are not replaced with fabricated measurements. The network uses schematic delegate links, not measured physical topology. Transaction counts are not labeled as transactions per second.
+
+Scenario presets and attack descriptions are illustrative. Performance summaries are drawn from saved experiments with potentially different settings; use matched configurations and repeated seeds for research comparisons.
+
+The optional FHE path uses TenSEAL if available and otherwise mock encryption. The UI describes this implementation limitation explicitly.

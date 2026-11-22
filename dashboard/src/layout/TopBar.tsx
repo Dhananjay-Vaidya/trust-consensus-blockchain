@@ -1,69 +1,50 @@
-import { useLocation } from 'react-router-dom';
-
-import { useSimulationStore } from '../store/simulationStore';
-
-const ROUTE_TITLES: Record<string, string> = {
-  '/':           'Live Simulation',
-  '/metrics':    'Metrics Explorer',
-  '/attack-lab': 'Attack Lab',
-  '/scenarios':  'Scenarios',
-  '/results':    'Results Browser',
-  '/compare':    'Compare Runs',
-  '/explainer':  'System Explainer',
-  '/export':     'Export',
+import { useLocation } from "react-router-dom";
+import { CornersOut, CornersIn } from "@phosphor-icons/react";
+import { useSimulationStore } from "../store/simulationStore";
+const titles: Record<string, string> = {
+  "/": "Live simulation",
+  "/metrics": "Metrics explorer",
+  "/attack-lab": "Attack laboratory",
+  "/scenarios": "Scenario library",
+  "/experiments": "Experiment results",
+  "/compare": "Compare runs",
+  "/explainer": "System architecture",
+  "/export": "Export & present",
 };
-
-export function TopBar() {
+export function TopBar({
+  presentation,
+  onPresentation,
+}: {
+  presentation: boolean;
+  onPresentation: () => void;
+}) {
   const { pathname } = useLocation();
-  const status         = useSimulationStore((s) => s.status);
-  const currentEpisode = useSimulationStore((s) => s.currentEpisode);
-  const totalEpisodes  = useSimulationStore((s) => s.totalEpisodes);
-  const latestStep     = useSimulationStore((s) => s.latestStep);
-
-  const title = ROUTE_TITLES[pathname] ?? 'Dashboard';
-  const progress = totalEpisodes > 0 ? (currentEpisode / totalEpisodes) * 100 : 0;
-  const isRunning = status === 'running';
-
+  const status = useSimulationStore((s) => s.status);
+  const episode = useSimulationStore((s) => s.currentEpisode);
+  const total = useSimulationStore((s) => s.totalEpisodes);
   return (
-    <header style={{
-      position: 'fixed', top: 0,
-      left: 'var(--sidebar-w)', right: 0,
-      height: 'var(--topbar-h)',
-      background: 'rgba(10,13,20,0.85)',
-      backdropFilter: 'blur(12px)',
-      borderBottom: '1px solid var(--border)',
-      display: 'flex', alignItems: 'center',
-      padding: '0 20px', gap: 20, zIndex: 90,
-    }}>
-      {/* Breadcrumb */}
-      <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', flexShrink: 0 }}>
-        {title}
-      </span>
-
-      {/* Live run indicator */}
-      {isRunning && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, minWidth: 0 }}>
-          <span style={{ fontSize: 12, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>
-            Episode {currentEpisode} / {totalEpisodes}
+    <header className="topbar">
+      <div className="breadcrumb">
+        <span>Research workspace</span>
+        <span className="breadcrumb-slash">/</span>
+        <strong>{titles[pathname] ?? "Dashboard"}</strong>
+      </div>
+      <div className="topbar-actions">
+        {status === "running" && (
+          <span className="running-label">
+            <span className="status-dot online" />
+            Episode {episode} / {total || "?"}
           </span>
-          <div style={{ width: 160, height: 4, background: 'var(--bg-active)', borderRadius: 2, flexShrink: 0 }}>
-            <div style={{
-              height: '100%', background: 'var(--accent)', borderRadius: 2,
-              width: `${progress}%`, transition: 'width 0.3s',
-            }} />
-          </div>
-          {latestStep && (
-            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--green)', whiteSpace: 'nowrap' }}>
-              F1 {latestStep.f1_score.toFixed(3)}
-            </span>
-          )}
-        </div>
-      )}
-
-      <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
-        <span style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-          TDCB-Sim v2.0
-        </span>
+        )}
+        <button
+          className={`quiet-button ${presentation ? "selected" : ""}`}
+          onClick={onPresentation}
+          aria-pressed={presentation}
+          title="Hide navigation for presentation"
+        >
+          {presentation ? <CornersIn size={18} /> : <CornersOut size={18} />}
+          <span>{presentation ? "Exit presentation" : "Present"}</span>
+        </button>
       </div>
     </header>
   );

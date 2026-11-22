@@ -1,194 +1,245 @@
-import { useState } from 'react';
-import toast from 'react-hot-toast';
-
-import { Badge } from '../components/ui/Badge';
-
-const FIGURES = [
-  { id: '1', label: 'Fig 1: F1 score vs episode (all agents × all attacks)' },
-  { id: '2', label: 'Fig 2: Trust separation over time' },
-  { id: '3', label: 'Fig 3: Baseline comparison bar chart' },
-  { id: '4', label: 'Fig 4: Ablation study' },
-  { id: '5', label: 'Fig 5: Scalability curves' },
-  { id: '6', label: 'Fig 6: Malicious fraction sweep' },
-  { id: '7', label: 'Fig 7: Trust network graph (PNG snapshot)' },
-  { id: '8', label: 'Fig 8: Scenario comparison' },
-];
-
+import { useEffect, useRef, useState } from "react";
+import {
+  DownloadSimple,
+  FileCsv,
+  FileCode,
+  VideoCamera,
+  Stop,
+  Printer,
+  Copy,
+  Check,
+} from "@phosphor-icons/react";
+import { useResults } from "../hooks/useResults";
+import { useSimulationStore } from "../store/simulationStore";
+function download(name: string, content: string, type: string) {
+  const url = URL.createObjectURL(new Blob([content], { type }));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
 export function ExportPage() {
-  const [selected, setSelected] = useState<Set<string>>(new Set(['1','2','3']));
-  const [format, setFormat]     = useState('png');
-  const [recording, setRecording] = useState(false);
-  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
-  const [recordingUrl, setRecordingUrl]   = useState<string | null>(null);
-
-  const toggle = (id: string) => setSelected((s) => {
-    const n = new Set(s);
-    n.has(id) ? n.delete(id) : n.add(id);
-    return n;
-  });
-
-  const exportFigures = () => {
-    const ids = [...selected].join(',');
-    window.open(`/export/figures?figures=${ids}&format=${format}`, '_blank');
-  };
-
-  const startRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-      const mr = new MediaRecorder(stream, { mimeType: 'video/webm' });
-      const chunks: Blob[] = [];
-      mr.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
-      mr.onstop = () => {
-        const blob = new Blob(chunks, { type: 'video/webm' });
-        setRecordingUrl(URL.createObjectURL(blob));
-        stream.getTracks().forEach((t) => t.stop());
-      };
-      mr.start();
-      setMediaRecorder(mr);
-      setRecording(true);
-      toast('🔴 Recording started — 90 second limit', { duration: 3000 });
-      setTimeout(() => { mr.stop(); setRecording(false); }, 90000);
-    } catch {
-      toast.error('Screen capture not available');
-    }
-  };
-
-  const stopRecording = () => {
-    mediaRecorder?.stop();
+  const { data: runs = [] } = useResults();
+  const [runId, setRunId] = useState("");
+  const config = useSimulationStore((s) => s.config);
+  const [recording, setRecording] = useState(false),
+    [recordingUrl, setRecordingUrl] = useState<string | null>(null),
+    [error, setError] = useState(""),
+    [copied, setCopied] = useState(false);
+  const recorder = useRef<MediaRecorder | null>(null),
+    stream = useRef<MediaStream | null>(null),
+    timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const stop = () => {
+    clearTimeout(timer.current);
+    if (recorder.current?.state === "recording") recorder.current.stop();
     setRecording(false);
   };
-
-  const BIBTEX = `@inproceedings{vaidya2025tdcb,
-  title     = {{ABAC-TDCB-FHE}: Adaptive Trust-Based Delegated Consensus
-               for Secure {IoT} Blockchains with Reinforcement Learning},
-  author    = {Vaidya, Dhananjay and others},
-  booktitle = {Proceedings of IEEE International Conference on
-               Blockchain and Cryptocurrency (ICBC)},
-  year      = {2025},
-  note      = {Under review}
-}`;
-
+  useEffect(
+    () => () => {
+      clearTimeout(timer.current);
+      if (recorder.current?.state === "recording") recorder.current.stop();
+      stream.current?.getTracks().forEach((t) => t.stop());
+    },
+    [],
+  );
+  useEffect(
+    () => () => {
+      if (recordingUrl) URL.revokeObjectURL(recordingUrl);
+    },
+    [recordingUrl],
+  );
+  const record = async () => {
+    setError("");
+    try {
+      stream.current = await navigator.mediaDevices.getDisplayMedia({
+        video: true,
+      });
+      const mr = new MediaRecorder(stream.current);
+      recorder.current = mr;
+      const chunks: Blob[] = [];
+      mr.ondataavailable = (e) => {
+        if (e.data.size) chunks.push(e.data);
+      };
+      mr.onstop = () => {
+        setRecordingUrl(
+          URL.createObjectURL(new Blob(chunks, { type: mr.mimeType })),
+        );
+        stream.current?.getTracks().forEach((t) => t.stop());
+        setRecording(false);
+        clearTimeout(timer.current);
+      };
+      stream.current.getVideoTracks()[0].onended = stop;
+      mr.start();
+      setRecording(true);
+      timer.current = setTimeout(stop, 90000);
+    } catch {
+      setError(
+        "Screen recording did not start. Allow screen sharing in your browser and try again.",
+      );
+    }
+  };
+  const command = "python generate_paper_figures.py";
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16, maxWidth: 800 }}>
-      <div>
-        <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 4 }}>Export</div>
-        <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
-          Export figures, data, and LaTeX tables for IEEE paper submission.
-        </div>
-      </div>
-
-      {/* Figure Export */}
-      <div style={{ background: 'var(--bg-panel)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: 18 }}>
-        <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>
-          Figure Export
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 14 }}>
-          {FIGURES.map((f) => (
-            <label key={f.id} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', fontSize: 13, color: 'var(--text-secondary)' }}>
-              <input type="checkbox" checked={selected.has(f.id)} onChange={() => toggle(f.id)}
-                style={{ accentColor: 'var(--accent)', width: 14, height: 14 }} />
-              {f.label}
-            </label>
-          ))}
-        </div>
-        <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Format:</span>
-          {(['png','svg','pdf'] as const).map((fmt) => (
-            <button key={fmt} onClick={() => setFormat(fmt)}
-              style={{ padding: '5px 12px', borderRadius: 'var(--radius-sm)', fontSize: 11, fontWeight: 600, cursor: 'pointer',
-                background: format === fmt ? 'var(--accent-dim)' : 'var(--bg-elevated)',
-                border: `1px solid ${format === fmt ? 'var(--accent)' : 'var(--border)'}`,
-                color: format === fmt ? 'var(--accent)' : 'var(--text-secondary)' }}>
-              {fmt.toUpperCase()}
-            </button>
-          ))}
-          <button onClick={exportFigures} disabled={selected.size === 0}
-            style={{ marginLeft: 'auto', padding: '8px 20px', borderRadius: 'var(--radius-md)',
-              background: selected.size > 0 ? 'var(--accent)' : 'var(--bg-active)',
-              color: 'white', fontWeight: 600, fontSize: 13, border: 'none',
-              cursor: selected.size > 0 ? 'pointer' : 'not-allowed' }}>
-            Export {selected.size} Figure{selected.size !== 1 ? 's' : ''}
-          </button>
-        </div>
-      </div>
-
-      {/* Data Export */}
-      <div style={{ background: 'var(--bg-panel)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: 18 }}>
-        <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>
-          Data Export
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-          {[
-            { label: '↓ All Results CSV', href: '/export/results' },
-            { label: '↓ Statistical Report', href: '/export/statistics' },
-            { label: '↓ LaTeX Table (.tex)', href: '/export/latex_table' },
-          ].map(({ label, href }) => (
-            <a key={label} href={href}
-              style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px',
-                borderRadius: 'var(--radius-md)', background: 'var(--bg-elevated)',
-                border: '1px solid var(--border)', color: 'var(--text-primary)',
-                fontSize: 12, fontWeight: 500, textDecoration: 'none',
-                transition: 'border-color 120ms' }}>
-              {label}
-            </a>
-          ))}
-        </div>
-      </div>
-
-      {/* BibTeX */}
-      <div style={{ background: 'var(--bg-panel)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: 18 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-            BibTeX Citation
-          </div>
-          <button onClick={() => { navigator.clipboard.writeText(BIBTEX); toast.success('Copied BibTeX'); }}
-            style={{ padding: '5px 12px', borderRadius: 'var(--radius-sm)', fontSize: 11, cursor: 'pointer',
-              background: 'var(--bg-elevated)', border: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
-            Copy
-          </button>
-        </div>
-        <pre style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-secondary)',
-          background: 'var(--bg-elevated)', borderRadius: 'var(--radius-sm)',
-          padding: 12, overflowX: 'auto', margin: 0, lineHeight: 1.6 }}>
-          {BIBTEX}
-        </pre>
-      </div>
-
-      {/* Demo Recording */}
-      <div style={{ background: 'var(--bg-panel)', border: `1px solid ${recording ? 'var(--red)' : 'var(--border)'}`, borderRadius: 'var(--radius-lg)', padding: 18 }}>
-        <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
-          Demo Video Recording
-        </div>
-        <p style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 12, lineHeight: 1.6 }}>
-          Capture a 90-second screen recording for conference demo video. Automatically stops after 90 seconds.
+    <div className="export-grid">
+      <section className="export-card">
+        <span className="export-icon">
+          <FileCsv size={25} />
+        </span>
+        <h2>Experiment data</h2>
+        <p>
+          Download source metrics for an individual experiment, or collect all
+          saved results in one archive.
         </p>
-        <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
-          {recording && (
-            <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--red)' }}>
-              <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--red)', animation: 'pulse-dot 1s infinite' }} />
-              Recording…
-            </span>
+        <label className="field-label" htmlFor="export-run">
+          Recorded experiment
+        </label>
+        <select
+          id="export-run"
+          value={runId}
+          onChange={(e) => setRunId(e.target.value)}
+        >
+          <option value="">Choose an experiment</option>
+          {runs.map((r) => (
+            <option key={r.run_id} value={r.run_id}>
+              {r.run_id}
+            </option>
+          ))}
+        </select>
+        <div className="export-actions">
+          {runId ? (
+            <a className="quiet-button" href={`/results/${runId}/download`}>
+              <DownloadSimple size={16} />
+              Download CSV
+            </a>
+          ) : (
+            <button className="quiet-button" disabled>
+              Select a run to download
+            </button>
           )}
-          <button onClick={recording ? stopRecording : () => void startRecording()}
-            style={{ padding: '9px 20px', borderRadius: 'var(--radius-md)', fontWeight: 600, fontSize: 13, border: 'none', cursor: 'pointer',
-              background: recording ? 'var(--red)' : 'var(--bg-elevated)',
-              color: recording ? 'white' : 'var(--text-secondary)' }}>
-            {recording ? '⏹ Stop Recording' : '⏺ Record Demo (90s)'}
+          <a className="quiet-button" href="/export/results">
+            All results ZIP
+          </a>
+        </div>
+        <div className="export-footnote">
+          {runs.length} saved experiments available
+        </div>
+      </section>
+      <section className="export-card">
+        <span className="export-icon">
+          <FileCode size={25} />
+        </span>
+        <h2>Reproducibility</h2>
+        <p>
+          Save the current workspace configuration with its agent, attack, seed,
+          and training parameters.
+        </p>
+        <pre className="configuration-preview">
+          {JSON.stringify(
+            {
+              agent: config.agent,
+              attack: config.attack,
+              nodes: config.nodes,
+              episodes: config.episodes,
+              seed: config.seed,
+            },
+            null,
+            2,
+          )}
+        </pre>
+        <button
+          className="quiet-button"
+          onClick={() =>
+            download(
+              "tdcb-experiment-config.json",
+              JSON.stringify(config, null, 2),
+              "application/json",
+            )
+          }
+        >
+          <DownloadSimple size={16} />
+          Save configuration JSON
+        </button>
+      </section>
+      <section className="export-card">
+        <span className="export-icon">
+          <VideoCamera size={25} />
+        </span>
+        <h2>Presentation recording</h2>
+        <p>
+          Capture a browser tab, window, or screen. Recording stops
+          automatically after 90 seconds.
+        </p>
+        <div className="recording-preview">
+          <VideoCamera size={32} weight="light" />
+          <span>
+            {recording
+              ? "Recording in progress"
+              : "Ready to capture your demonstration"}
+          </span>
+        </div>
+        {error && (
+          <p className="form-error" role="alert">
+            {error}
+          </p>
+        )}
+        <div className="export-actions">
+          <button
+            className={`quiet-button ${recording ? "recording-active" : ""}`}
+            onClick={() => (recording ? stop() : void record())}
+          >
+            {recording ? <Stop size={16} /> : <VideoCamera size={16} />}{" "}
+            {recording ? "Stop recording" : "Start recording"}
           </button>
           {recordingUrl && (
-            <a href={recordingUrl} download="tdcb-sim-demo.webm"
-              style={{ padding: '9px 20px', borderRadius: 'var(--radius-md)', fontWeight: 600, fontSize: 13,
-                background: 'var(--green)', color: 'white', textDecoration: 'none' }}>
-              ↓ Download Recording
+            <a
+              className="quiet-button"
+              href={recordingUrl}
+              download="tdcb-presentation.webm"
+            >
+              <DownloadSimple size={16} />
+              Download video
             </a>
           )}
         </div>
-      </div>
-
-      {/* License */}
-      <div style={{ fontSize: 11, color: 'var(--text-muted)', textAlign: 'center', padding: '8px 0' }}>
-        <Badge label="MIT License" variant="muted" /> &nbsp; TDCB-Sim v2.0 · IEEE Research Dashboard
-      </div>
+      </section>
+      <section className="export-card">
+        <span className="export-icon">
+          <Printer size={25} />
+        </span>
+        <h2>Paper figures</h2>
+        <p>
+          Generate figures from saved experiment results using the repository's
+          plotting workflow.
+        </p>
+        <div className="command-block">
+          <code>{command}</code>
+          <button
+            className="text-button"
+            aria-label="Copy figure generation command"
+            onClick={async () => {
+              try {
+                await navigator.clipboard.writeText(command);
+                setCopied(true);
+              } catch {
+                setError(
+                  "Could not copy command. Select and copy the text directly.",
+                );
+              }
+            }}
+          >
+            {copied ? <Check size={17} /> : <Copy size={17} />}
+          </button>
+        </div>
+        <p className="data-note">
+          Run this command from the repository root. Check each figure against
+          the underlying CSV before including it in your paper.
+        </p>
+        <button className="quiet-button" onClick={() => window.print()}>
+          <Printer size={16} />
+          Print this view
+        </button>
+      </section>
     </div>
   );
 }

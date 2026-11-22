@@ -1,12 +1,17 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
-import { apiClient } from '../api/client';
-import type { EpisodeSummary, ResultRunMetadata, SimulationConfig, StepEvent } from '../types';
+import { apiClient } from "../api/client";
+import type {
+  EpisodeSummary,
+  ResultRunMetadata,
+  SimulationConfig,
+  StepEvent,
+} from "../types";
 
 const DEFAULT_CONFIG: SimulationConfig = {
-  agent: 'marl',
-  attack: 'cra',
-  consensus: 'tdcb',
+  agent: "marl",
+  attack: "cra",
+  consensus: "tdcb",
   nodes: 16,
   episodes: 50,
   steps_per_episode: 30,
@@ -18,8 +23,9 @@ const DEFAULT_CONFIG: SimulationConfig = {
 
 interface SimulationStore {
   runId: string | null;
+  streamVersion: number;
   replayRunId: string | null;
-  status: 'idle' | 'running' | 'completed' | 'error' | 'stopped';
+  status: "idle" | "running" | "completed" | "error" | "stopped";
   config: SimulationConfig;
   currentEpisode: number;
   totalEpisodes: number;
@@ -29,13 +35,13 @@ interface SimulationStore {
   isMalicious: Record<string, boolean>;
   isDetected: Record<string, boolean>;
   delegateNodes: string[];
-  webSocketState: 'idle' | 'connecting' | 'open' | 'closed' | 'error';
+  webSocketState: "idle" | "connecting" | "open" | "closed" | "error";
   selectedComparisonRuns: string[];
   activeRuns: ResultRunMetadata[];
   selectedNodeId: string | null;
 
   setConfig: (partial: Partial<SimulationConfig>) => void;
-  setWebSocketState: (state: SimulationStore['webSocketState']) => void;
+  setWebSocketState: (state: SimulationStore["webSocketState"]) => void;
   startSimulation: () => Promise<void>;
   stopSimulation: () => Promise<void>;
   beginReplay: (runId: string) => void;
@@ -48,7 +54,8 @@ interface SimulationStore {
 
 export const useSimulationStore = create<SimulationStore>((set, get) => ({
   runId: null,
-  status: 'idle',
+  streamVersion: 0,
+  status: "idle",
   config: DEFAULT_CONFIG,
   currentEpisode: 0,
   totalEpisodes: 0,
@@ -58,20 +65,21 @@ export const useSimulationStore = create<SimulationStore>((set, get) => ({
   isMalicious: {},
   isDetected: {},
   delegateNodes: [],
-  webSocketState: 'idle',
+  webSocketState: "idle",
   replayRunId: null,
   selectedComparisonRuns: [],
   activeRuns: [],
   selectedNodeId: null,
 
-  setConfig: (partial) => set((state) => ({ config: { ...state.config, ...partial } })),
+  setConfig: (partial) =>
+    set((state) => ({ config: { ...state.config, ...partial } })),
   setWebSocketState: (webSocketState) => set({ webSocketState }),
   selectNode: (nodeId) => set({ selectedNodeId: nodeId }),
 
   startSimulation: async () => {
     const config = get().config;
     set({
-      status: 'running',
+      status: "running",
       currentEpisode: 0,
       totalEpisodes: config.episodes,
       latestStep: null,
@@ -83,24 +91,38 @@ export const useSimulationStore = create<SimulationStore>((set, get) => ({
       replayRunId: null,
       selectedNodeId: null,
     });
-    const response = await apiClient.post('/simulation/start', config);
-    set({ runId: response.data.run_id });
+    try {
+      const response = await apiClient.post("/simulation/start", config);
+      set({
+        runId: response.data.run_id,
+        streamVersion: get().streamVersion + 1,
+      });
+    } catch (error) {
+      set({ status: "error", runId: null });
+      throw error;
+    }
   },
 
   stopSimulation: async () => {
+    if (get().replayRunId) {
+      set({ status: "stopped", runId: null, replayRunId: null });
+      return;
+    }
     const runId = get().runId;
     if (runId) {
       await apiClient.post(`/simulation/${runId}/stop`);
     }
-    set({ status: 'stopped' });
+    set({ status: "stopped" });
   },
 
   beginReplay: (runId) => {
     set({
       runId,
       replayRunId: runId,
-      status: 'running',
+      streamVersion: get().streamVersion + 1,
+      status: "running",
       currentEpisode: 0,
+      totalEpisodes: Number(runId.split("_")[1]) || 0,
       latestStep: null,
       episodeHistory: [],
       trustScores: {},
@@ -155,5 +177,9 @@ export const useSimulationStore = create<SimulationStore>((set, get) => ({
       ],
     })),
 
-  handleSimulationEnd: () => set({ status: 'completed', webSocketState: 'closed' }),
+  handleSimulationEnd: () =>
+    set((state) => ({
+      status: state.status === "stopped" ? "stopped" : "completed",
+      webSocketState: "closed",
+    })),
 }));

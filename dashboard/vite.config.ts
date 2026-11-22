@@ -1,21 +1,25 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/simulation': {
-        target: 'http://localhost:8000',
+      "/simulation": {
+        target: "http://localhost:8000",
         changeOrigin: true,
         ws: true,
       },
-      '/results': {
-        target: 'http://localhost:8000',
+      "/results": {
+        target: "http://localhost:8000",
         changeOrigin: true,
       },
-      '/health': {
-        target: 'http://localhost:8000',
+      "/export/": {
+        target: "http://localhost:8000",
+        changeOrigin: true,
+      },
+      "/health": {
+        target: "http://localhost:8000",
         changeOrigin: true,
       },
     },

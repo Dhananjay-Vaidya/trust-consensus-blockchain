@@ -1,24 +1,78 @@
-import { Outlet } from 'react-router-dom';
-
-import { Sidebar } from './Sidebar';
-import { TopBar } from './TopBar';
-
+import { useSimulationStore } from "../store/simulationStore";
+import { useSimulationWebSocket } from "../hooks/useSimulationWebSocket";
+import { Suspense, useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import { Sidebar } from "./Sidebar";
+import { TopBar } from "./TopBar";
+const descriptions: Record<string, [string, string]> = {
+  "/metrics": [
+    "Metrics explorer",
+    "Inspect recorded episode metrics and trace model behavior over time.",
+  ],
+  "/attack-lab": [
+    "Attack laboratory",
+    "Examine adversarial strategies and configure the threat model.",
+  ],
+  "/scenarios": [
+    "Scenario library",
+    "Explore deployment contexts and load reproducible experiment configurations.",
+  ],
+  "/experiments": [
+    "Experiment results",
+    "Browse recorded runs, replay event streams, and download source data.",
+  ],
+  "/compare": [
+    "Compare runs",
+    "Evaluate recorded results across agents and attack configurations.",
+  ],
+  "/explainer": [
+    "System architecture",
+    "Follow the path from transaction authorization to adaptive consensus.",
+  ],
+  "/export": [
+    "Export & present",
+    "Prepare experiment data and supporting material for your presentation.",
+  ],
+};
 export function AppLayout() {
+  const runId = useSimulationStore((s) => s.runId);
+  const replay = useSimulationStore((s) => s.replayRunId);
+  const streamVersion = useSimulationStore((s) => s.streamVersion);
+  useSimulationWebSocket(runId, replay ? "replay" : "live", streamVersion);
+  const [presentation, setPresentation] = useState(false);
+  const { pathname } = useLocation();
+  const heading = descriptions[pathname];
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-base)' }}>
+    <div className={`app-shell${presentation ? " presentation-mode" : ""}`}>
+      <a className="skip-link" href="#main-content">
+        Skip to content
+      </a>
       <Sidebar />
-      <div style={{
-        marginLeft: 'var(--sidebar-w)',
-        flex: 1, minWidth: 0,
-        display: 'flex', flexDirection: 'column',
-      }}>
-        <TopBar />
-        <main style={{
-          flex: 1, padding: 20,
-          marginTop: 'var(--topbar-h)',
-          overflowY: 'auto', overflowX: 'hidden',
-        }}>
-          <Outlet />
+      <div className="app-body">
+        <TopBar
+          presentation={presentation}
+          onPresentation={() => setPresentation((p) => !p)}
+        />
+        <main
+          id="main-content"
+          className={`main-content${pathname === "/" ? " live-main" : " secondary-page"}`}
+        >
+          {heading && (
+            <div className="page-heading">
+              <div className="eyebrow">TDCB research platform</div>
+              <h1>{heading[0]}</h1>
+              <p>{heading[1]}</p>
+            </div>
+          )}
+          <Suspense
+            fallback={<div className="loading-state">Loading workspace...</div>}
+          >
+            <Outlet />
+          </Suspense>
+          <footer className="workspace-footer">
+            <span>Trust-driven delegated consensus</span>
+            <span>ABAC / TDCB / Reinforcement learning</span>
+          </footer>
         </main>
       </div>
     </div>

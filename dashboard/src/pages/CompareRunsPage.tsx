@@ -1,180 +1,204 @@
-import { useMemo } from 'react';
+import { useMemo } from "react";
+import { Scales } from "@phosphor-icons/react";
 import {
-  CartesianGrid, Legend, Line, LineChart,
-  PolarAngleAxis, PolarGrid, Radar, RadarChart,
-  ResponsiveContainer, Tooltip, XAxis, YAxis,
-} from 'recharts';
-
-import { useCompareRuns, useResults } from '../hooks/useResults';
-import { useSimulationStore } from '../store/simulationStore';
-import { Badge, badgeVariant } from '../components/ui/Badge';
-import type { ResultRunMetadata } from '../types';
-
-const RUN_COLOURS = ['var(--accent)', 'var(--green)', 'var(--amber)', 'var(--purple)', 'var(--cyan)', 'var(--pink)'];
-
-const TT = {
-  contentStyle: { background: 'var(--bg-elevated)', border: '1px solid var(--border-strong)', borderRadius: 8 },
-  labelStyle: { color: 'var(--text-secondary)', fontSize: 11 },
-};
-
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { useCompareRuns, useResults } from "../hooks/useResults";
+import { useSimulationStore } from "../store/simulationStore";
+const colors = [
+  "#167567",
+  "#397991",
+  "#996c23",
+  "#6b6688",
+  "#986078",
+  "#465d6b",
+];
 export function CompareRunsPage() {
-  const { data: runs = [] } = useResults();
-  const selectedComparisonRuns = useSimulationStore((s) => s.selectedComparisonRuns);
-  const toggleComparisonRun    = useSimulationStore((s) => s.toggleComparisonRun);
-
-  const selectedRuns = useMemo(
-    () => (runs as ResultRunMetadata[]).filter((r) => selectedComparisonRuns.includes(r.run_id)),
-    [runs, selectedComparisonRuns],
-  );
-
-  const comparison = useCompareRuns(selectedComparisonRuns, 'F1 Score');
-
-  const lineData = useMemo(() => {
+  const { data: runs = [], isError } = useResults();
+  const ids = useSimulationStore((s) => s.selectedComparisonRuns);
+  const toggle = useSimulationStore((s) => s.toggleComparisonRun);
+  const selected = runs.filter((r) => ids.includes(r.run_id));
+  const comparison = useCompareRuns(ids, "F1 Score");
+  const data = useMemo(() => {
     if (!comparison.data) return [];
-    const maxLen = Math.max(0, ...Object.values(comparison.data.series).map((s) => s.length));
-    return Array.from({ length: maxLen }, (_, i) => {
-      const row: Record<string, number> = { ep: i + 1 };
-      selectedRuns.forEach((r) => { row[r.run_id.slice(0, 8)] = comparison.data!.series[r.run_id]?.[i] ?? 0; });
-      return row;
-    });
-  }, [comparison.data, selectedRuns]);
-
-  const radarData = useMemo(() => [
-    { metric: 'Final F1',    ...Object.fromEntries(selectedRuns.map((r) => [r.run_id.slice(0,8), r.final_f1 ?? 0])) },
-    { metric: 'Node Scale',  ...Object.fromEntries(selectedRuns.map((r) => [r.run_id.slice(0,8), Math.min(Number(r.nodes)/128, 1)])) },
-    { metric: 'Episodes',    ...Object.fromEntries(selectedRuns.map((r) => [r.run_id.slice(0,8), Math.min(r.episodes/500, 1)])) },
-    { metric: 'Throughput',  ...Object.fromEntries(selectedRuns.map((r) => [r.run_id.slice(0,8), 0.7])) },
-    { metric: 'Convergence', ...Object.fromEntries(selectedRuns.map((r) => [r.run_id.slice(0,8), 0.65])) },
-    { metric: 'Trust Sep.',  ...Object.fromEntries(selectedRuns.map((r) => [r.run_id.slice(0,8), r.final_f1 ?? 0])) },
-  ], [selectedRuns]);
-
+    const count = Math.max(
+      0,
+      ...Object.values(comparison.data.series).map((s) => s.length),
+    );
+    return Array.from({ length: count }, (_, i) =>
+      Object.fromEntries([
+        ["episode", i + 1],
+        ...ids.map((id) => [id, comparison.data!.series[id]?.[i] ?? null]),
+      ]),
+    );
+  }, [comparison.data, ids]);
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      {/* Run chips */}
-      <div>
-        <div style={{ fontSize: 12, color: 'var(--text-secondary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>
-          Selected Runs (max 6)
+    <div className="compare-workspace">
+      <section className="data-panel">
+        <div className="panel-heading">
+          <div>
+            <h2>Select experiments</h2>
+            <p>Compare up to six recorded trajectories</p>
+          </div>
+          <span className="neutral-tag">{ids.length} / 6 selected</span>
         </div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-          {(runs as ResultRunMetadata[]).slice(0, 20).map((r) => {
-            const sel = selectedComparisonRuns.includes(r.run_id);
-            const colIdx = selectedComparisonRuns.indexOf(r.run_id);
-            const colour = colIdx >= 0 ? RUN_COLOURS[colIdx] : 'var(--text-muted)';
+        <div className="comparison-selector">
+          {runs.map((r) => {
+            const active = ids.includes(r.run_id);
             return (
-              <button key={r.run_id} onClick={() => toggleComparisonRun(r.run_id)}
-                style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px',
-                  borderRadius: 'var(--radius-xl)', cursor: 'pointer',
-                  background: sel ? `${colour}18` : 'var(--bg-panel)',
-                  border: `1px solid ${sel ? colour : 'var(--border)'}`,
-                  color: sel ? colour : 'var(--text-secondary)', fontSize: 11, fontWeight: 500 }}>
-                {sel && <span style={{ width: 8, height: 8, borderRadius: '50%', background: colour, flexShrink: 0 }} />}
-                {r.run_id.slice(0, 8)}
-                <Badge label={r.agent.toUpperCase()} variant={badgeVariant(r.agent)} />
-                <Badge label={r.attack.toUpperCase()} variant={badgeVariant(r.attack)} />
+              <button
+                className={`comparison-option ${active ? "selected" : ""}`}
+                key={r.run_id}
+                onClick={() => toggle(r.run_id)}
+                aria-pressed={active}
+                disabled={!active && ids.length >= 6}
+              >
+                <span className="comparison-option-title">
+                  {r.agent.toUpperCase()} / {r.attack.toUpperCase()}
+                  <strong>{r.final_f1?.toFixed(3) ?? "--"}</strong>
+                </span>
+                <small>
+                  {r.nodes} nodes / {r.episodes} episodes
+                </small>
+                <span className="run-identifier" title={r.run_id}>
+                  {r.run_id}
+                </span>
               </button>
             );
           })}
-          {runs.length === 0 && (
-            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>No completed runs. Run simulations first.</span>
+          {!runs.length && (
+            <p className="data-note">
+              {isError
+                ? "Could not load experiments. Check the engine connection."
+                : "No saved experiments available."}
+            </p>
           )}
         </div>
-      </div>
-
-      {selectedRuns.length < 2 && (
-        <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-muted)', fontSize: 13 }}>
-          Select at least 2 runs above to compare.
+      </section>
+      {selected.length < 2 ? (
+        <div className="data-panel empty-state">
+          <Scales size={34} weight="light" />
+          <h3>Compare recorded outcomes</h3>
+          <p>
+            Select at least two experiments. For a controlled comparison, match
+            node count, malicious fraction, training budget, and seed.
+          </p>
         </div>
-      )}
-
-      {selectedRuns.length >= 2 && (
+      ) : (
         <>
-          {/* F1 Line Chart */}
-          <div style={{ background: 'var(--bg-panel)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '14px 16px' }}>
-            <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
-              F1 Score Trajectory
-            </div>
-            <ResponsiveContainer width="100%" height={280}>
-              <LineChart data={lineData}>
-                <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" />
-                <XAxis dataKey="ep" stroke="var(--text-muted)" tick={{ fontSize: 10 }} />
-                <YAxis domain={[0, 1.05]} stroke="var(--text-muted)" tick={{ fontSize: 10 }} />
-                <Tooltip {...TT} />
-                <Legend wrapperStyle={{ fontSize: 11 }} />
-                {selectedRuns.map((r, i) => (
-                  <Line key={r.run_id} type="monotone" dataKey={r.run_id.slice(0, 8)}
-                    stroke={RUN_COLOURS[i]} strokeWidth={2} dot={false}
-                    name={`${r.run_id.slice(0,8)} (${r.agent}/${r.attack})`} />
-                ))}
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Radar + Table */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-            <div style={{ background: 'var(--bg-panel)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '14px 16px' }}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
-                Radar Comparison
+          <section className="chart-panel">
+            <header>
+              <h3>Detection F1 trajectory</h3>
+              <span>Recorded episode metrics</span>
+            </header>
+            {comparison.isPending ? (
+              <div className="loading-state">Loading comparison...</div>
+            ) : comparison.isError ? (
+              <div className="empty-state" role="alert">
+                Could not load comparison metrics.
               </div>
-              <ResponsiveContainer width="100%" height={260}>
-                <RadarChart data={radarData}>
-                  <PolarGrid stroke="var(--border)" />
-                  <PolarAngleAxis dataKey="metric" tick={{ fill: 'var(--text-secondary)', fontSize: 10 }} />
-                  <Tooltip {...TT} />
-                  <Legend wrapperStyle={{ fontSize: 11 }} />
-                  {selectedRuns.map((r, i) => (
-                    <Radar key={r.run_id} name={r.run_id.slice(0, 8)}
-                      dataKey={r.run_id.slice(0, 8)}
-                      stroke={RUN_COLOURS[i]} fill={RUN_COLOURS[i]} fillOpacity={0.12} />
+            ) : (
+              <ResponsiveContainer width="100%" height={320}>
+                <LineChart
+                  data={data}
+                  margin={{ top: 10, right: 15, left: -20, bottom: 5 }}
+                >
+                  <CartesianGrid stroke="var(--border)" vertical={false} />
+                  <XAxis
+                    dataKey="episode"
+                    axisLine={false}
+                    tickLine={false}
+                    stroke="var(--text-muted)"
+                  />
+                  <YAxis
+                    domain={[0, 1]}
+                    axisLine={false}
+                    tickLine={false}
+                    stroke="var(--text-muted)"
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      background: "white",
+                      border: "1px solid var(--border)",
+                      fontSize: 12,
+                    }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: 11, paddingTop: 20 }} />
+                  {selected.map((r, i) => (
+                    <Line
+                      key={r.run_id}
+                      dataKey={r.run_id}
+                      name={`${r.agent.toUpperCase()} / ${r.attack.toUpperCase()} / ${r.nodes}n / ${r.episodes}ep [${i + 1}]`}
+                      stroke={colors[ids.indexOf(r.run_id)]}
+                      strokeWidth={2}
+                      strokeDasharray={i > 2 ? "5 3" : undefined}
+                      dot={false}
+                      connectNulls={false}
+                      isAnimationActive={false}
+                    />
                   ))}
-                </RadarChart>
+                </LineChart>
               </ResponsiveContainer>
+            )}
+          </section>
+          <section className="data-panel">
+            <div className="panel-heading">
+              <h2>Recorded run summary</h2>
             </div>
-
-            <div style={{ background: 'var(--bg-panel)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '14px 16px', overflowX: 'auto' }}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
-                Summary Table
-              </div>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11 }}>
+            <div className="table-scroll">
+              <table className="results-table">
                 <thead>
                   <tr>
-                    <th style={{ padding: '6px 8px', textAlign: 'left', color: 'var(--text-secondary)', borderBottom: '1px solid var(--border)' }}>Metric</th>
-                    {selectedRuns.map((r, i) => (
-                      <th key={r.run_id} style={{ padding: '6px 8px', textAlign: 'center', borderBottom: '1px solid var(--border)', color: RUN_COLOURS[i] }}>
-                        {r.run_id.slice(0, 8)}
+                    <th>Configuration</th>
+                    {selected.map((r, i) => (
+                      <th
+                        key={r.run_id}
+                        style={{ color: colors[ids.indexOf(r.run_id)] }}
+                      >
+                        Experiment {i + 1}
                       </th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {[
-                    { label: 'Final F1', vals: selectedRuns.map((r) => r.final_f1?.toFixed(4) ?? '—') },
-                    { label: 'Episodes', vals: selectedRuns.map((r) => String(r.episodes)) },
-                    { label: 'Nodes',    vals: selectedRuns.map((r) => String(r.nodes)) },
-                    { label: 'Attack',   vals: selectedRuns.map((r) => r.attack.toUpperCase()) },
-                    { label: 'Agent',    vals: selectedRuns.map((r) => r.agent.toUpperCase()) },
-                  ].map(({ label, vals }) => {
-                    const numVals = vals.map((v) => parseFloat(v) || 0);
-                    const best = Math.max(...numVals);
-                    return (
-                      <tr key={label} style={{ borderBottom: '1px solid var(--border)' }}>
-                        <td style={{ padding: '6px 8px', color: 'var(--text-secondary)' }}>{label}</td>
-                        {vals.map((v, i) => {
-                          const isBest = numVals[i] === best && label === 'Final F1' && best > 0;
-                          return (
-                            <td key={i} style={{ padding: '6px 8px', textAlign: 'center',
-                              fontWeight: isBest ? 700 : 400,
-                              color: isBest ? 'var(--green)' : 'var(--text-primary)' }}>
-                              {v}
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    );
-                  })}
+                    ["Agent", ...selected.map((r) => r.agent.toUpperCase())],
+                    ["Attack", ...selected.map((r) => r.attack.toUpperCase())],
+                    ["Nodes", ...selected.map((r) => r.nodes)],
+                    ["Episodes", ...selected.map((r) => r.episodes)],
+                    [
+                      "Final F1",
+                      ...selected.map((r) => r.final_f1?.toFixed(4) ?? "--"),
+                    ],
+                  ].map(([label, ...values]) => (
+                    <tr key={label}>
+                      <td>{label}</td>
+                      {values.map((v, i) => (
+                        <td
+                          key={i}
+                          className={label === "Final F1" ? "score-cell" : ""}
+                        >
+                          {v}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
-          </div>
+          </section>
+          <p className="data-note">
+            Only recorded metrics are displayed. A single run does not establish
+            statistical significance; use repeated seeds and the experiment
+            analysis scripts for paper conclusions.
+          </p>
         </>
       )}
     </div>
