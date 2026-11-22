@@ -57,7 +57,7 @@ class TDCB:
         w = np.asarray(weights, dtype=float)
         v = np.asarray(votes, dtype=float)
         t_count = v.shape[0]
-        if w.sum() <= 0 or (max_share is not None and w.max() > max_share * w.sum() + 1e-9):
+        if w.sum() <= 0 or (max_share is not None and w.max() > max_share * w.sum() * (1.0 + 1e-9)):
             return TallyOutcome(np.zeros(t_count, dtype=bool), np.zeros(t_count), aborted=True)
         # Normalise so max weight is 1: the rule is scale-invariant and HETally clips to [0, 1].
         w = w / w.max()

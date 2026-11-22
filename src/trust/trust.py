@@ -263,11 +263,28 @@ class LegacyBetaBackend(TrustBackend):
 
 
 class SleeperGuardBackend(TrustBackend):
+    """SleeperGuard with a selectable share-cap implementation.
+
+    cap_method="exact"              : SleeperGuard computes uncapped weights, then
+                                      ``capping.cap_shares_exact`` applies the cap (default).
+    cap_method="verified_iterative" : SleeperGuard's own ``cap_shares`` (as provided; may overshoot).
+    """
+
     name = "sleeper_guard"
 
-    def __init__(self, nodes: List[str], cfg: Any) -> None:
-        from src.trust.sleeper_guard import SleeperGuard
-        self.sg = SleeperGuard(nodes, cfg)
+    def __init__(self, nodes: List[str], cfg: Any, cap_method: str = "exact") -> None:
+        import dataclasses
+
+        from src.trust.sleeper_guard import SleeperGuard, SleeperGuardConfig
+
+        cfg = cfg or SleeperGuardConfig()
+        if cap_method not in ("exact", "verified_iterative"):
+            raise ValueError(f"unknown cap_method {cap_method!r}")
+        self.cap_method = cap_method
+        self.cap_on = cfg.use_share_cap
+        self.cap_factor = cfg.cap_factor
+        inner = dataclasses.replace(cfg, use_share_cap=False) if cap_method == "exact" else cfg
+        self.sg = SleeperGuard(nodes, inner)
 
     def observe(self, node: str, inconsistent: bool) -> bool:
         return self.sg.observe(node, inconsistent)
@@ -279,7 +296,11 @@ class SleeperGuardBackend(TrustBackend):
         return self.sg.is_quarantined(node)
 
     def weights(self, committee: List[str]) -> np.ndarray:
-        return self.sg.weights(committee)
+        w = self.sg.weights(committee)
+        if self.cap_method == "exact" and self.cap_on and committee:
+            from src.trust.capping import cap_shares_exact
+            w = cap_shares_exact(w, self.cap_factor / len(committee))
+        return w
 
 
 class NoTrustBackend(TrustBackend):
@@ -300,9 +321,10 @@ class NoTrustBackend(TrustBackend):
         return np.ones(len(committee), dtype=float)
 
 
-def make_trust_backend(name: str, nodes: List[str], sg_cfg: Any, rng: random.Random) -> TrustBackend:
+def make_trust_backend(name: str, nodes: List[str], sg_cfg: Any, rng: random.Random,
+                       cap_method: str = "exact") -> TrustBackend:
     if name == "sleeper_guard":
-        return SleeperGuardBackend(nodes, sg_cfg)
+        return SleeperGuardBackend(nodes, sg_cfg, cap_method)
     if name == "legacy_beta":
         return LegacyBetaBackend(nodes, rng)
     if name == "none":

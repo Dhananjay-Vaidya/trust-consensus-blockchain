@@ -15,7 +15,7 @@ cleanup() {
 trap cleanup EXIT INT TERM
 
 cd "${ROOT_DIR}"
-python -m uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload &
+python -m uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --reload &
 API_PID=$!
 
 cd "${ROOT_DIR}/dashboard"

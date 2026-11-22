@@ -1,0 +1,4 @@
+# LaTeX toolchain for `make paper` (IEEEtran is part of TeX Live).
+FROM texlive/texlive:latest
+WORKDIR /work
+CMD ["latexmk", "-pdf", "-interaction=nonstopmode", "main.tex"]

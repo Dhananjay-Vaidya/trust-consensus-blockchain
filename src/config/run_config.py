@@ -54,6 +54,7 @@ class RunConfig:
     # ---- trust ----------------------------------------------------------------------------
     trust_backend: TrustBackend = "sleeper_guard"
     sleeper_guard: SleeperGuardConfig = field(default_factory=SleeperGuardConfig)
+    cap_method: Literal["exact", "verified_iterative"] = "exact"   # see src/trust/capping.py
     flag_threshold: float = 0.5             # node is *flagged* if trust < this (or quarantined)
 
     # ---- attack ---------------------------------------------------------------------------

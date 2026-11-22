@@ -1,0 +1,58 @@
+{
+  "0": {
+    "poly_modulus_degree": 8192,
+    "coeff_mod_bit_sizes": [
+      60,
+      40,
+      60
+    ],
+    "total_bits": 160,
+    "max_bits_128bit_security": 218,
+    "global_scale": "2^40"
+  },
+  "1": {
+    "poly_modulus_degree": 16384,
+    "coeff_mod_bit_sizes": [
+      60,
+      40,
+      40,
+      40,
+      60
+    ],
+    "total_bits": 240,
+    "max_bits_128bit_security": 438,
+    "global_scale": "2^40"
+  },
+  "2": {
+    "poly_modulus_degree": 16384,
+    "coeff_mod_bit_sizes": [
+      60,
+      40,
+      40,
+      40,
+      40,
+      40,
+      60
+    ],
+    "total_bits": 320,
+    "max_bits_128bit_security": 438,
+    "global_scale": "2^40"
+  },
+  "3": {
+    "poly_modulus_degree": 16384,
+    "coeff_mod_bit_sizes": [
+      60,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      60
+    ],
+    "total_bits": 400,
+    "max_bits_128bit_security": 438,
+    "global_scale": "2^40"
+  }
+}

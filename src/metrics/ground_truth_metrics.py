@@ -125,4 +125,5 @@ def summarize(env: HonestEnv, window_start: Optional[int] = None, window_end: Op
         "he_ms_per_step": float(np.mean(he)),
         "he_flips": int(sum(recs[s].he_flips for s in win)),
         "mean_reward": float(np.mean([recs[s].reward for s in win])) if s1 > s0 else math.nan,
+        "mean_reward_all": float(np.mean([r.reward for r in recs])) if recs else math.nan,
     }

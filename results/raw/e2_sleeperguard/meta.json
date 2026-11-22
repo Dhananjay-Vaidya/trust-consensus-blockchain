@@ -1,0 +1,25 @@
+{
+  "experiment": "e2_sleeperguard",
+  "argv": [
+    "C:\\Users\\Dhananjay Vaidya\\Downloads\\PopulationDataProject\\trust-consensus-blockchain\\experiments\\exp_e2_sleeperguard.py"
+  ],
+  "machine": {
+    "python": "3.13.3",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "processor": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+    "cpu_count": 12,
+    "numpy": "2.2.6",
+    "scipy": "1.15.3",
+    "sklearn": "1.6.1",
+    "torch": "2.7.0+cpu",
+    "pandas": "2.2.3",
+    "ram_gb": 16.78,
+    "tenseal": "0.3.16",
+    "git_commit": "5d73c63babbc010a65dba647aa75d03eb98be906",
+    "git_dirty": true
+  },
+  "written": "2026-11-22T07:23:53",
+  "runtime_s": {
+    "runs.csv": 180.3
+  }
+}

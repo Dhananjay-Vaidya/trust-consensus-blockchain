@@ -1,0 +1,17 @@
+{
+  "0.02": {
+    "baseline_floor": 0.02,
+    "cusum_slack": 0.1,
+    "cusum_alarm": 2.0
+  },
+  "0.05": {
+    "baseline_floor": 0.05,
+    "cusum_slack": 0.1,
+    "cusum_alarm": 3.0
+  },
+  "0.10": {
+    "baseline_floor": 0.1,
+    "cusum_slack": 0.15,
+    "cusum_alarm": 3.0
+  }
+}

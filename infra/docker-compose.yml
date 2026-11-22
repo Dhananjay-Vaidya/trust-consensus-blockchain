@@ -8,17 +8,20 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ../experiments/results:/app/experiments/results
-      - ../experiments/checkpoints:/app/experiments/checkpoints
-      - ../experiments/figures:/app/experiments/figures
-      - ../experiments/tables:/app/experiments/tables
+      - ../results:/app/results
 
-  simulation:
+  reproduce:
     build:
       context: ..
       dockerfile: infra/Dockerfile
     volumes:
-      - ../experiments/results:/app/experiments/results
-      - ../experiments/checkpoints:/app/experiments/checkpoints
-      - ../experiments/figures:/app/experiments/figures
-    command: python main.py --agent drl --attack nma --nodes 16 --episodes 50 --seed 42
+      - ../results:/app/results
+      - ../paper:/app/paper
+    command: python scripts/reproduce.py
+
+  paper:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile.paper
+    volumes:
+      - ../paper:/work

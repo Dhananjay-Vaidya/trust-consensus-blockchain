@@ -2,7 +2,7 @@ name: Tests
 
 on:
   push:
-    branches: [main]
+    branches: [main, research-grade]
   pull_request:
     branches: [main]
 
@@ -10,15 +10,19 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
-
+          python-version: "3.11"
       - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Run tests
-        run: pytest tests/ -v --tb=short
+        run: pip install --extra-index-url https://download.pytorch.org/whl/cpu -r requirements.txt
+      - name: Lint (touched modules)
+        run: ruff check src experiments scripts paper/make_assets.py tests
+      - name: Type check (touched modules)
+        run: mypy src/config src/crypto src/trust/sleeper_guard.py src/env src/metrics src/stats src/consensus
+      - name: Unit + audit regression tests
+        run: pytest -q tests
+      - name: 3-seed smoke version of every experiment
+        run: |
+          python scripts/reproduce.py --smoke
+          python -m experiments.exp_he_band --smoke
