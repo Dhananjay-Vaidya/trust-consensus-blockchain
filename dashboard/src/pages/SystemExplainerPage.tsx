@@ -82,14 +82,14 @@ const stages = [
     id: "encryption",
     icon: LockKey,
     name: "Evaluate privacy",
-    subtitle: "Optional encryption path",
-    title: "Optional FHE evaluation path",
+    subtitle: "Homomorphic tally",
+    title: "HETally: trust-weighted vote tally under CKKS",
     description:
-      "The encryption helper uses TenSEAL CKKS when available and falls back to mock encryption otherwise. Some operations decrypt internally, so this implementation should not be described as end-to-end computation over encrypted values.",
-    equation: "Optional encrypted-policy path -> measured overhead",
-    input: "Trust values and policy evaluation requests",
-    output: "Policy decisions and encryption overhead measurements.",
-    source: "src/abac/fhe.py",
+      "The trust authority encrypts the committee weights; the aggregator multiplies the public votes by Enc(w) and never sees the weights; the decryptor decodes one value per transaction. One process plays all three roles with one key (a real deployment needs threshold CKKS). Measured: decisions match plaintext for |margin| >= 1e-7, but the decryptor can recover the margins.",
+    equation: "accept_t <=> sum_i w_i (v[t,i] - theta) / k >= 0",
+    input: "Enc(trust weights) and public signed votes",
+    output: "Commit decisions, HE latency and flip count.",
+    source: "src/crypto/he_tally.py",
   },
 ];
 export function SystemExplainerPage() {

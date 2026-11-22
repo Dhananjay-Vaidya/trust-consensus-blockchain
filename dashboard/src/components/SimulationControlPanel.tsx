@@ -1,3 +1,4 @@
+import type { SimulationConfig } from "../types";
 import { useState } from "react";
 import { Play, Stop, CircleNotch } from "@phosphor-icons/react";
 import { useSimulationStore } from "../store/simulationStore";
@@ -185,19 +186,39 @@ export function SimulationControlPanel() {
               onChange={(e) => setConfig({ seed: Number(e.target.value) })}
             />
           </div>
-          <label className="field-label" htmlFor="fhe">
-            Enable FHE path
-            <input
-              id="fhe"
-              type="checkbox"
-              checked={config.fhe_enabled}
+          <div className="field">
+            <label htmlFor="trust-backend">Trust backend</label>
+            <select
+              id="trust-backend"
+              value={config.trust_backend}
               disabled={running || busy}
-              onChange={(e) => setConfig({ fhe_enabled: e.target.checked })}
-            />
-          </label>
+              onChange={(e) =>
+                setConfig({ trust_backend: e.target.value as SimulationConfig["trust_backend"] })
+              }
+            >
+              <option value="sleeper_guard">SleeperGuard (proposed)</option>
+              <option value="legacy_beta">Legacy Beta (base protocol)</option>
+              <option value="none">None (unweighted)</option>
+            </select>
+          </div>
+          <div className="field">
+            <label htmlFor="tally-backend">Tally backend</label>
+            <select
+              id="tally-backend"
+              value={config.tally_backend}
+              disabled={running || busy}
+              onChange={(e) =>
+                setConfig({ tally_backend: e.target.value as SimulationConfig["tally_backend"] })
+              }
+            >
+              <option value="plain">Plaintext</option>
+              <option value="he">Homomorphic (CKKS, TenSEAL)</option>
+            </select>
+          </div>
           <p className="field-help">
-            Uses TenSEAL when installed; otherwise the engine uses mock
-            encryption.
+            The HE tally needs TenSEAL and fails loudly without it (no mock). It is
+            ~100x slower per step; the decryptor still learns the margins (see
+            docs/SECURITY_MODEL.md).
           </p>
         </details>
       </div>

@@ -28,7 +28,6 @@ def test_update_trust_decreases_on_failure(tm):
 
 
 def test_decay_trust_reduces_all(tm):
-    before = {n: tm.get_trust(n) for n in ["A", "B", "C", "D"]}
     # Run many decay steps to see effect
     for _ in range(20):
         tm.decay_trust(decay_rate=0.05)

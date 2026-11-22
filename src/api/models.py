@@ -58,8 +58,23 @@ class SimulationStartRequest(BaseModel):
     )
     fhe_enabled: bool = Field(
         default=False,
-        description="Enable the optional FHE evaluation path.",
+        description="Deprecated alias: true selects tally_backend='he'.",
         examples=[False],
+    )
+    trust_backend: Literal["sleeper_guard", "legacy_beta", "none"] = Field(
+        default="sleeper_guard",
+        description="Trust model fed by audit evidence (legacy_beta = base protocol, for comparison).",
+        examples=["sleeper_guard"],
+    )
+    tally_backend: Literal["plain", "he"] = Field(
+        default="plain",
+        description="Trust-weighted tally in plaintext or under CKKS homomorphic encryption (HETally).",
+        examples=["plain"],
+    )
+    he_sign_iters: int = Field(
+        default=0, ge=0, le=3,
+        description="Sign-polynomial iterations for the HE tally (0 is fastest; see docs/SECURITY_MODEL.md).",
+        examples=[0],
     )
     scenario: Optional[str] = Field(
         default=None,
@@ -119,7 +134,7 @@ class StepEventPayload(BaseModel):
     episode: int = Field(..., description="Current zero-based episode index.", examples=[3])
     step: int = Field(..., description="Current zero-based step index within the episode.", examples=[17])
     trust_scores: Dict[str, float] = Field(..., description="Current node trust scores keyed by node id.")
-    is_malicious: Dict[str, bool] = Field(..., description="Ground-truth malicious labels keyed by node id.")
+    is_malicious: Dict[str, bool] = Field(..., description="Post-hoc ground-truth labels for display only (from src.metrics); never seen by the system.")
     is_detected: Dict[str, bool] = Field(..., description="Detection flags keyed by node id.")
     delegate_nodes: List[str] = Field(..., description="Delegates used for the current consensus round.", examples=[["Node_1", "Node_2"]])
     transactions_verified: int = Field(..., description="Transactions verified for the current event.", examples=[21])

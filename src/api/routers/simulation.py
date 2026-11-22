@@ -8,7 +8,7 @@ from pathlib import Path
 from fastapi import APIRouter, HTTPException, Query, WebSocket, WebSocketDisconnect
 
 from src.api import simulation_runner as runner
-from src.api.models import SimulationStartRequest, SimulationStartResponse, SimulationStatusResponse, StepEventPayload
+from src.api.models import SimulationStartRequest, SimulationStartResponse, SimulationStatusResponse
 
 router = APIRouter(prefix="/simulation", tags=["simulation"])
 RESULTS_DIR = Path("experiments/results")

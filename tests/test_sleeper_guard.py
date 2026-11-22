@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import numpy as np
-import pytest
 
 from src.stats.paired import bootstrap_ci, cliffs_delta, holm, paired_compare
 from src.trust.sleeper_guard import SleeperGuard, SleeperGuardConfig, cap_shares

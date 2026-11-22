@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 import logging
 import sys
-from datetime import datetime
 
 
 def get_logger(name: str, level: int = logging.INFO) -> logging.Logger:

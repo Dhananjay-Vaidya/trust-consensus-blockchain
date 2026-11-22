@@ -2,8 +2,6 @@
 from __future__ import annotations
 
 import io
-import os
-import tempfile
 import zipfile
 from pathlib import Path
 
@@ -31,89 +29,40 @@ async def export_results():
     )
 
 
-@router.get("/statistics", summary="Download statistical analysis report CSV")
-async def export_statistics():
-    """Generate and return the statistical analysis table as CSV."""
-    output_path = Path("new_res/statistical_table.csv")
-    if not output_path.exists():
-        try:
-            from analysis.statistical_analysis import generate_results_table
-            generate_results_table(
-                str(RESULTS_DIR), "new_res",
-                nodes=16, episodes=50,
-            )
-        except Exception as e:
-            return Response(content=f"Error generating statistics: {e}", status_code=500)
-    if output_path.exists():
-        return FileResponse(str(output_path), media_type="text/csv", filename="statistical_table.csv")
-    return Response(content="Statistics not available", status_code=404)
+PAPER_RAW = Path("results/raw")
+PAPER_GEN = Path("paper/generated")
+PAPER_FIGS = Path("paper/figs")
 
 
-@router.get("/latex_table", summary="Download LaTeX results table")
-async def export_latex_table():
-    """Generate and return the LaTeX results table."""
-    output_path = Path("new_res/statistical_table.tex")
-    if not output_path.exists():
-        try:
-            from analysis.statistical_analysis import generate_results_table
-            generate_results_table(
-                str(RESULTS_DIR), "new_res",
-                nodes=16, episodes=50,
-            )
-        except Exception as e:
-            return Response(content=f"Error generating LaTeX table: {e}", status_code=500)
-    if output_path.exists():
-        return FileResponse(str(output_path), media_type="text/plain", filename="results_table.tex")
-    return Response(content="LaTeX table not available", status_code=404)
-
-
-@router.get("/figures", summary="Export paper figures as a ZIP")
-async def export_figures(
-    figures: str = "1,2,3",
-    format: str = "png",
-):
-    """Generate requested paper figures and return them as a ZIP file."""
-    import matplotlib
-    matplotlib.use("Agg")
-
-    requested = [f.strip() for f in figures.split(",") if f.strip()]
+def _zip(paths, name: str) -> StreamingResponse:
     buf = io.BytesIO()
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-        generated: list[Path] = []
-        try:
-            import generate_paper_figures as gpf
-            func_map = {
-                "1": getattr(gpf, "figure1_f1_scores", None),
-                "2": getattr(gpf, "figure2_trust_separation", None),
-                "3": getattr(gpf, "figure8_baseline_comparison", None),
-                "4": getattr(gpf, "figure9_ablation_study", None),
-                "5": getattr(gpf, "figure10_scalability", None),
-                "6": getattr(gpf, "figure11_malicious_sweep", None),
-            }
-            for fig_id in requested:
-                fn = func_map.get(fig_id)
-                if fn:
-                    try:
-                        fn()
-                        for ext in ["png", "svg", "pdf"]:
-                            for candidate in Path("new_res").glob(f"figure{fig_id}*.{ext}"):
-                                if candidate.exists():
-                                    generated.append(candidate)
-                    except Exception:
-                        pass
-        except ImportError:
-            pass
-
-        with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
-            for fig_path in generated:
-                zf.write(fig_path, fig_path.name)
-            if not generated:
-                zf.writestr("README.txt", f"No figures generated for: {figures}\nRun simulations first.")
-
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
+        for p in paths:
+            zf.write(p, p.as_posix())
     buf.seek(0)
-    return StreamingResponse(
-        buf,
-        media_type="application/zip",
-        headers={"Content-Disposition": f"attachment; filename=figures_{figures.replace(',','_')}.zip"},
-    )
+    return StreamingResponse(buf, media_type="application/zip",
+                             headers={"Content-Disposition": f"attachment; filename={name}"})
+
+
+@router.get("/statistics", summary="Download the paired-statistics CSVs (Wilcoxon/Holm/bootstrap/Cliff)")
+async def export_statistics():
+    files = sorted((PAPER_RAW / "stats").glob("*.csv")) if (PAPER_RAW / "stats").exists() else []
+    if not files:
+        return Response(content="Statistics not available: run python paper/make_assets.py", status_code=404)
+    return _zip(files, "statistics.zip")
+
+
+@router.get("/latex_table", summary="Download the generated LaTeX tables")
+async def export_latex_table():
+    files = sorted(PAPER_GEN.glob("tab_*.tex")) if PAPER_GEN.exists() else []
+    if not files:
+        return Response(content="LaTeX tables not available: run python paper/make_assets.py", status_code=404)
+    return FileResponse(files[0], media_type="text/plain") if len(files) == 1 else _zip(files, "tables.zip")
+
+
+@router.get("/figures", summary="Export the paper figures (vector PDF) as a ZIP")
+async def export_figures():
+    files = sorted(PAPER_FIGS.glob("*.pdf")) if PAPER_FIGS.exists() else []
+    if not files:
+        return Response(content="Figures not available: run python paper/make_assets.py", status_code=404)
+    return _zip(files, "figures.zip")

@@ -8,6 +8,9 @@ export interface SimulationConfig {
   malicious_fraction: number;
   seed: number;
   fhe_enabled: boolean;
+  trust_backend: 'sleeper_guard' | 'legacy_beta' | 'none';
+  tally_backend: 'plain' | 'he';
+  he_sign_iters: number;
   scenario: string | null;
 }
 
@@ -66,6 +69,15 @@ export interface StepEvent {
   action_description: string;
   fhe_overhead_ms: number | null;
   timestamp: number;
+  // honest-environment extensions (optional for older replay logs)
+  quarantined?: string[];
+  quarantine_events?: string[];
+  audited?: number;
+  audited_error?: number | null;
+  aborted?: boolean;
+  he_flips?: number;
+  trust_backend?: string;
+  tally_backend?: string;
 }
 
 export interface EpisodeSummary {

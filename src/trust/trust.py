@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """Trust backends.
 
 ``TrustManager`` is the legacy Beta-reputation model of the base protocol, kept unchanged in its
@@ -8,9 +6,10 @@ of randomness is an injected ``random.Random``.  ``make_trust_backend`` returns 
 ``SleeperGuard`` behind one interface.  No backend reads ground truth: the only input is audit
 evidence (``observe(node, inconsistent)``).
 """
+from __future__ import annotations
 
 import random
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 from scipy.stats import beta as beta_dist

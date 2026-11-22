@@ -18,6 +18,9 @@ const DEFAULT_CONFIG: SimulationConfig = {
   malicious_fraction: 0.3,
   seed: 42,
   fhe_enabled: false,
+  trust_backend: "sleeper_guard",
+  tally_backend: "plain",
+  he_sign_iters: 0,
   scenario: null,
 };
 

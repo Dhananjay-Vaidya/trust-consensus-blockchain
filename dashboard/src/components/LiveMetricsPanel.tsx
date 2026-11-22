@@ -55,6 +55,34 @@ export function LiveMetricsPanel() {
           unit="/ event"
           deltaLabel="Reported by current event"
         />
+        <MetricCard
+          label="Quarantined"
+          value={latest?.quarantined ? latest.quarantined.length : "--"}
+          deltaLabel={
+            latest?.quarantine_events?.length
+              ? `New: ${latest.quarantine_events.join(", ")}`
+              : latest?.trust_backend ?? "Trust backend"
+          }
+        />
+        <MetricCard
+          label="Audited decision error"
+          value={
+            latest?.audited_error !== undefined && latest?.audited_error !== null
+              ? latest.audited_error.toFixed(3)
+              : "--"
+          }
+          deltaLabel={latest?.audited !== undefined ? `${latest.audited} audited` : "Observable signal"}
+        />
+        <MetricCard
+          label="HE tally time"
+          value={latest?.fhe_overhead_ms != null ? latest.fhe_overhead_ms.toFixed(1) : "--"}
+          unit="ms"
+          deltaLabel={
+            latest?.tally_backend === "he"
+              ? `${latest.he_flips ?? 0} flips vs plaintext`
+              : "Plaintext tally"
+          }
+        />
       </div>
       <div className="chart-grid">
         <section className="chart-panel">
