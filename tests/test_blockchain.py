@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import pytest
-from blockchain import Blockchain
+from src.blockchain.blockchain import Blockchain
 
 
 @pytest.fixture

@@ -139,3 +139,15 @@ checkpoints/
 instance/
 .webassets-cache
 
+
+# ------------------------------------------------------------
+# research-grade: raw results and generated paper assets ARE tracked,
+# so every number in the paper can be traced to a committed file.
+# ------------------------------------------------------------
+!/results/
+!/results/raw/
+!/results/raw/**
+!/paper/figs/
+!/paper/figs/*.pdf
+!/paper/generated/
+!/paper/generated/**

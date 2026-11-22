@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import pytest
-from abac import ABAC
+from src.abac.abac import ABAC
 
 
 @pytest.fixture

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-# abac.py - Attribute-Based Access Control with FHE Integration
+# abac.py - Attribute-Based Access Control (admission policy of the base protocol).
+# The former 'FHE' path decrypted, compared in plaintext and re-encrypted (audit A5); it is removed.
+# Encrypted computation now lives in src/crypto/he_tally.py (the consensus tally).
 
 import time
 from collections import defaultdict
@@ -24,10 +26,9 @@ class ABAC:
     Attribute-Based Access Control (ABAC) with trust integration.
     """
 
-    def __init__(self, fhe_enabled: bool = False) -> None:
+    def __init__(self) -> None:
         self.policies: Dict[str, AttributePolicy] = {}
         self.user_attributes: Dict[str, Set[str]] = {}
-        self.fhe_enabled: bool = fhe_enabled
         self._init_default_policies()
 
         self.access_history: list = []
@@ -39,7 +40,6 @@ class ABAC:
         self.granted_requests: int = 0
         self.denied_requests: int = 0
 
-        self._fhe: Optional[Any] = None
 
     def _init_default_policies(self) -> None:
         self.policies["admin"] = AttributePolicy(
@@ -60,17 +60,6 @@ class ABAC:
             time_restrictions={"weekday": (9, 17), "weekend": (10, 16)},
             location_restrictions=None,
         )
-
-    def _get_fhe(self) -> Optional[Any]:
-        if self._fhe is None and self.fhe_enabled:
-            try:
-                from src.abac.fhe import FullyHomomorphicEncryption
-                self._fhe = FullyHomomorphicEncryption(use_real_fhe=True)
-            except ImportError:
-                from src.utils.logger import get_logger
-                get_logger(__name__).warning("FHE module not available, using plaintext")
-                self.fhe_enabled = False
-        return self._fhe
 
     def add_user_attributes(self, user_id: str, attributes: Set[str]) -> None:
         self.user_attributes[user_id] = attributes
@@ -114,42 +103,6 @@ class ABAC:
                 continue
             return True
         return False
-
-    def enforce_policy_with_fhe(
-        self,
-        user_id: str,
-        requested_action: str,
-        time_of_day: int,
-        day_type: str,
-        location: str,
-        trust_score: float = 1.0,
-    ) -> Tuple[bool, float, str]:
-        fhe = self._get_fhe()
-        if fhe is None or not self.fhe_enabled:
-            return self.enforce_policy_with_learning(
-                user_id, requested_action, time_of_day, day_type, location, trust_score
-            )
-
-        encrypted_trust = fhe.encrypt_value(trust_score)
-        trust_check_result = fhe.compute_encrypted_comparison(encrypted_trust, self.trust_threshold)
-        trust_passed = fhe.decrypt_value(trust_check_result) > 0.5
-
-        base_decision = self.enforce_policy(user_id, requested_action, time_of_day, day_type, location)
-        final_decision = base_decision and trust_passed
-        confidence = trust_score if trust_passed else (1.0 - trust_score)
-
-        self.total_requests += 1
-        if final_decision:
-            reason = "FHE-verified: policy and trust checks passed"
-            self.granted_requests += 1
-        else:
-            if not base_decision:
-                reason = "FHE-verified: policy restrictions not met"
-            else:
-                reason = f"FHE-verified: trust below threshold ({trust_score:.2f})"
-            self.denied_requests += 1
-
-        return final_decision, confidence, reason
 
     def enforce_policy_with_learning(
         self,

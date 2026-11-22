@@ -1,18 +1,19 @@
 from __future__ import annotations
 
-# trust.py - BALANCED Trust Manager with Realistic Detection Difficulty
-"""
-Trust Manager tuned for realistic detection scenarios.
+"""Trust backends.
+
+``TrustManager`` is the legacy Beta-reputation model of the base protocol, kept unchanged in its
+update rules for the ablation (``trust_backend="legacy_beta"``) but made reproducible: every source
+of randomness is an injected ``random.Random``.  ``make_trust_backend`` returns either it or
+``SleeperGuard`` behind one interface.  No backend reads ground truth: the only input is audit
+evidence (``observe(node, inconsistent)``).
 """
 
 import random
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
-import torch
 from scipy.stats import beta as beta_dist
-
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 class TrustManager:
@@ -20,7 +21,9 @@ class TrustManager:
     Bayesian Trust Manager using Beta distribution for trust estimation.
     """
 
-    def __init__(self, nodes: List[str], config: Optional[Dict[str, Any]] = None) -> None:
+    def __init__(self, nodes: List[str], config: Optional[Dict[str, Any]] = None,
+                 rng: Optional[random.Random] = None) -> None:
+        self._rng = rng if rng is not None else random.Random(0)
         self.config: Dict[str, Any] = config or {
             "initial_alpha": 8.0,
             "initial_beta": 8.0,
@@ -47,11 +50,11 @@ class TrustManager:
         base_beta = self.config["initial_beta"]
 
         for node in nodes:
-            noise = random.uniform(-4, 4)
+            noise = self._rng.uniform(-4, 4)
             self.alpha[node] = base_alpha + noise
             self.beta_param[node] = base_beta - noise
 
-            extra_variance = random.uniform(-2, 2)
+            extra_variance = self._rng.uniform(-2, 2)
             self.alpha[node] += extra_variance
             self.beta_param[node] += abs(extra_variance) * 0.5
 
@@ -59,9 +62,6 @@ class TrustManager:
             self.trust_scores[node] = self.alpha[node] / total
             self.uncertainty[node] = self._calculate_uncertainty(node)
 
-        from src.utils.logger import get_logger
-        _log = get_logger(__name__)
-        _log.info(f"Initialized {len(nodes)} nodes with HIGH-VARIANCE Bayesian trust")
 
     def _calculate_uncertainty(self, node_id: str) -> float:
         a = self.alpha.get(node_id, self.config["initial_alpha"])
@@ -82,7 +82,7 @@ class TrustManager:
         if node_id not in self.alpha:
             return
         self.update_counts[node_id] += 1
-        noise = random.gauss(0, self.config["noise_level"])
+        noise = self._rng.gauss(0, self.config["noise_level"])
 
         if outcome == "valid":
             boost = max(0.5, self.config["valid_boost"] + noise)
@@ -93,7 +93,7 @@ class TrustManager:
         elif outcome == "malicious":
             penalty = max(1.0, self.config["malicious_penalty"] + noise)
             self.beta_param[node_id] += penalty
-            decay = float(np.clip(self.config["malicious_alpha_decay"] + random.gauss(0, 0.02), 0.85, 0.98))
+            decay = float(np.clip(self.config["malicious_alpha_decay"] + self._rng.gauss(0, 0.02), 0.85, 0.98))
             self.alpha[node_id] *= decay
 
         self._recalculate_trust(node_id)
@@ -102,7 +102,7 @@ class TrustManager:
         if node_id not in self.trust_scores:
             return
         scale_factor = 15.0
-        noise = random.gauss(0, 0.5)
+        noise = self._rng.gauss(0, 0.5)
         if amount > 0:
             adjustment = (amount * scale_factor) + noise
             self.alpha[node_id] += max(0.0, adjustment)
@@ -119,7 +119,7 @@ class TrustManager:
         for node_id in self.alpha:
             self.alpha[node_id] *= 1.0 - decay_rate
             self.beta_param[node_id] *= 1.0 - decay_rate
-            noise = random.gauss(0, 0.1)
+            noise = self._rng.gauss(0, 0.1)
             self.alpha[node_id] += noise
             self.beta_param[node_id] -= noise * 0.5
             self.alpha[node_id] = max(self.config["min_alpha"], self.alpha[node_id])
@@ -149,7 +149,7 @@ class TrustManager:
         for node_id in self.trust_scores:
             a = max(self.config["min_alpha"], self.alpha[node_id])
             b = max(self.config["min_beta"], self.beta_param[node_id])
-            samples[node_id] = float(np.random.beta(a, b))
+            samples[node_id] = float(self._rng.betavariate(a, b))
         import heapq
         top_nodes = heapq.nlargest(num_delegates, samples.items(), key=lambda item: item[1])
         return [node_id for node_id, _ in top_nodes]
@@ -199,21 +199,112 @@ class TrustManager:
             "node_ids": list(self.trust_scores.keys()),
         }
 
-    def get_encrypted_trust_snapshot(self, fhe: Any) -> Any:
-        """Encrypt the current trust score vector using FHE."""
-        scores = list(self.trust_scores.values())
-        return fhe.encrypt_vector(scores)
-
-    def get_decrypted_trust_snapshot(self, fhe: Any, encrypted: Any) -> List[float]:
-        """Decrypt an encrypted trust score vector."""
-        return fhe.decrypt_vector(encrypted)
-
     def reset(self) -> None:
         for node_id in self.trust_scores:
-            noise = random.uniform(-4, 4)
+            noise = self._rng.uniform(-4, 4)
             self.alpha[node_id] = self.config["initial_alpha"] + noise
             self.beta_param[node_id] = self.config["initial_beta"] - noise
             total = self.alpha[node_id] + self.beta_param[node_id]
             self.trust_scores[node_id] = self.alpha[node_id] / total
             self.update_counts[node_id] = 0
             self.uncertainty[node_id] = self._calculate_uncertainty(node_id)
+
+
+# ---------------------------------------------------------------------------------------------
+#  Unified backend interface
+# ---------------------------------------------------------------------------------------------
+class TrustBackend:
+    """Interface used by the environment. Implementations see audit evidence only."""
+
+    name = "abstract"
+
+    def observe(self, node: str, inconsistent: bool) -> bool:  # returns True on a change alarm
+        raise NotImplementedError
+
+    def trust(self, node: str) -> float:
+        raise NotImplementedError
+
+    def is_quarantined(self, node: str) -> bool:
+        return False
+
+    def weights(self, committee: List[str]) -> np.ndarray:
+        raise NotImplementedError
+
+    def end_step(self, step: int) -> None:
+        return None
+
+
+class LegacyBetaBackend(TrustBackend):
+    """Legacy Beta trust fed by audit evidence instead of ground truth.
+
+    Mapping: consistent audited vote -> ``update_trust(node, "valid")``;
+    inconsistent -> ``update_trust(node, "invalid")``.  The legacy periodic decay
+    (rate 0.003 every 5 steps) is kept.  Weights are the raw trust scores (no cap).
+    """
+
+    name = "legacy_beta"
+
+    def __init__(self, nodes: List[str], rng: random.Random) -> None:
+        self.tm = TrustManager(nodes, rng=rng)
+
+    def observe(self, node: str, inconsistent: bool) -> bool:
+        self.tm.update_trust(node, "invalid" if inconsistent else "valid")
+        return False
+
+    def trust(self, node: str) -> float:
+        return self.tm.get_trust(node)
+
+    def weights(self, committee: List[str]) -> np.ndarray:
+        return np.array([self.tm.get_trust(n) for n in committee], dtype=float)
+
+    def end_step(self, step: int) -> None:
+        if step % 5 == 0:
+            self.tm.decay_trust(decay_rate=0.003)
+
+
+class SleeperGuardBackend(TrustBackend):
+    name = "sleeper_guard"
+
+    def __init__(self, nodes: List[str], cfg: Any) -> None:
+        from src.trust.sleeper_guard import SleeperGuard
+        self.sg = SleeperGuard(nodes, cfg)
+
+    def observe(self, node: str, inconsistent: bool) -> bool:
+        return self.sg.observe(node, inconsistent)
+
+    def trust(self, node: str) -> float:
+        return self.sg.trust(node)
+
+    def is_quarantined(self, node: str) -> bool:
+        return self.sg.is_quarantined(node)
+
+    def weights(self, committee: List[str]) -> np.ndarray:
+        return self.sg.weights(committee)
+
+
+class NoTrustBackend(TrustBackend):
+    """Uniform weights; used by PBFT / DPoS / majority / random baselines."""
+
+    name = "none"
+
+    def __init__(self, nodes: List[str]) -> None:
+        self.nodes = list(nodes)
+
+    def observe(self, node: str, inconsistent: bool) -> bool:
+        return False
+
+    def trust(self, node: str) -> float:
+        return 1.0
+
+    def weights(self, committee: List[str]) -> np.ndarray:
+        return np.ones(len(committee), dtype=float)
+
+
+def make_trust_backend(name: str, nodes: List[str], sg_cfg: Any, rng: random.Random) -> TrustBackend:
+    if name == "sleeper_guard":
+        return SleeperGuardBackend(nodes, sg_cfg)
+    if name == "legacy_beta":
+        return LegacyBetaBackend(nodes, rng)
+    if name == "none":
+        return NoTrustBackend(nodes)
+    raise ValueError(f"unknown trust_backend {name!r}")

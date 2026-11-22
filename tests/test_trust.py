@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import pytest
-from trust import TrustManager
+from src.trust.trust import TrustManager
 
 
 @pytest.fixture
