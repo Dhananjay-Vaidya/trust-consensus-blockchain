@@ -273,6 +273,17 @@ def e4() -> None:
     fig.tight_layout()
     fig.savefig(FIGS / "e4_he_latency.pdf")
     plt.close(fig)
+    lk, bd = load("e4_he", "leakage.csv"), load("e4_he", "band.csv")
+    if lk is not None:
+        macro("EfourLeakErrMax", float(lk.recover_err_max.max()), "results/raw/e4_he/leakage.csv", "{:.0e}")
+        macro("EfourSatMaxPct", 100.0 * float(lk.saturated_frac.max()), "results/raw/e4_he/leakage.csv", "{:.2f}")
+    if bd is not None:
+        fl = bd[bd.flip]
+        macro("EfourBandMaxFlip", float(fl.margin.abs().max()) if len(fl) else 0.0, "results/raw/e4_he/band.csv", "{:.0e}")
+        ok = bd[bd.margin.abs() > (fl.margin.abs().max() if len(fl) else 0.0)]
+        macro("EfourBandMinSafe", float(ok.margin.abs().min()), "results/raw/e4_he/band.csv", "{:.0e}")
+        macro("EfourDecisionsTotal", int(len(dec)), "results/raw/e4_he/decisions.csv")
+        macro("EfourFlipsTotal", int(dec.flip.sum()), "results/raw/e4_he/decisions.csv")
     if con is not None:
         crow = []
         for (s, be), g in con.groupby(["sign_iters", "backend"]):
@@ -307,6 +318,10 @@ def e5() -> None:
     macro("EfiveBigWall", float(big.wall_ms_per_step.median()), "results/raw/e5_scale/runs.csv", "{:.1f}")
     macro("EfiveBigMem", float(big.peak_mem_mb.median()), "results/raw/e5_scale/runs.csv", "{:.0f}")
     macro("EfiveBigFOne", float(big.det_f1.median()), "results/raw/e5_scale/runs.csv")
+    cen = df[df.nodes == df.nodes.max()]
+    macro("EfiveBigCensoredPct", 100.0 * float(cen.delay_censored.sum() / cen.n_adversary.sum()), "results/raw/e5_scale/runs.csv", "{:.0f}")
+    small = df[df.nodes == df.nodes.min()]
+    macro("EfiveSmallCensoredPct", 100.0 * float(small.delay_censored.sum() / small.n_adversary.sum()), "results/raw/e5_scale/runs.csv", "{:.0f}")
     macro("EfiveMinFOne", float(df.groupby(["nodes", "k"]).det_f1.median().min()), "results/raw/e5_scale/runs.csv")
 
 
@@ -403,6 +418,8 @@ def e8() -> None:
               "E8 (H3): bribery with public weights ('weights') vs hidden weights inferred from the public ledger "
               "('votes') vs random targets. Share = bribed nodes' weight share at bribe time; valid-reject in the "
               "40 steps after bribery. Median [95\\% CI], 30 seeds; tests in results/raw/stats/e8\\_privacy.csv.", "tab:e8")
+    gap = df.pivot_table(index=["backend", "budget"], columns="strategy", values="bribed_weight_share", aggfunc="median")
+    macro("EeightMaxShareGap", float((gap["weights"] - gap["votes"]).max()), "results/raw/e8_privacy/runs.csv")
     wv = st[st.a.str.startswith("weights") & st.metric.str.startswith("valid_reject")]
     macro("EeightTests", len(wv), "results/raw/stats/e8_privacy.csv")
     macro("EeightSig", int(wv.significant.sum()), "results/raw/stats/e8_privacy.csv")
@@ -445,6 +462,14 @@ def e9() -> None:
     macro("EnineBestLearnerReward", float(med[best_learn]), "results/raw/e9_learning/runs.csv", "{:.3f}")
     macro("EnineRuleReward", float(med.get("rule", math.nan)), "results/raw/e9_learning/runs.csv", "{:.3f}")
     macro("EnineFixedReward", float(med.get("sleeper_guard_fixed", math.nan)), "results/raw/e9_learning/runs.csv", "{:.3f}")
+    dl = df[df.attack != "none"].groupby("controller").delay_mean.median()
+    f1 = df[df.attack != "none"].groupby("controller").det_f1.median()
+    macro("EnineBestLearnerDelay", float(dl[best_learn]), "results/raw/e9_learning/runs.csv", "{:.0f}")
+    macro("EnineFixedDelay", float(dl["sleeper_guard_fixed"]), "results/raw/e9_learning/runs.csv", "{:.1f}")
+    macro("EnineDposReward", float(med.get("static_dpos", math.nan)), "results/raw/e9_learning/runs.csv", "{:.3f}")
+    macro("EnineDthreeFOne", float(f1.get("d3p", math.nan)), "results/raw/e9_learning/runs.csv")
+    macro("EnineFixedFOne", float(f1.get("sleeper_guard_fixed", math.nan)), "results/raw/e9_learning/runs.csv")
+    macro("EnineDthreeReward", float(med.get("d3p", math.nan)), "results/raw/e9_learning/runs.csv", "{:.3f}")
     vs_rule = st[st.b == "rule"]
     macro("EnineLearnersBeatRule", int((vs_rule.significant & (vs_rule.median_diff > 0)).sum()), "results/raw/stats/e9_learning.csv")
     macro("EnineLearnersLoseRule", int((vs_rule.significant & (vs_rule.median_diff < 0)).sum()), "results/raw/stats/e9_learning.csv")

@@ -85,3 +85,18 @@ machine (see the final report); `make paper` needs `latexmk` + IEEEtran.
 
 **D18 — Naming of the multi-agent controller.** It is "independent learners over a factored action
 space" (one DQN per knob), not "MARL with attention".
+
+**D19 — "Encrypted" condition in E8.** The HE tally is decision-equivalent to plaintext outside the
+CKKS guard band (E4) and ~100x slower, so E8 runs the plaintext tally and simply withholds the
+weights from the briber in the "encrypted" condition. The briber's information is what H3 is about.
+
+**D20 — Exact share cap by default.** The provided `cap_shares` leaves shares above the cap after its
+20 iterations (up to ~2x). It is kept unchanged in `sleeper_guard.py`; `src/trust/capping.py` adds an
+exact water-filling, selected by `RunConfig.cap_method="exact"` (default). `verified_iterative`
+remains available and is compared in E10. The tally's cap check uses a relative tolerance of 1e-9.
+
+**D21 — E9 training budget.** 10 epochs over the 20 training seeds (attack cycled per seed),
+i.e. 200 training episodes of 600 steps per learner; the rule's two thresholds tuned on seeds 20-29.
+
+**D22 — E4 timings rerun alone.** The first full reproduction overlapped E4's timing phase with other
+work, so E4 was rerun on an otherwise idle machine and those files replace the first run's.

@@ -1,0 +1,17 @@
+\begin{table}[t]
+\centering\scriptsize
+\caption{E0: node-detection F1 (median [95\% bootstrap CI], 30 eval seeds) of legacy Beta trust with and without the pre-audit oracle feedback. Paired Wilcoxon, Holm-corrected.}\label{tab:e0}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lllll}
+\toprule
+attack & F1 with oracle & F1 oracle-free & Holm p & Cliff's d \\
+\midrule
+TDP & 0.758 [0.734, 0.768] & 0.000 [0.000, 0.000] & 5.2e-06 & +1.00 \\
+CRA & 1.000 [1.000, 1.000] & 1.000 [1.000, 1.000] & 1 & +0.00 \\
+AAA & 0.000 [0.000, 0.000] & 0.000 [0.000, 0.000] & 1 & +0.00 \\
+NMA & 0.873 [0.854, 0.886] & 0.000 [0.000, 0.000] & 9.3e-09 & +1.00 \\
+BFI & 0.859 [0.818, 0.891] & 0.000 [0.000, 0.000] & 9.3e-09 & +1.00 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

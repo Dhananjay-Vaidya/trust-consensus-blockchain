@@ -1,0 +1,16 @@
+\begin{table}[t]
+\centering\scriptsize
+\caption{E4b: end-to-end runs (TDP, SleeperGuard, 200 steps) with the plaintext vs HE tally on identical seeds.}\label{tab:e4b}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llllllll}
+\toprule
+sign iters & backend & seeds & F1 & invalid-commit & valid-reject & HE flips & wall ms/step \\
+\midrule
+0 & he & 5 & 0.588 [0.538, 0.603] & 0.000 [0.000, 0.000] & 0.020 [0.016, 0.030] & 0 & 31.656 [27.081, 32.572] \\
+0 & plain & 5 & 0.588 [0.538, 0.603] & 0.000 [0.000, 0.000] & 0.020 [0.016, 0.030] & 0 & 0.284 [0.220, 0.489] \\
+3 & he & 3 & 0.597 [0.538, 0.603] & 0.000 [0.000, 0.000] & 0.021 [0.016, 0.030] & 0 & 431.965 [428.174, 454.308] \\
+3 & plain & 3 & 0.597 [0.538, 0.603] & 0.000 [0.000, 0.000] & 0.021 [0.016, 0.030] & 0 & 0.342 [0.218, 0.358] \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

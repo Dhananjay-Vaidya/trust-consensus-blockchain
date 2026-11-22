@@ -1,0 +1,18 @@
+\begin{table}[t]
+\centering\scriptsize
+\caption{E8 (H3): bribery with public weights ('weights') vs hidden weights inferred from the public ledger ('votes') vs random targets. Share = bribed nodes' weight share at bribe time; valid-reject in the 40 steps after bribery. Median [95\% CI], 30 seeds; tests in results/raw/stats/e8\_privacy.csv.}\label{tab:e8}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llllllll}
+\toprule
+trust & B & share: weights & share: votes & share: random & valid-reject: weights & valid-reject: votes & valid-reject: random \\
+\midrule
+legacy beta & 2 & 0.251 [0.251, 0.252] & 0.251 [0.250, 0.251] & 0.125 [0.125, 0.125] & 0.259 [0.249, 0.265] & 0.261 [0.256, 0.268] & 0.047 [0.038, 0.053] \\
+legacy beta & 3 & 0.377 [0.376, 0.377] & 0.376 [0.375, 0.376] & 0.250 [0.249, 0.251] & 1.000 [1.000, 1.000] & 1.000 [1.000, 1.000] & 0.260 [0.240, 0.283] \\
+legacy beta & 4 & 0.502 [0.502, 0.502] & 0.501 [0.500, 0.501] & 0.374 [0.250, 0.375] & 1.000 [1.000, 1.000] & 1.000 [1.000, 1.000] & 0.939 [0.267, 1.000] \\
+sleeper guard & 2 & 0.260 [0.258, 0.263] & 0.250 [0.246, 0.254] & 0.129 [0.122, 0.194] & 0.012 [0.011, 0.015] & 0.013 [0.012, 0.015] & 0.009 [0.006, 0.013] \\
+sleeper guard & 3 & 0.390 [0.386, 0.392] & 0.373 [0.321, 0.377] & 0.248 [0.190, 0.292] & 0.035 [0.027, 0.038] & 0.029 [0.026, 0.034] & 0.017 [0.013, 0.028] \\
+sleeper guard & 4 & 0.518 [0.513, 0.520] & 0.429 [0.375, 0.502] & 0.371 [0.268, 0.375] & 0.041 [0.036, 0.050] & 0.036 [0.031, 0.043] & 0.034 [0.020, 0.038] \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

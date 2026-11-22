@@ -15,11 +15,11 @@
     "pandas": "2.2.3",
     "ram_gb": 16.78,
     "tenseal": "0.3.16",
-    "git_commit": "5d73c63babbc010a65dba647aa75d03eb98be906",
-    "git_dirty": true
+    "git_commit": "8a908ecb8721ee24ae3976d6518c6de74e509ffe",
+    "git_dirty": false
   },
-  "written": "2026-11-22T07:32:33",
+  "written": "2026-11-22T21:51:15",
   "runtime_s": {
-    "runs.csv": 51.2
+    "runs.csv": 54.7
   }
 }

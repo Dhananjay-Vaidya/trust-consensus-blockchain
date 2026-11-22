@@ -27,7 +27,7 @@ That is out of scope and is stated as a limitation in the paper.
   `s >= 1` the decryptor learns "approximately sign(m_t) outside a small band". **Our measurements
   contradict this for the parameters used.** `p` is strictly increasing on [-1, 1], typical margins are
   small (median |m| ~0.07–0.08), and three iterations do not saturate them. Inverting `p^(s)` recovers
-  `m_t` to about 1e-6 at every `s` in {0, 1, 2, 3}, and fewer than 0.2% of outputs exceed |0.9|
+  `m_t` to within 8e-6 at every `s` in {0, 1, 2, 3}, and at most 0.15% of outputs exceed |0.9|
   (`results/raw/e4_he/leakage.csv`). **The decryptor therefore learns the margins in every
   configuration we ran.** From margins over many steps it can, in principle, estimate the weights by
   regression on the public votes. Hiding margins would need a comparison circuit that saturates (more
@@ -47,8 +47,10 @@ modulus (`60 + 40 * (2s + 1) + 60` bits) is within the 128-bit-security bound us
 
 CKKS is approximate. Decisions with |margin| below a guard band may differ from the plaintext rule.
 We measured the band by placing margins at exactly `±delta`
-(`experiments/exp_he_band.py`, `results/raw/e4_he/band.csv`): **no flips for |m| >= 1e-7; flips
-only at |m| <= 1e-8** (including exact ties, |m| = 0, where plaintext accepts by convention).
+(`experiments/exp_he_band.py`, `results/raw/e4_he/band.csv`): **no flips for |m| >= 1e-8; flips
+only at |m| <= 1e-9** (including exact ties, |m| = 0, where plaintext accepts by convention).
+An earlier run on the same machine put the boundary one decade higher (1e-7 / 1e-8); treat the band as
+~1e-8 and machine/noise dependent.
 Over 13,440 random-instance decisions there were 0 flips (`decisions.csv`).
 
 ## Trust and audit assumptions

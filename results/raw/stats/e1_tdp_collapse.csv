@@ -1,0 +1,4 @@
+metric,a,b,n,median_a,median_b,ci_a,ci_b,median_diff,ci_diff,p_value,p_holm,cliffs_delta,effect,significant
+det_f1[f=0.02],cra,tdp,30,1.0,0.0,"[1, 1]","[0, 0]",1.0,"[1, 1]",4.320463057827488e-08,1.2961389173482465e-07,1.0,large,True
+det_f1[f=0.05],cra,tdp,30,1.0,0.0,"[1, 1]","[0, 0]",1.0,"[1, 1]",4.320463057827488e-08,1.2961389173482465e-07,1.0,large,True
+det_f1[f=0.1],cra,tdp,30,1.0,0.0,"[1, 1]","[0, 0]",1.0,"[1, 1]",5.083367971638435e-07,5.083367971638435e-07,1.0,large,True

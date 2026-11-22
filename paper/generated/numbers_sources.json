@@ -1,0 +1,502 @@
+{
+  "EzeroOracleTdp": {
+    "value": "0.76",
+    "source": "results/raw/e0_oracle_gap/runs.csv"
+  },
+  "EzeroHonestTdp": {
+    "value": "0.00",
+    "source": "results/raw/e0_oracle_gap/runs.csv"
+  },
+  "EzeroOracleCra": {
+    "value": "1.00",
+    "source": "results/raw/e0_oracle_gap/runs.csv"
+  },
+  "EzeroHonestCra": {
+    "value": "1.00",
+    "source": "results/raw/e0_oracle_gap/runs.csv"
+  },
+  "EzeroOracleAaa": {
+    "value": "0.00",
+    "source": "results/raw/e0_oracle_gap/runs.csv"
+  },
+  "EzeroHonestAaa": {
+    "value": "0.00",
+    "source": "results/raw/e0_oracle_gap/runs.csv"
+  },
+  "EzeroOracleNma": {
+    "value": "0.87",
+    "source": "results/raw/e0_oracle_gap/runs.csv"
+  },
+  "EzeroHonestNma": {
+    "value": "0.00",
+    "source": "results/raw/e0_oracle_gap/runs.csv"
+  },
+  "EzeroOracleBfi": {
+    "value": "0.86",
+    "source": "results/raw/e0_oracle_gap/runs.csv"
+  },
+  "EzeroHonestBfi": {
+    "value": "0.00",
+    "source": "results/raw/e0_oracle_gap/runs.csv"
+  },
+  "EoneCraTwo": {
+    "value": "1.00",
+    "source": "results/raw/e1_tdp_collapse/runs.csv"
+  },
+  "EoneTdpTwo": {
+    "value": "0.00",
+    "source": "results/raw/e1_tdp_collapse/runs.csv"
+  },
+  "EoneTdpFinalTwo": {
+    "value": "0.00",
+    "source": "results/raw/e1_tdp_collapse/runs.csv"
+  },
+  "EoneCraFinalTwo": {
+    "value": "1.00",
+    "source": "results/raw/e1_tdp_collapse/runs.csv"
+  },
+  "EoneCraFive": {
+    "value": "1.00",
+    "source": "results/raw/e1_tdp_collapse/runs.csv"
+  },
+  "EoneTdpFive": {
+    "value": "0.00",
+    "source": "results/raw/e1_tdp_collapse/runs.csv"
+  },
+  "EoneTdpFinalFive": {
+    "value": "0.00",
+    "source": "results/raw/e1_tdp_collapse/runs.csv"
+  },
+  "EoneCraFinalFive": {
+    "value": "1.00",
+    "source": "results/raw/e1_tdp_collapse/runs.csv"
+  },
+  "EoneCraTen": {
+    "value": "1.00",
+    "source": "results/raw/e1_tdp_collapse/runs.csv"
+  },
+  "EoneTdpTen": {
+    "value": "0.00",
+    "source": "results/raw/e1_tdp_collapse/runs.csv"
+  },
+  "EoneTdpFinalTen": {
+    "value": "0.00",
+    "source": "results/raw/e1_tdp_collapse/runs.csv"
+  },
+  "EoneCraFinalTen": {
+    "value": "1.00",
+    "source": "results/raw/e1_tdp_collapse/runs.csv"
+  },
+  "EtwoCells": {
+    "value": "30",
+    "source": "results/raw/stats/e2_sleeperguard.csv"
+  },
+  "EtwoSigBetter": {
+    "value": "30",
+    "source": "results/raw/stats/e2_sleeperguard.csv"
+  },
+  "EtwoSigWorse": {
+    "value": "0",
+    "source": "results/raw/stats/e2_sleeperguard.csv"
+  },
+  "EtwoSgFOneMin": {
+    "value": "0.42",
+    "source": "results/raw/e2_sleeperguard/runs.csv"
+  },
+  "EtwoLgFOneMax": {
+    "value": "0.74",
+    "source": "results/raw/e2_sleeperguard/runs.csv"
+  },
+  "EtwoSgDelayMed": {
+    "value": "2.0",
+    "source": "results/raw/e2_sleeperguard/runs.csv"
+  },
+  "EtwoLgDelayMed": {
+    "value": "252",
+    "source": "results/raw/e2_sleeperguard/runs.csv"
+  },
+  "EtwoSgInvalid": {
+    "value": "0.0000",
+    "source": "results/raw/e2_sleeperguard/runs.csv"
+  },
+  "EtwoLgInvalid": {
+    "value": "0.0007",
+    "source": "results/raw/e2_sleeperguard/runs.csv"
+  },
+  "EthreeFullFOne": {
+    "value": "0.48",
+    "source": "results/raw/e3_ablation/runs.csv"
+  },
+  "EthreeFullDelay": {
+    "value": "6.3",
+    "source": "results/raw/e3_ablation/runs.csv"
+  },
+  "EthreeNoCusumFOne": {
+    "value": "0.05",
+    "source": "results/raw/e3_ablation/runs.csv"
+  },
+  "EthreeNoCusumDelay": {
+    "value": "66.7",
+    "source": "results/raw/e3_ablation/runs.csv"
+  },
+  "EthreeNoTwoFOne": {
+    "value": "0.47",
+    "source": "results/raw/e3_ablation/runs.csv"
+  },
+  "EthreeNoTwoDelay": {
+    "value": "6.3",
+    "source": "results/raw/e3_ablation/runs.csv"
+  },
+  "EthreeNoCapFOne": {
+    "value": "0.48",
+    "source": "results/raw/e3_ablation/runs.csv"
+  },
+  "EthreeNoCapDelay": {
+    "value": "6.3",
+    "source": "results/raw/e3_ablation/runs.csv"
+  },
+  "EthreeNoneFOne": {
+    "value": "0.00",
+    "source": "results/raw/e3_ablation/runs.csv"
+  },
+  "EthreeNoneDelay": {
+    "value": "300.0",
+    "source": "results/raw/e3_ablation/runs.csv"
+  },
+  "EthreeAaaFullFOne": {
+    "value": "0.00",
+    "source": "results/raw/e3_ablation/runs.csv"
+  },
+  "EthreeAaaFullInvalid": {
+    "value": "0.0000",
+    "source": "results/raw/e3_ablation/runs.csv"
+  },
+  "EthreeAaaNoCusumFOne": {
+    "value": "0.00",
+    "source": "results/raw/e3_ablation/runs.csv"
+  },
+  "EthreeAaaNoCusumInvalid": {
+    "value": "0.0000",
+    "source": "results/raw/e3_ablation/runs.csv"
+  },
+  "EthreeAaaNoTwoFOne": {
+    "value": "0.00",
+    "source": "results/raw/e3_ablation/runs.csv"
+  },
+  "EthreeAaaNoTwoInvalid": {
+    "value": "0.0000",
+    "source": "results/raw/e3_ablation/runs.csv"
+  },
+  "EthreeAaaNoCapFOne": {
+    "value": "0.00",
+    "source": "results/raw/e3_ablation/runs.csv"
+  },
+  "EthreeAaaNoCapInvalid": {
+    "value": "0.0000",
+    "source": "results/raw/e3_ablation/runs.csv"
+  },
+  "EthreeAaaNoneFOne": {
+    "value": "0.00",
+    "source": "results/raw/e3_ablation/runs.csv"
+  },
+  "EthreeAaaNoneInvalid": {
+    "value": "0.0000",
+    "source": "results/raw/e3_ablation/runs.csv"
+  },
+  "EfourFlipsOutZero": {
+    "value": "0",
+    "source": "results/raw/e4_he/decisions.csv"
+  },
+  "EfourDecisionsZero": {
+    "value": "3360",
+    "source": "results/raw/e4_he/decisions.csv"
+  },
+  "EfourMsZero": {
+    "value": "31",
+    "source": "results/raw/e4_he/timings.csv"
+  },
+  "EfourBandZero": {
+    "value": "0.0e+00",
+    "source": "results/raw/e4_he/decisions.csv"
+  },
+  "EfourFlipsOutOne": {
+    "value": "0",
+    "source": "results/raw/e4_he/decisions.csv"
+  },
+  "EfourDecisionsOne": {
+    "value": "3360",
+    "source": "results/raw/e4_he/decisions.csv"
+  },
+  "EfourMsOne": {
+    "value": "168",
+    "source": "results/raw/e4_he/timings.csv"
+  },
+  "EfourBandOne": {
+    "value": "0.0e+00",
+    "source": "results/raw/e4_he/decisions.csv"
+  },
+  "EfourFlipsOutTwo": {
+    "value": "0",
+    "source": "results/raw/e4_he/decisions.csv"
+  },
+  "EfourDecisionsTwo": {
+    "value": "3360",
+    "source": "results/raw/e4_he/decisions.csv"
+  },
+  "EfourMsTwo": {
+    "value": "304",
+    "source": "results/raw/e4_he/timings.csv"
+  },
+  "EfourBandTwo": {
+    "value": "0.0e+00",
+    "source": "results/raw/e4_he/decisions.csv"
+  },
+  "EfourFlipsOutThree": {
+    "value": "0",
+    "source": "results/raw/e4_he/decisions.csv"
+  },
+  "EfourDecisionsThree": {
+    "value": "3360",
+    "source": "results/raw/e4_he/decisions.csv"
+  },
+  "EfourMsThree": {
+    "value": "477",
+    "source": "results/raw/e4_he/timings.csv"
+  },
+  "EfourBandThree": {
+    "value": "0.0e+00",
+    "source": "results/raw/e4_he/decisions.csv"
+  },
+  "EfourLeakErrMax": {
+    "value": "8e-06",
+    "source": "results/raw/e4_he/leakage.csv"
+  },
+  "EfourSatMaxPct": {
+    "value": "0.15",
+    "source": "results/raw/e4_he/leakage.csv"
+  },
+  "EfourBandMaxFlip": {
+    "value": "1e-09",
+    "source": "results/raw/e4_he/band.csv"
+  },
+  "EfourBandMinSafe": {
+    "value": "1e-08",
+    "source": "results/raw/e4_he/band.csv"
+  },
+  "EfourDecisionsTotal": {
+    "value": "13440",
+    "source": "results/raw/e4_he/decisions.csv"
+  },
+  "EfourFlipsTotal": {
+    "value": "0",
+    "source": "results/raw/e4_he/decisions.csv"
+  },
+  "EfourConsFlipsZero": {
+    "value": "0",
+    "source": "results/raw/e4_he/consensus.csv"
+  },
+  "EfourConsWallZero": {
+    "value": "32",
+    "source": "results/raw/e4_he/consensus.csv"
+  },
+  "EfourConsFlipsThree": {
+    "value": "0",
+    "source": "results/raw/e4_he/consensus.csv"
+  },
+  "EfourConsWallThree": {
+    "value": "432",
+    "source": "results/raw/e4_he/consensus.csv"
+  },
+  "EfourConsWallPlain": {
+    "value": "0.30",
+    "source": "results/raw/e4_he/consensus.csv"
+  },
+  "EfiveMaxNodes": {
+    "value": "1024",
+    "source": "results/raw/e5_scale/runs.csv"
+  },
+  "EfiveBigWall": {
+    "value": "15.5",
+    "source": "results/raw/e5_scale/runs.csv"
+  },
+  "EfiveBigMem": {
+    "value": "35",
+    "source": "results/raw/e5_scale/runs.csv"
+  },
+  "EfiveBigFOne": {
+    "value": "0.43",
+    "source": "results/raw/e5_scale/runs.csv"
+  },
+  "EfiveBigCensoredPct": {
+    "value": "77",
+    "source": "results/raw/e5_scale/runs.csv"
+  },
+  "EfiveSmallCensoredPct": {
+    "value": "0",
+    "source": "results/raw/e5_scale/runs.csv"
+  },
+  "EfiveMinFOne": {
+    "value": "0.07",
+    "source": "results/raw/e5_scale/runs.csv"
+  },
+  "EsixSgFOneLowAudit": {
+    "value": "0.64",
+    "source": "results/raw/e6_audit_budget/runs.csv"
+  },
+  "EsixSgDelayLowAudit": {
+    "value": "28.0",
+    "source": "results/raw/e6_audit_budget/runs.csv"
+  },
+  "EsixSgDelayFullAudit": {
+    "value": "0.9",
+    "source": "results/raw/e6_audit_budget/runs.csv"
+  },
+  "EsixLowAudit": {
+    "value": "0.05",
+    "source": "results/raw/e6_audit_budget/runs.csv"
+  },
+  "EsevenFqZero": {
+    "value": "0.00",
+    "source": "results/raw/e7_false_positives/runs.csv"
+  },
+  "EsevenFqTwo": {
+    "value": "0.36",
+    "source": "results/raw/e7_false_positives/runs.csv"
+  },
+  "EsevenFqFive": {
+    "value": "0.31",
+    "source": "results/raw/e7_false_positives/runs.csv"
+  },
+  "EsevenFqTen": {
+    "value": "0.62",
+    "source": "results/raw/e7_false_positives/runs.csv"
+  },
+  "EsevenFqFifteen": {
+    "value": "1.93",
+    "source": "results/raw/e7_false_positives/runs.csv"
+  },
+  "EsevenFqTwenty": {
+    "value": "3.59",
+    "source": "results/raw/e7_false_positives/runs.csv"
+  },
+  "EsevenFqMisTwenty": {
+    "value": "8.07",
+    "source": "results/raw/e7_false_positives/runs.csv"
+  },
+  "EsevenVrMisTwenty": {
+    "value": "0.122",
+    "source": "results/raw/e7_false_positives/runs.csv"
+  },
+  "EeightMaxShareGap": {
+    "value": "0.09",
+    "source": "results/raw/e8_privacy/runs.csv"
+  },
+  "EeightTests": {
+    "value": "6",
+    "source": "results/raw/stats/e8_privacy.csv"
+  },
+  "EeightSig": {
+    "value": "0",
+    "source": "results/raw/stats/e8_privacy.csv"
+  },
+  "EeightSigWeightsWorse": {
+    "value": "0",
+    "source": "results/raw/stats/e8_privacy.csv"
+  },
+  "EeightVotesBeatRandom": {
+    "value": "6",
+    "source": "results/raw/stats/e8_privacy.csv"
+  },
+  "EeightVotesRandomTests": {
+    "value": "6",
+    "source": "results/raw/stats/e8_privacy.csv"
+  },
+  "EnineBestLearner": {
+    "value": "marl factored",
+    "source": "results/raw/e9_learning/runs.csv"
+  },
+  "EnineBestLearnerReward": {
+    "value": "0.929",
+    "source": "results/raw/e9_learning/runs.csv"
+  },
+  "EnineRuleReward": {
+    "value": "0.857",
+    "source": "results/raw/e9_learning/runs.csv"
+  },
+  "EnineFixedReward": {
+    "value": "0.857",
+    "source": "results/raw/e9_learning/runs.csv"
+  },
+  "EnineBestLearnerDelay": {
+    "value": "248",
+    "source": "results/raw/e9_learning/runs.csv"
+  },
+  "EnineFixedDelay": {
+    "value": "8.4",
+    "source": "results/raw/e9_learning/runs.csv"
+  },
+  "EnineDposReward": {
+    "value": "0.913",
+    "source": "results/raw/e9_learning/runs.csv"
+  },
+  "EnineDthreeFOne": {
+    "value": "0.75",
+    "source": "results/raw/e9_learning/runs.csv"
+  },
+  "EnineFixedFOne": {
+    "value": "0.60",
+    "source": "results/raw/e9_learning/runs.csv"
+  },
+  "EnineDthreeReward": {
+    "value": "0.862",
+    "source": "results/raw/e9_learning/runs.csv"
+  },
+  "EnineLearnersBeatRule": {
+    "value": "2",
+    "source": "results/raw/stats/e9_learning.csv"
+  },
+  "EnineLearnersLoseRule": {
+    "value": "0",
+    "source": "results/raw/stats/e9_learning.csv"
+  },
+  "EtenIterAbortFrac": {
+    "value": "0.306",
+    "source": "results/raw/e10_safety/search.csv"
+  },
+  "EtenIterViolations": {
+    "value": "0",
+    "source": "results/raw/e10_safety/search.csv"
+  },
+  "EtenExactAbortFrac": {
+    "value": "0.241",
+    "source": "results/raw/e10_safety/search.csv"
+  },
+  "EtenCells": {
+    "value": "504",
+    "source": "results/raw/e10_safety/search.csv"
+  },
+  "EtenViolations": {
+    "value": "0",
+    "source": "results/raw/e10_safety/search.csv"
+  },
+  "EtenUnsafeCells": {
+    "value": "352",
+    "source": "results/raw/e10_safety/search.csv"
+  },
+  "EtenUnsafeBroken": {
+    "value": "352",
+    "source": "results/raw/e10_safety/search.csv"
+  },
+  "EtenCapUnenforced": {
+    "value": "0",
+    "source": "results/raw/e10_safety/search.csv"
+  },
+  "EtenEnvMaxInvalidSafe": {
+    "value": "0.0000",
+    "source": "results/raw/e10_safety/env.csv"
+  },
+  "EtenEnvMaxInvalidAll": {
+    "value": "0.0000",
+    "source": "results/raw/e10_safety/env.csv"
+  }
+}
