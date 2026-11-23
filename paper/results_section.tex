@@ -135,8 +135,11 @@ detects nothing below lie rate 0.75. The honest false-quarantine rate on the sam
 \subsection{E13: the preprint's sleeper protocol, without the oracle}
 Using the preprint's protocol (16 nodes, 4 adversaries, 50 episodes of 100 steps with trust carried over, activation after
 episode 25, intensity 0.75, F1 at the end of each episode with static labels), legacy Beta trust scores a median F1 of
-\EthirteenLegacyPre{} over the dormant episodes and \EthirteenLegacyPost{} over the active ones (Table~\ref{tab:e13}). The
-preprint reported 0.11--0.16 after activation from a simulator whose trust updates read ground truth (E0); without that
-feedback the legacy model never flags a sleeper. SleeperGuard scores \EthirteenSgPre{} while the sleepers are dormant
-(they behave honestly, so nothing can be detected) and \EthirteenSgPost{} after activation.
+\EthirteenLegacyPre{} over the dormant episodes and \EthirteenLegacyPost{} averaged over the 25 active ones
+(Table~\ref{tab:e13}), which falls inside the 0.11--0.16 the preprint reported. The average hides the dynamics: legacy Beta
+flags no sleeper until episode \EthirteenLegacyFirstEp{} (median over seeds), about 20 episodes after activation, and then
+catches them (final-episode F1 \EthirteenLegacyFinal{}). SleeperGuard first flags them in episode \EthirteenSgFirstEp{},
+the first episode after activation, and averages \EthirteenSgPost{} over the active phase; before activation both score
+\EthirteenSgPre{}, because dormant sleepers behave honestly. The preprint's headline number therefore survives removing the
+oracle under its own protocol, but it measures a long detection lag, not a permanent failure.
 \input{generated/tab_e13.tex}

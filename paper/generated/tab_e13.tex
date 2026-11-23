@@ -1,0 +1,14 @@
+\begin{table}[t]
+\centering\scriptsize
+\caption{E13: the sleeper attack under the preprint's protocol (16 nodes, 4 adversaries, 50 episodes $\times$ 100 steps, activation after episode 25, intensity 0.75), F1 at the end of each episode with static labels as in the preprint, averaged over the dormant and active phases. Median [95\% CI], 30 seeds.}\label{tab:e13}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lllll}
+\toprule
+trust & adversaries & F1 episodes 1-25 (dormant) & F1 episodes 26-50 (active) & F1 final episode \\
+\midrule
+legacy beta & 4 & 0.000 [0.000, 0.000] & 0.160 [0.136, 0.160] & 1.000 [1.000, 1.000] \\
+sleeper guard & 4 & 0.000 [0.000, 0.016] & 0.996 [0.991, 0.996] & 1.000 [1.000, 1.000] \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

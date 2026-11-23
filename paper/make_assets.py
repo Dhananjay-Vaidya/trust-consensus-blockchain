@@ -610,6 +610,11 @@ def e13() -> None:
         macro(f"Ethirteen{tag}Pre", float(g.f1_pre_mean.median()), src)
         macro(f"Ethirteen{tag}Post", float(g.f1_post_mean.median()), src)
         macro(f"Ethirteen{tag}Final", float(g.f1_final.median()), src)
+        ep = load("e13_preprint_protocol", "episodes.csv")
+        if ep is not None:
+            h = ep[(ep.backend == be) & (ep.episode > 25)]
+            first = h[h.f1_static >= 0.5].groupby("seed").episode.min().reindex(sorted(h.seed.unique()))
+            macro(f"Ethirteen{tag}FirstEp", float(first.fillna(51).median()), "results/raw/e13_preprint_protocol/episodes.csv", "{:.0f}")
     tex_table(pd.DataFrame(rows), GEN / "tab_e13.tex",
               r"E13: the sleeper attack under the preprint's protocol (16 nodes, 4 adversaries, 50 episodes $\times$ 100 "
               r"steps, activation after episode 25, intensity 0.75), F1 at the end of each episode with static labels as "

@@ -18,7 +18,7 @@ import itertools
 import random
 import time
 from collections import deque
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Callable, Deque, List, Optional, Sequence, Tuple
 
 import numpy as np

@@ -1,7 +1,7 @@
 {
   "experiment": "e5_scale",
   "argv": [
-    "C:\\Users\\Dhananjay Vaidya\\Downloads\\PopulationDataProject\\trust-consensus-blockchain\\experiments\\exp_e5_scale.py"
+    "C:\\Users\\Dhananjay Vaidya\\AppData\\Local\\Temp\\claude\\5a0c7a4aed12602c\\d4b5d0a2-48c5-4511-bd7e-bfe674a1cc61\\scratchpad\\clean\\experiments\\exp_e5_scale.py"
   ],
   "machine": {
     "python": "3.13.3",
@@ -13,14 +13,16 @@
     "sklearn": "1.6.1",
     "torch": "2.7.0+cpu",
     "pandas": "2.2.3",
+    "cpu_model": "Intel(R) Core(TM) 5 210H",
     "ram_gb": 16.78,
+    "physical_cores": 8,
     "tenseal": "0.3.16",
-    "git_commit": "50104783cf1c1fd41d3efc8c2e0fb1ac28809ee0",
-    "git_dirty": true
+    "git_commit": "4e588eb3763611bc691ccdeddc9589b2ec6a13bf",
+    "git_dirty": false
   },
-  "written": "2026-11-22T21:46:56",
+  "written": "2026-11-24T00:08:06",
   "runtime_s": {
-    "runs.csv": 3211.4
+    "runs.csv": 160.6
   },
   "note": "wall-clock measured with up to 4 concurrent worker processes"
 }

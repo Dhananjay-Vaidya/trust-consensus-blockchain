@@ -172,7 +172,7 @@
     "source": "results/raw/e4_he/decisions.csv"
   },
   "EfourMsZero": {
-    "value": "25",
+    "value": "23",
     "source": "results/raw/e4_he/timings.csv"
   },
   "EfourBandZero": {
@@ -188,7 +188,7 @@
     "source": "results/raw/e4_he/decisions.csv"
   },
   "EfourMsOne": {
-    "value": "268",
+    "value": "147",
     "source": "results/raw/e4_he/timings.csv"
   },
   "EfourBandOne": {
@@ -204,7 +204,7 @@
     "source": "results/raw/e4_he/decisions.csv"
   },
   "EfourMsTwo": {
-    "value": "220",
+    "value": "296",
     "source": "results/raw/e4_he/timings.csv"
   },
   "EfourBandTwo": {
@@ -220,7 +220,7 @@
     "source": "results/raw/e4_he/decisions.csv"
   },
   "EfourMsThree": {
-    "value": "486",
+    "value": "478",
     "source": "results/raw/e4_he/timings.csv"
   },
   "EfourBandThree": {
@@ -236,7 +236,7 @@
     "source": "results/raw/e4_he/leakage.csv"
   },
   "EfourBandMaxFlip": {
-    "value": "1e-09",
+    "value": "1e-08",
     "source": "results/raw/e4_he/band.csv"
   },
   "EfourBandMinSafe": {
@@ -256,7 +256,7 @@
     "source": "results/raw/e4_he/consensus.csv"
   },
   "EfourConsWallZero": {
-    "value": "22",
+    "value": "32",
     "source": "results/raw/e4_he/consensus.csv"
   },
   "EfourConsFlipsThree": {
@@ -264,11 +264,11 @@
     "source": "results/raw/e4_he/consensus.csv"
   },
   "EfourConsWallThree": {
-    "value": "471",
+    "value": "436",
     "source": "results/raw/e4_he/consensus.csv"
   },
   "EfourConsWallPlain": {
-    "value": "0.18",
+    "value": "0.31",
     "source": "results/raw/e4_he/consensus.csv"
   },
   "EfiveMaxNodes": {
@@ -276,7 +276,7 @@
     "source": "results/raw/e5_scale/runs.csv"
   },
   "EfiveBigWall": {
-    "value": "15.5",
+    "value": "14.4",
     "source": "results/raw/e5_scale/runs.csv"
   },
   "EfiveBigMem": {
@@ -376,11 +376,11 @@
     "source": "results/raw/e9_learning/runs.csv"
   },
   "EnineBestLearnerReward": {
-    "value": "0.929",
+    "value": "0.920",
     "source": "results/raw/e9_learning/runs.csv"
   },
   "EnineRuleReward": {
-    "value": "0.857",
+    "value": "0.856",
     "source": "results/raw/e9_learning/runs.csv"
   },
   "EnineFixedReward": {
@@ -388,11 +388,11 @@
     "source": "results/raw/e9_learning/runs.csv"
   },
   "EnineBestLearnerDelay": {
-    "value": "248",
+    "value": "39",
     "source": "results/raw/e9_learning/runs.csv"
   },
   "EnineFixedDelay": {
-    "value": "8.4",
+    "value": "9.4",
     "source": "results/raw/e9_learning/runs.csv"
   },
   "EnineDposReward": {
@@ -400,7 +400,7 @@
     "source": "results/raw/e9_learning/runs.csv"
   },
   "EnineDthreeFOne": {
-    "value": "0.75",
+    "value": "0.66",
     "source": "results/raw/e9_learning/runs.csv"
   },
   "EnineFixedFOne": {
@@ -408,11 +408,11 @@
     "source": "results/raw/e9_learning/runs.csv"
   },
   "EnineDthreeReward": {
-    "value": "0.862",
+    "value": "0.872",
     "source": "results/raw/e9_learning/runs.csv"
   },
   "EnineLearnersBeatRule": {
-    "value": "2",
+    "value": "3",
     "source": "results/raw/stats/e9_learning.csv"
   },
   "EnineLearnersLoseRule": {
@@ -630,5 +630,61 @@
   "EtwelveFqMax": {
     "value": "0.30",
     "source": "results/raw/e12_lierate/runs.csv"
+  },
+  "EthirteenLegacyPre": {
+    "value": "0.00",
+    "source": "results/raw/e13_preprint_protocol/runs.csv"
+  },
+  "EthirteenLegacyPost": {
+    "value": "0.16",
+    "source": "results/raw/e13_preprint_protocol/runs.csv"
+  },
+  "EthirteenLegacyFinal": {
+    "value": "1.00",
+    "source": "results/raw/e13_preprint_protocol/runs.csv"
+  },
+  "EthirteenLegacyFirstEp": {
+    "value": "47",
+    "source": "results/raw/e13_preprint_protocol/episodes.csv"
+  },
+  "EthirteenSgPre": {
+    "value": "0.00",
+    "source": "results/raw/e13_preprint_protocol/runs.csv"
+  },
+  "EthirteenSgPost": {
+    "value": "1.00",
+    "source": "results/raw/e13_preprint_protocol/runs.csv"
+  },
+  "EthirteenSgFinal": {
+    "value": "1.00",
+    "source": "results/raw/e13_preprint_protocol/runs.csv"
+  },
+  "EthirteenSgFirstEp": {
+    "value": "26",
+    "source": "results/raw/e13_preprint_protocol/episodes.csv"
+  },
+  "HwCpu": {
+    "value": "Intel Core 5 210H",
+    "source": "results/raw/e4_he/meta.json"
+  },
+  "HwCores": {
+    "value": "8 physical / 12 logical",
+    "source": "results/raw/e4_he/meta.json"
+  },
+  "HwRam": {
+    "value": "16.78~GB",
+    "source": "results/raw/e4_he/meta.json"
+  },
+  "HwOs": {
+    "value": "Windows-11-10.0.26300-SP0",
+    "source": "results/raw/e4_he/meta.json"
+  },
+  "HwTenseal": {
+    "value": "0.3.16",
+    "source": "results/raw/e4_he/meta.json"
+  },
+  "HwPython": {
+    "value": "3.13.3",
+    "source": "results/raw/e4_he/meta.json"
   }
 }

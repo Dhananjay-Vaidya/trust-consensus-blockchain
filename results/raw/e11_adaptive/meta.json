@@ -1,7 +1,7 @@
 {
   "experiment": "e11_adaptive",
   "argv": [
-    "C:\\Users\\Dhananjay Vaidya\\Downloads\\PopulationDataProject\\trust-consensus-blockchain\\experiments\\exp_e11_adaptive.py"
+    "C:\\Users\\Dhananjay Vaidya\\AppData\\Local\\Temp\\claude\\5a0c7a4aed12602c\\d4b5d0a2-48c5-4511-bd7e-bfe674a1cc61\\scratchpad\\clean\\experiments\\exp_e11_adaptive.py"
   ],
   "machine": {
     "python": "3.13.3",
@@ -13,14 +13,16 @@
     "sklearn": "1.6.1",
     "torch": "2.7.0+cpu",
     "pandas": "2.2.3",
+    "cpu_model": "Intel(R) Core(TM) 5 210H",
     "ram_gb": 16.78,
+    "physical_cores": 8,
     "tenseal": "0.3.16",
-    "git_commit": "0c536560cd7d364b28c181b782e905586b399b56",
-    "git_dirty": true
+    "git_commit": "4e588eb3763611bc691ccdeddc9589b2ec6a13bf",
+    "git_dirty": false
   },
-  "written": "2026-11-23T09:03:20",
+  "written": "2026-11-24T00:37:08",
   "runtime_s": {
-    "search.csv": 225.3,
-    "runs.csv": 44.3
+    "search.csv": 274.0,
+    "runs.csv": 55.8
   }
 }
