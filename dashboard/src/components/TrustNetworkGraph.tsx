@@ -13,7 +13,7 @@ interface Edge extends d3.SimulationLinkDatum<Node> {
   target: string | Node;
 }
 function color(t: number) {
-  return t < 0.4 ? "#b54a4a" : t < 0.7 ? "#ad863f" : "#32816b";
+  return t < 0.4 ? "#b0372a" : t < 0.7 ? "#9a6f1c" : "#3d6b4b";
 }
 export function TrustNetworkGraph() {
   const ref = useRef<SVGSVGElement>(null);
@@ -82,7 +82,7 @@ export function TrustNetworkGraph() {
       .selectAll("line")
       .data(links)
       .join("line")
-      .attr("stroke", "#acc9bf")
+      .attr("stroke", "#c9c0ad")
       .attr("stroke-width", 1)
       .attr("stroke-opacity", 0.65);
     const groups = root
@@ -104,15 +104,15 @@ export function TrustNetworkGraph() {
     groups
       .append("circle")
       .attr("r", (d) => (d.delegate ? 19 : 14))
-      .attr("fill", (d) => (d.delegate ? "#edf6f2" : "white"))
+      .attr("fill", (d) => (d.delegate ? "#e6e9ee" : "#fbfaf6"))
       .attr("stroke", (d) =>
         d.id === selected
-          ? "#253c40"
+          ? "#1d1c19"
           : d.detected
-            ? "#b54a4a"
+            ? "#b0372a"
             : d.delegate
-              ? "#167567"
-              : "#d2ded9",
+              ? "#1f3a5f"
+              : "#d8d0be",
       )
       .attr("stroke-width", (d) =>
         d.id === selected || d.detected ? 2.5 : 1.5,
@@ -126,8 +126,8 @@ export function TrustNetworkGraph() {
         .append("text")
         .attr("text-anchor", "middle")
         .attr("y", 32)
-        .attr("fill", "#65777c")
-        .attr("font-family", "var(--font-mono)")
+        .attr("fill", "#6e695e")
+        .attr("font-family", "var(--font-sans)")
         .attr("font-size", 10)
         .text((d) => d.id.replace("Node_", "N"));
     groups
@@ -187,10 +187,10 @@ export function TrustNetworkGraph() {
           <div className="network-empty-icon">
             <Graph size={32} weight="light" />
           </div>
-          <h3>Your network starts here</h3>
+          <h3>No run on the bench</h3>
           <p>
-            Configure an experiment to observe node trust, adversarial behavior,
-            and delegate selection in real time.
+            Start an experiment to plot each node's trust, the delegates chosen
+            each step, and nodes quarantined by the trust backend.
           </p>
         </div>
       ) : (
@@ -218,9 +218,9 @@ export function TrustNetworkGraph() {
           </button>
           <div className="network-legend">
             {[
-              ["#32816b", "High trust"],
-              ["#ad863f", "Mid trust"],
-              ["#b54a4a", "Low trust"],
+              ["#3d6b4b", "High trust"],
+              ["#9a6f1c", "Mid trust"],
+              ["#b0372a", "Low trust"],
             ].map(([c, l]) => (
               <span className="legend-item" key={l}>
                 <i className="legend-node" style={{ background: c }} />

@@ -28,9 +28,14 @@ depends on modelling choices a reviewer can reasonably reject.
 | C17 | The provided iterative `cap_shares` can exceed the cap by up to ~2x; safety then relies on the tally's abort | `tests/test_capping.py`, `results/raw/e10_safety/search.csv` | strong | Measured on random heavy-tailed weight vectors |
 | C18 | No invalid commit in the full environment for coalitions up to 8 of 16 with zero honest faults | `results/raw/e10_safety/env.csv` | moderate | CRA colluders are quarantined quickly; says nothing about adversaries that keep high trust |
 
+| C19 | Against the adaptive coalition (exact cap), no invalid commit for coalitions below the bound: 0/450 runs without and 0/450 with honest faults; above the bound 89/540 runs breach, all with honest faults | `results/raw/e10_safety/env.csv` | strong | 30 seeds x 3 lie rates; k=16, c=2, θ=0.667 only |
+| C20 | A damage-maximising coalition chosen by search (always b=8, above the bound) evades detection: SleeperGuard median F1 0.24, legacy 0.00; invalid-commit rate 0.0007 vs 0.0023 | `results/raw/e11_adaptive/` | moderate | Attacker search on seeds 30-39 over a fixed grid; damage rates are small in absolute terms |
+| C21 | SleeperGuard detection rises with lie rate (F1 0.07 at 5% to 1.00 at 100%; ≥0.5 from 40%); honest false quarantines stay ≤0.30/1000 | `results/raw/e12_lierate/runs.csv` | strong | One coalition size (5/16), one fault rate (0.05) |
+
 ## Claims that must NOT appear in the paper
 
 * Any "first" / "no one has done" claim (literature search incomplete: `docs/LITERATURE.md`).
 * That the HE tally hides margins or weights from the decryptor (contradicted by C9).
 * That learning controllers improve security (C14 caveat).
+* That SleeperGuard detects adaptive or low-rate attackers (contradicted by C20, C21); safety against them comes from the cap bound (C19).
 * Any number from the preprint arXiv:2512.22860 as a result of this system (produced by the audited simulator).

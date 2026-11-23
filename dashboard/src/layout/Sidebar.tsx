@@ -1,34 +1,23 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import {
-  Graph,
-  ChartLine,
-  Flask,
-  Stack,
-  FolderOpen,
-  Scales,
-  Blueprint,
-  Export,
-  BookOpen,
-} from "@phosphor-icons/react";
 import { apiClient } from "../api/client";
 const groups = [
   {
-    label: "Workspace",
+    label: "Part I — Workspace",
     items: [
-      { icon: Graph, label: "Live simulation", to: "/" },
-      { icon: ChartLine, label: "Metrics explorer", to: "/metrics" },
-      { icon: Flask, label: "Attack laboratory", to: "/attack-lab" },
-      { icon: Stack, label: "Scenario library", to: "/scenarios" },
+      { label: "Live simulation", to: "/" },
+      { label: "Metrics explorer", to: "/metrics" },
+      { label: "Attack laboratory", to: "/attack-lab" },
+      { label: "Scenario library", to: "/scenarios" },
     ],
   },
   {
-    label: "Research",
+    label: "Part II — Research",
     items: [
-      { icon: FolderOpen, label: "Experiment results", to: "/experiments" },
-      { icon: Scales, label: "Compare runs", to: "/compare" },
-      { icon: Blueprint, label: "System architecture", to: "/explainer" },
-      { icon: Export, label: "Export & present", to: "/export" },
+      { label: "Experiment results", to: "/experiments" },
+      { label: "Compare runs", to: "/compare" },
+      { label: "System architecture", to: "/explainer" },
+      { label: "Export & present", to: "/export" },
     ],
   },
 ];
@@ -54,21 +43,16 @@ export function Sidebar() {
   return (
     <aside className="sidebar">
       <NavLink to="/" className="brand" aria-label="TDCB research workspace">
-        <span className="brand-mark">
-          <Graph size={25} weight="bold" />
-        </span>
         <span>
-          <strong>
-            TDCB<span className="brand-divider"> / </span>Lab
-          </strong>
-          <small>Trust & consensus research</small>
+          <strong>TDCB Laboratory</strong>
+          <small>Notebook on trust &amp; consensus</small>
         </span>
       </NavLink>
       <nav aria-label="Main navigation">
         {groups.map((group) => (
           <div className="nav-group" key={group.label}>
             <div className="nav-label">{group.label}</div>
-            {group.items.map(({ icon: Icon, label, to }) => (
+            {group.items.map(({ label, to }) => (
               <NavLink
                 key={to}
                 to={to}
@@ -78,7 +62,6 @@ export function Sidebar() {
                 }
                 title={label}
               >
-                <Icon size={19} />
                 <span>{label}</span>
               </NavLink>
             ))}
@@ -87,7 +70,6 @@ export function Sidebar() {
       </nav>
       <div className="sidebar-bottom">
         <NavLink to="/explainer" className="research-note">
-          <BookOpen size={20} />
           <span>
             Understand the model<small>Architecture & methodology</small>
           </span>

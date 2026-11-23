@@ -99,9 +99,9 @@ export function SystemExplainerPage() {
     <div className="architecture-workspace">
       <div className="research-callout">
         <p>
-          The simulation links authorization, trust estimation, delegation,
-          blockchain records, and reinforcement learning. Select a stage to
-          inspect its role. Encryption is an optional evaluation path.
+          Votes come from a noisy vote model; trust learns only from randomly
+          audited transactions; the tally can run in plaintext or under CKKS
+          encryption. Select a stage to read its role and source file.
         </p>
       </div>
       <div className="pipeline" role="group" aria-label="Simulation components">

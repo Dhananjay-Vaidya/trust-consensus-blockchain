@@ -1,39 +1,56 @@
+/* "Lab ledger" tokens. Variable names are kept so every existing rule keeps working;
+   the values come from a bound research notebook: ledger paper, graphite and blue-black ink,
+   stamp vermilion (reserved for malicious / quarantined), ledger green (honest), ochre (mid trust). */
 :root {
   color-scheme: light;
-  --bg-base: #f5f7f8;
-  --bg-surface: #ffffff;
-  --bg-elevated: #f4f6f7;
-  --bg-panel: #ffffff;
-  --bg-hover: #eef3f3;
-  --bg-active: #e4edec;
-  --accent: #167567;
-  --accent-dim: #eaf4f1;
-  --accent-border: #b3d5cc;
-  --text-accent: #126454;
-  --green: #20745c;
-  --green-dim: #eaf4ee;
-  --red: #b54a4a;
-  --red-dim: #fbefee;
-  --amber: #996c23;
-  --amber-dim: #fbf4e7;
-  --purple: #6b6688;
-  --purple-dim: #f0eef6;
-  --cyan: #397991;
-  --cyan-dim: #ecf3f7;
-  --pink: #986078;
-  --pink-dim: #f7eff3;
-  --text-primary: #202e32;
-  --text-secondary: #58686e;
-  --text-muted: #64747b;
-  --border: #e1e7e9;
-  --border-strong: #cbd5d8;
-  --border-accent: #99c4b8;
-  --font-sans: "IBM Plex Sans Variable", "Segoe UI", sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
-  --radius-sm: 5px;
-  --radius-md: 7px;
-  --radius-lg: 9px;
-  --radius-xl: 12px;
-  --sidebar-w: 238px;
-  --topbar-h: 66px;
+
+  /* paper */
+  --bg-base: #f3f0e8;        /* ledger page */
+  --bg-surface: #fbfaf6;     /* fresh sheet */
+  --bg-elevated: #eeeae0;    /* inset: inputs, wells */
+  --bg-panel: #fbfaf6;
+  --bg-hover: #ebe6da;
+  --bg-active: #e3dccb;
+
+  /* ink: the single accent */
+  --accent: #1f3a5f;         /* blue-black fountain-pen ink */
+  --accent-dim: #e6e9ee;
+  --accent-border: #9fb0c6;
+  --text-accent: #1f3a5f;
+
+  /* semantic, from the same desk */
+  --green: #3d6b4b;          /* ledger green: honest / verified */
+  --green-dim: #e6ede4;
+  --red: #b0372a;            /* stamp vermilion: malicious / quarantined */
+  --red-dim: #f6e6e1;
+  --amber: #9a6f1c;          /* ochre: mid trust, warnings */
+  --amber-dim: #f4ecd9;
+  --purple: #5d5470;
+  --purple-dim: #ece9f0;
+  --cyan: #4a6a80;           /* faded blueprint, secondary series */
+  --cyan-dim: #e7ecef;
+  --pink: #7d4f5e;
+  --pink-dim: #f1e7ea;
+
+  /* graphite */
+  --text-primary: #1d1c19;
+  --text-secondary: #46433c;
+  --text-muted: #6e695e;
+
+  /* ruling */
+  --border: rgba(29, 28, 25, 0.13);
+  --border-strong: rgba(29, 28, 25, 0.24);
+  --border-accent: rgba(31, 58, 95, 0.45);
+  --rule-double: 3px double rgba(29, 28, 25, 0.32);
+
+  --font-serif: "Spectral", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Libre Franklin Variable", "Franklin Gothic Book", "Arial Narrow", sans-serif;
+  --font-mono: "Courier Prime", "Courier New", monospace;
+
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-xl: 6px;
+  --sidebar-w: 232px;
+  --topbar-h: 56px;
 }

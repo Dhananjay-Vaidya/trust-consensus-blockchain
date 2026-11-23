@@ -1,0 +1,590 @@
+/* ============================================================================================
+   LEDGER LAYER — the "lab notebook bound to an IEEE paper" direction.
+   Loaded after globals.css; owns typography, depth (borders only, no shadows), the ledger
+   double rule, figure captions, numbered contents and the ink-stamp status style.
+   Type scale: 14px base, ratio 1.25 -> 11 / 12 / 14 / 16 / 18 / 22 / 28 / 34.
+   Spacing: 4px base. Depth: hairline rules + paper tones; no drop shadows anywhere.
+   ============================================================================================ */
+
+/* ---- paper & type ------------------------------------------------------------------------- */
+body {
+  font-size: 14px;
+  line-height: 1.55;
+  background: var(--bg-base);
+  font-feature-settings: "tnum" 1, "lnum" 1;
+}
+button,
+input,
+select,
+textarea {
+  border-radius: var(--radius-sm);
+}
+h1,
+h2,
+.page-heading h1,
+.brand strong {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  text-wrap: balance;
+}
+h1 {
+  font-size: 34px;
+  letter-spacing: -0.4px;
+  line-height: 1.15;
+}
+h2 {
+  font-size: 18px;
+  letter-spacing: -0.1px;
+}
+h3 {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 600;
+}
+p {
+  text-wrap: pretty;
+}
+::selection {
+  background: rgba(31, 58, 95, 0.16);
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---- sidebar: a paper's table of contents -------------------------------------------------- */
+.sidebar {
+  background: var(--bg-base);
+  border-right: 1px solid var(--border);
+}
+.brand {
+  padding: 28px 24px 24px;
+  gap: 0;
+  border-bottom: var(--rule-double);
+  margin: 0 16px 8px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+.brand strong {
+  font-size: 24px;
+  letter-spacing: -0.3px;
+}
+.brand small {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+.nav-group {
+  margin: 16px 16px 20px;
+  counter-reset: section;
+}
+.nav-group + .nav-group {
+  counter-reset: none;
+}
+.nav-label {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0 8px 6px;
+}
+.nav-item {
+  counter-increment: section;
+  min-height: 36px;
+  padding: 6px 8px;
+  margin-bottom: 0;
+  gap: 10px;
+  border-radius: 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  border-bottom: 1px dotted var(--border);
+  transition: color 0.12s cubic-bezier(0.23, 1, 0.32, 1), background-color 0.12s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.nav-item::before {
+  content: "§" counter(section);
+  font-family: var(--font-serif);
+  font-size: 13px;
+  color: var(--text-muted);
+  min-width: 22px;
+  font-variant-numeric: lining-nums;
+}
+.nav-item:hover {
+  background: transparent;
+  color: var(--text-primary);
+}
+.nav-item.active {
+  background: transparent;
+  box-shadow: none;
+  color: var(--accent);
+  font-weight: 600;
+}
+.nav-item.active::before {
+  color: var(--accent);
+}
+.nav-item.active span {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+.research-note {
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  padding: 14px 4px;
+}
+.research-note small {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 12px;
+}
+.api-status {
+  font-size: 12px;
+  border-top: 0;
+  padding: 0 4px;
+}
+
+/* ---- top bar: running head of a page ------------------------------------------------------- */
+.topbar {
+  background: var(--bg-base);
+  border-bottom: 1px solid var(--border-strong);
+  padding: 0 40px;
+}
+.breadcrumb {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 14px;
+  gap: 10px;
+}
+.breadcrumb strong {
+  font-style: normal;
+  font-weight: 600;
+}
+.breadcrumb-slash {
+  color: var(--text-muted);
+}
+.running-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+}
+.quiet-button {
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  padding: 7px 12px;
+  color: var(--text-primary);
+  transition: background-color 0.12s cubic-bezier(0.23, 1, 0.32, 1), transform 0.12s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.quiet-button:hover,
+.quiet-button.selected {
+  background: var(--bg-hover);
+  border-color: var(--text-secondary);
+  color: var(--text-primary);
+}
+.quiet-button:active,
+.primary-button:active {
+  transform: scale(0.97);
+}
+
+/* ---- page head ---------------------------------------------------------------------------- */
+.main-content {
+  padding: 36px 40px 0;
+}
+.page-heading {
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: var(--rule-double);
+}
+.eyebrow {
+  font-family: var(--font-serif);
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.page-heading p {
+  font-size: 16px;
+  font-family: var(--font-serif);
+  color: var(--text-secondary);
+  margin-top: 8px;
+  max-width: 68ch;
+}
+.workspace-footer {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 12px;
+  border-top: 1px solid var(--border);
+  margin-top: 32px;
+}
+
+/* ---- sheets (panels): ruled, square, no shadow --------------------------------------------- */
+.configuration-panel,
+.network-panel,
+.chart-panel,
+.event-panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: none;
+}
+.panel-heading,
+.config-header {
+  border-bottom: var(--rule-double);
+  padding: 16px 20px 14px;
+}
+.panel-heading h2,
+.config-header h2 {
+  font-size: 18px;
+}
+.panel-heading p,
+.config-header p {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* figure captions: every chart is a numbered figure, as in the paper */
+.main-content {
+  counter-reset: figure;
+}
+.chart-panel {
+  padding: 16px 20px 12px;
+}
+.chart-panel header {
+  align-items: baseline;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+  margin-bottom: 14px;
+}
+.chart-panel header h3 {
+  counter-increment: figure;
+  font-size: 16px;
+  font-weight: 600;
+}
+.chart-panel header h3::before {
+  content: "Fig. " counter(figure) ". ";
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-muted);
+}
+.chart-panel header span {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 13px;
+}
+.chart-empty {
+  background: repeating-linear-gradient(to top, transparent 0, transparent 27px, rgba(29, 28, 25, 0.06) 28px);
+}
+
+/* the network canvas is graph paper */
+.network-canvas {
+  background-color: var(--bg-surface);
+  background-image:
+    linear-gradient(rgba(31, 58, 95, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(31, 58, 95, 0.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.network-legend {
+  background: var(--bg-surface);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+}
+.network-summary {
+  font-size: 13px;
+}
+.network-summary strong {
+  font-family: var(--font-sans);
+  font-weight: 600;
+}
+.network-empty-icon {
+  border-radius: 50%;
+  border-color: var(--border-strong);
+  background: transparent;
+}
+.network-empty h3 {
+  font-size: 18px;
+}
+.network-empty p {
+  font-size: 14px;
+  font-family: var(--font-serif);
+}
+
+/* ---- metrics: figures in a results table, not tiles ---------------------------------------- */
+.metric-grid {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--text-primary);
+  border-bottom: 2px solid var(--text-primary);
+  border-radius: 0;
+}
+.metric-card {
+  padding: 14px 20px 16px;
+}
+.metric-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+.metric-value {
+  font-family: var(--font-serif);
+  font-size: 34px;
+  font-weight: 400;
+  letter-spacing: -0.5px;
+  font-variant-numeric: tabular-nums lining-nums;
+  margin-top: 4px;
+}
+.metric-unit,
+.metric-detail {
+  font-size: 12px;
+}
+
+/* ---- controls ------------------------------------------------------------------------------ */
+.field label,
+.field-label {
+  font-size: 13px;
+}
+.field output {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+}
+.field select,
+.field input[type="number"],
+input:not([type="range"]):not([type="checkbox"]),
+select {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  padding: 8px 10px;
+}
+.form-section-title {
+  font-family: var(--font-serif);
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 14px;
+  font-weight: 400;
+}
+.field-help {
+  font-size: 12px;
+}
+.segmented {
+  border-radius: var(--radius-sm);
+  padding: 0;
+  background: transparent;
+}
+.segmented button {
+  border-radius: 0;
+  font-size: 13px;
+  padding: 8px 4px;
+}
+.segmented button + button {
+  border-left: 1px solid var(--border-strong);
+}
+.segmented button[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--bg-surface);
+  box-shadow: none;
+}
+input[type="range"] {
+  accent-color: var(--accent);
+}
+.primary-button {
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  padding: 12px 16px;
+  transition: background-color 0.14s cubic-bezier(0.23, 1, 0.32, 1), transform 0.12s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.primary-button:hover {
+  background: #15294a;
+}
+.primary-button.danger-button {
+  background: transparent;
+  color: var(--red);
+  border-color: var(--red);
+}
+details.advanced summary {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+/* ---- ink stamps: status / state labels ----------------------------------------------------- */
+.state-label,
+.badge,
+.status-pill {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  border: 1.5px solid currentColor;
+  border-radius: var(--radius-sm);
+  padding: 3px 7px;
+  background: transparent;
+}
+
+/* ---- event log: the typewritten lab record ------------------------------------------------- */
+.log-body,
+.log-body * {
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+.log-count {
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-item,
+  .quiet-button,
+  .primary-button {
+    transition: none;
+  }
+  .quiet-button:active,
+  .primary-button:active {
+    transform: none;
+  }
+}
+
+/* ---- charts: axis text in the interface face, tooltips as paper slips ---------------------- */
+.recharts-text,
+.recharts-cartesian-axis-tick-value,
+.recharts-legend-item-text {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  fill: var(--text-muted);
+}
+.recharts-default-tooltip {
+  background: var(--bg-surface) !important;
+  border: 1px solid var(--border-strong) !important;
+  border-radius: var(--radius-sm) !important;
+  font-family: var(--font-sans);
+  font-size: 12px;
+}
+
+/* ---- fixes from the visual pass ------------------------------------------------------------ */
+.brand strong {
+  font-size: 21px;
+  white-space: nowrap;
+}
+/* a 7-figure results table wraps to two rows: rule between rows, no orphan left rule */
+.metric-grid .metric-card:nth-child(n + 5) {
+  border-top: 1px solid var(--border);
+}
+.metric-grid .metric-card:nth-child(4n + 1) {
+  border-left: 0;
+}
+/* margin note instead of a tinted callout box */
+.research-callout {
+  background: transparent;
+  border: 0;
+  border-left: 2px solid var(--accent);
+  border-radius: 0;
+  padding: 4px 0 4px 18px;
+}
+.research-callout p {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 80ch;
+}
+/* one inset well, not a box inside a box */
+.search-field {
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+}
+.search-field input:not([type="range"]):not([type="checkbox"]) {
+  background: transparent;
+  border: 0;
+  padding: 9px 0;
+}
+
+/* architecture pipeline: a numbered process strip, not icon tiles */
+.pipeline {
+  counter-reset: stage;
+  gap: 0;
+  border-top: 2px solid var(--text-primary);
+  border-bottom: 1px solid var(--border-strong);
+}
+.pipeline-stage {
+  counter-increment: stage;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  border-left: 1px solid var(--border);
+  padding: 14px 16px 16px;
+  text-align: left;
+  transition: background-color 0.12s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.pipeline-stage:first-child {
+  border-left: 0;
+}
+.pipeline-stage svg {
+  display: none;
+}
+.pipeline-stage::before {
+  content: counter(stage, upper-roman) ".";
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 22px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.pipeline-stage strong {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 600;
+}
+.pipeline-stage small {
+  font-size: 12px;
+}
+.pipeline-stage:hover {
+  background: var(--bg-hover);
+}
+.pipeline-stage.selected {
+  background: var(--bg-surface);
+  border-color: var(--border);
+  box-shadow: inset 0 -3px 0 var(--accent);
+}
+.pipeline-stage.selected::before {
+  color: var(--accent);
+}
+
+/* phones: one column for the setup form, nothing wider than the viewport */
+@media (max-width: 560px) {
+  .main-content {
+    padding: 24px 16px 0;
+  }
+  .config-form {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  .config-form > * {
+    grid-column: auto !important;
+  }
+  .live-workspace,
+  .observation-panel,
+  .configuration-panel {
+    min-width: 0;
+    max-width: 100%;
+  }
+  h1 {
+    font-size: 28px;
+  }
+  .metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

@@ -5,7 +5,11 @@ import time
 
 from fastapi.testclient import TestClient
 
+import src.api.simulation_runner as runner
+
 from src.api.main import app
+
+runner.STEP_DELAY_S = 0.0
 
 
 def test_start_status_and_stream_endpoints():

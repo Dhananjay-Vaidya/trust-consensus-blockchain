@@ -2,6 +2,14 @@ import type { SimulationConfig } from "../types";
 import { useState } from "react";
 import { Play, Stop, CircleNotch } from "@phosphor-icons/react";
 import { useSimulationStore } from "../store/simulationStore";
+/** Mirrors the engine: round(nodes x fraction), Python round-half-to-even. */
+function adversaryCount(nodes: number, fraction: number): number {
+  const x = nodes * fraction;
+  const f = Math.floor(x);
+  const d = x - f;
+  if (Math.abs(d - 0.5) < 1e-9) return f % 2 === 0 ? f : f + 1;
+  return d > 0.5 ? f + 1 : f;
+}
 const attacks = [
   ["none", "None - baseline"],
   ["nma", "NMA - noise manipulation"],
@@ -170,7 +178,7 @@ export function SimulationControlPanel() {
             }
           />
           <span className="field-help">
-            {Math.floor(config.nodes * config.malicious_fraction)} of{" "}
+            {adversaryCount(config.nodes, config.malicious_fraction)} of{" "}
             {config.nodes} nodes configured as adversarial.
           </span>
         </div>

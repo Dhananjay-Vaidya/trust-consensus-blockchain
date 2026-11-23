@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
 import threading
 import time
 from pathlib import Path
@@ -22,6 +23,9 @@ import pandas as pd
 from src.api.models import RunMetadata, SimulationConfig, SimulationStatusResponse
 
 MAX_CONCURRENT = 4
+# The honest simulator takes ~1 ms per step; streaming every step unthrottled floods the dashboard
+# websocket. Pace live runs (seconds per step); set SIM_STEP_DELAY=0 for full speed.
+STEP_DELAY_S = float(os.environ.get("SIM_STEP_DELAY", "0.05"))
 RESULTS_DIR = Path("experiments/results")
 
 _runs: Dict[str, Dict[str, Any]] = {}
@@ -151,6 +155,8 @@ def _run_simulation_thread(run_id: str, loop: asyncio.AbstractEventLoop, queue: 
                     "trust_backend": cfg.trust_backend, "tally_backend": cfg.tally_backend,
                 })
                 state["episode"], state["current_f1"], state["current_reward"] = ep, f1, rec.reward
+                if STEP_DELAY_S > 0:
+                    time.sleep(STEP_DELAY_S)
             m = summarize(env)
             ep_rows.append({"Episode": ep + 1, "Cumulative Reward": ep_reward, "F1 Score": m["det_f1"],
                             "Precision": m["det_precision"], "Recall": m["det_recall"], "MCC": m["det_mcc"],

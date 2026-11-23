@@ -98,7 +98,36 @@ Across \EtenCells{} (k, c, $\theta$, b) cells the search found \EtenViolations{}
 Proposition~\ref{prop:safety} with the exact cap, and every one of the \EtenUnsafeCells{} cells the bound marks unsafe was
 broken, so the bound is tight on this grid (Table~\ref{tab:e10}). With the original iterative cap, the tally's cap check
 aborted \EtenIterAbortFrac{} of search candidates (exact cap: \EtenExactAbortFrac{}, all from infeasible weight
-vectors); safety held only because of the abort. In the full environment with no honest faults, no invalid transaction
-was committed for any coalition size $b\le8$ (max rate \EtenEnvMaxInvalidAll{}), including sizes beyond the bound, because
-SleeperGuard quarantines always-on colluders before their weight matters.
+vectors); safety held only because of the abort.
+
+\textbf{Direct test against the adaptive coalition (E10b).} In the full environment with the exact cap, the
+damage-maximising coalition of E11 approved invalid transactions in coordination at lie rates 0.1, 0.3 and 1.0.
+For coalitions the bound marks safe ($b\le5$ of 16), no run committed an invalid transaction: \EtenEnvBreachSafeZero{} of
+\EtenEnvRunsSafeZero{} runs without honest faults and \EtenEnvBreachSafeFive{} of \EtenEnvRunsSafeFive{} with honest fault
+rate 0.05. Above the bound ($b\ge6$), \EtenEnvBreachUnsafe{} of \EtenEnvRunsUnsafe{} runs committed at least one invalid
+transaction (max rate \EtenEnvMaxInvalidUnsafe{}), all of them with honest faults present: the faulty honest approvals
+are what carry an above-bound coalition over $\theta$, as the faults clause of the proposition predicts. The proposition
+therefore needed no change; its honest-fault term is not vacuous (Table~\ref{tab:e10b}).
 \input{generated/tab_e10.tex}
+\input{generated/tab_e10_env.tex}
+
+\subsection{E11: a damage-maximising adaptive coalition}
+For each defence we searched lie rate (0.05--1.0), coalition size (2--8 of 16) and target (approve invalid only, or
+invert) on seeds 30--39 and kept the configuration with the highest invalid-commit rate. Against every defence the search
+chose the largest coalition (\EelevenBSgFull{} of 16, i.e.\ above the bound) approving invalid transactions, at lie rate
+\EelevenRateSgFull{} against full SleeperGuard (Table~\ref{tab:e11}). On evaluation seeds the median invalid-commit rate
+was \EelevenInvalidSgFull{} with full SleeperGuard versus \EelevenInvalidLegacyBeta{} with legacy Beta and
+\EelevenInvalidSgNone{} with all SleeperGuard components removed. \textbf{SleeperGuard does not detect this attacker
+well}: median F1 \EelevenFOneSgFull{} (legacy Beta \EelevenFOneLegacyBeta{}; without CUSUM \EelevenFOneSgNoCusum{}). What
+limits the damage is coalition size, not detection: for coalitions below the bound, full SleeperGuard had
+\EelevenSgBelowBoundBreach{} invalid commits in \EelevenSgBelowBoundRuns{} runs.
+\input{generated/tab_e11.tex}
+
+\subsection{E12: detection versus lie rate}
+With CUSUM calibrated on seeds 20--29 only, SleeperGuard's median F1 rises from \EtwelveFOneLow{} at lie rate
+\EtwelveLowRate{} to \EtwelveFOneHigh{} at lie rate 1.0, first reaching 0.5 at lie rate \EtwelveHalfRate{}; legacy Beta
+detects nothing below lie rate 0.75. The honest false-quarantine rate on the same runs stays at a median of at most
+\EtwelveFqMax{} per 1000 node-steps across all lie rates (Fig.~\ref{fig:e12}). An attacker that lies on fewer than
+\EtwelveHalfRate{} of its votes is therefore detected less than half the time.
+\begin{figure}[t]\centering\includegraphics[width=\columnwidth]{e12_lierate.pdf}
+\caption{E12: detection F1 (left axis, median and IQR) and honest false quarantines (right axis) vs.\ coalition lie rate.}\label{fig:e12}\end{figure}

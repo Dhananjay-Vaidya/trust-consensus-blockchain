@@ -13,12 +13,12 @@ import {
 import { useCompareRuns, useResults } from "../hooks/useResults";
 import { useSimulationStore } from "../store/simulationStore";
 const colors = [
-  "#167567",
-  "#397991",
-  "#996c23",
-  "#6b6688",
-  "#986078",
-  "#465d6b",
+  "#1f3a5f",
+  "#4a6a80",
+  "#9a6f1c",
+  "#5d5470",
+  "#7d4f5e",
+  "#46433c",
 ];
 export function CompareRunsPage() {
   const { data: runs = [], isError } = useResults();

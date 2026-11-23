@@ -1,0 +1,44 @@
+{
+  "legacy_beta": {
+    "lie_rate": 0.5,
+    "b": 8,
+    "target": "invalid",
+    "search_invalid": 0.0028157905557512817,
+    "search_reject": 9.748999006483032e-05
+  },
+  "sg_full": {
+    "lie_rate": 0.5,
+    "b": 8,
+    "target": "invalid",
+    "search_invalid": 0.0011018615838097792,
+    "search_reject": 0.004882035958178437
+  },
+  "sg_no_cap": {
+    "lie_rate": 0.5,
+    "b": 8,
+    "target": "invalid",
+    "search_invalid": 0.0011018615838097792,
+    "search_reject": 0.0006320986439900926
+  },
+  "sg_no_cusum": {
+    "lie_rate": 0.5,
+    "b": 8,
+    "target": "invalid",
+    "search_invalid": 0.0015598838500168555,
+    "search_reject": 0.00014637785116027827
+  },
+  "sg_no_two_timescale": {
+    "lie_rate": 0.3,
+    "b": 8,
+    "target": "invalid",
+    "search_invalid": 0.0012580212949411546,
+    "search_reject": 0.0003074960294152295
+  },
+  "sg_none": {
+    "lie_rate": 0.3,
+    "b": 8,
+    "target": "invalid",
+    "search_invalid": 0.0016790466576159496,
+    "search_reject": 9.748999006483032e-05
+  }
+}

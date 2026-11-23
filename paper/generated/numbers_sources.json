@@ -163,46 +163,6 @@
     "value": "300.0",
     "source": "results/raw/e3_ablation/runs.csv"
   },
-  "EthreeAaaFullFOne": {
-    "value": "0.00",
-    "source": "results/raw/e3_ablation/runs.csv"
-  },
-  "EthreeAaaFullInvalid": {
-    "value": "0.0000",
-    "source": "results/raw/e3_ablation/runs.csv"
-  },
-  "EthreeAaaNoCusumFOne": {
-    "value": "0.00",
-    "source": "results/raw/e3_ablation/runs.csv"
-  },
-  "EthreeAaaNoCusumInvalid": {
-    "value": "0.0000",
-    "source": "results/raw/e3_ablation/runs.csv"
-  },
-  "EthreeAaaNoTwoFOne": {
-    "value": "0.00",
-    "source": "results/raw/e3_ablation/runs.csv"
-  },
-  "EthreeAaaNoTwoInvalid": {
-    "value": "0.0000",
-    "source": "results/raw/e3_ablation/runs.csv"
-  },
-  "EthreeAaaNoCapFOne": {
-    "value": "0.00",
-    "source": "results/raw/e3_ablation/runs.csv"
-  },
-  "EthreeAaaNoCapInvalid": {
-    "value": "0.0000",
-    "source": "results/raw/e3_ablation/runs.csv"
-  },
-  "EthreeAaaNoneFOne": {
-    "value": "0.00",
-    "source": "results/raw/e3_ablation/runs.csv"
-  },
-  "EthreeAaaNoneInvalid": {
-    "value": "0.0000",
-    "source": "results/raw/e3_ablation/runs.csv"
-  },
   "EfourFlipsOutZero": {
     "value": "0",
     "source": "results/raw/e4_he/decisions.csv"
@@ -212,7 +172,7 @@
     "source": "results/raw/e4_he/decisions.csv"
   },
   "EfourMsZero": {
-    "value": "31",
+    "value": "25",
     "source": "results/raw/e4_he/timings.csv"
   },
   "EfourBandZero": {
@@ -228,7 +188,7 @@
     "source": "results/raw/e4_he/decisions.csv"
   },
   "EfourMsOne": {
-    "value": "168",
+    "value": "268",
     "source": "results/raw/e4_he/timings.csv"
   },
   "EfourBandOne": {
@@ -244,7 +204,7 @@
     "source": "results/raw/e4_he/decisions.csv"
   },
   "EfourMsTwo": {
-    "value": "304",
+    "value": "220",
     "source": "results/raw/e4_he/timings.csv"
   },
   "EfourBandTwo": {
@@ -260,7 +220,7 @@
     "source": "results/raw/e4_he/decisions.csv"
   },
   "EfourMsThree": {
-    "value": "477",
+    "value": "486",
     "source": "results/raw/e4_he/timings.csv"
   },
   "EfourBandThree": {
@@ -296,7 +256,7 @@
     "source": "results/raw/e4_he/consensus.csv"
   },
   "EfourConsWallZero": {
-    "value": "32",
+    "value": "22",
     "source": "results/raw/e4_he/consensus.csv"
   },
   "EfourConsFlipsThree": {
@@ -304,11 +264,11 @@
     "source": "results/raw/e4_he/consensus.csv"
   },
   "EfourConsWallThree": {
-    "value": "432",
+    "value": "471",
     "source": "results/raw/e4_he/consensus.csv"
   },
   "EfourConsWallPlain": {
-    "value": "0.30",
+    "value": "0.18",
     "source": "results/raw/e4_he/consensus.csv"
   },
   "EfiveMaxNodes": {
@@ -491,12 +451,184 @@
     "value": "0",
     "source": "results/raw/e10_safety/search.csv"
   },
-  "EtenEnvMaxInvalidSafe": {
+  "EtenEnvRunsSafeZero": {
+    "value": "450",
+    "source": "results/raw/e10_safety/env.csv"
+  },
+  "EtenEnvBreachSafeZero": {
+    "value": "0",
+    "source": "results/raw/e10_safety/env.csv"
+  },
+  "EtenEnvRunsSafeFive": {
+    "value": "450",
+    "source": "results/raw/e10_safety/env.csv"
+  },
+  "EtenEnvBreachSafeFive": {
+    "value": "0",
+    "source": "results/raw/e10_safety/env.csv"
+  },
+  "EtenEnvMaxInvalidSafeFive": {
     "value": "0.0000",
     "source": "results/raw/e10_safety/env.csv"
   },
-  "EtenEnvMaxInvalidAll": {
-    "value": "0.0000",
+  "EtenEnvBreachUnsafe": {
+    "value": "89",
     "source": "results/raw/e10_safety/env.csv"
+  },
+  "EtenEnvRunsUnsafe": {
+    "value": "540",
+    "source": "results/raw/e10_safety/env.csv"
+  },
+  "EtenEnvMaxInvalidUnsafe": {
+    "value": "0.0034",
+    "source": "results/raw/e10_safety/env.csv"
+  },
+  "EelevenRateLegacyBeta": {
+    "value": "0.50",
+    "source": "results/raw/e11_adaptive/best.json"
+  },
+  "EelevenBLegacyBeta": {
+    "value": "8",
+    "source": "results/raw/e11_adaptive/best.json"
+  },
+  "EelevenInvalidLegacyBeta": {
+    "value": "0.0023",
+    "source": "results/raw/e11_adaptive/runs.csv"
+  },
+  "EelevenFOneLegacyBeta": {
+    "value": "0.00",
+    "source": "results/raw/e11_adaptive/runs.csv"
+  },
+  "EelevenRejectLegacyBeta": {
+    "value": "0.000",
+    "source": "results/raw/e11_adaptive/runs.csv"
+  },
+  "EelevenRateSgFull": {
+    "value": "0.50",
+    "source": "results/raw/e11_adaptive/best.json"
+  },
+  "EelevenBSgFull": {
+    "value": "8",
+    "source": "results/raw/e11_adaptive/best.json"
+  },
+  "EelevenInvalidSgFull": {
+    "value": "0.0007",
+    "source": "results/raw/e11_adaptive/runs.csv"
+  },
+  "EelevenFOneSgFull": {
+    "value": "0.24",
+    "source": "results/raw/e11_adaptive/runs.csv"
+  },
+  "EelevenRejectSgFull": {
+    "value": "0.001",
+    "source": "results/raw/e11_adaptive/runs.csv"
+  },
+  "EelevenRateSgNoCusum": {
+    "value": "0.50",
+    "source": "results/raw/e11_adaptive/best.json"
+  },
+  "EelevenBSgNoCusum": {
+    "value": "8",
+    "source": "results/raw/e11_adaptive/best.json"
+  },
+  "EelevenInvalidSgNoCusum": {
+    "value": "0.0011",
+    "source": "results/raw/e11_adaptive/runs.csv"
+  },
+  "EelevenFOneSgNoCusum": {
+    "value": "0.00",
+    "source": "results/raw/e11_adaptive/runs.csv"
+  },
+  "EelevenRejectSgNoCusum": {
+    "value": "0.000",
+    "source": "results/raw/e11_adaptive/runs.csv"
+  },
+  "EelevenRateSgNoTwoTimescale": {
+    "value": "0.30",
+    "source": "results/raw/e11_adaptive/best.json"
+  },
+  "EelevenBSgNoTwoTimescale": {
+    "value": "8",
+    "source": "results/raw/e11_adaptive/best.json"
+  },
+  "EelevenInvalidSgNoTwoTimescale": {
+    "value": "0.0008",
+    "source": "results/raw/e11_adaptive/runs.csv"
+  },
+  "EelevenFOneSgNoTwoTimescale": {
+    "value": "0.13",
+    "source": "results/raw/e11_adaptive/runs.csv"
+  },
+  "EelevenRejectSgNoTwoTimescale": {
+    "value": "0.000",
+    "source": "results/raw/e11_adaptive/runs.csv"
+  },
+  "EelevenRateSgNoCap": {
+    "value": "0.50",
+    "source": "results/raw/e11_adaptive/best.json"
+  },
+  "EelevenBSgNoCap": {
+    "value": "8",
+    "source": "results/raw/e11_adaptive/best.json"
+  },
+  "EelevenInvalidSgNoCap": {
+    "value": "0.0007",
+    "source": "results/raw/e11_adaptive/runs.csv"
+  },
+  "EelevenFOneSgNoCap": {
+    "value": "0.24",
+    "source": "results/raw/e11_adaptive/runs.csv"
+  },
+  "EelevenRejectSgNoCap": {
+    "value": "0.000",
+    "source": "results/raw/e11_adaptive/runs.csv"
+  },
+  "EelevenRateSgNone": {
+    "value": "0.30",
+    "source": "results/raw/e11_adaptive/best.json"
+  },
+  "EelevenBSgNone": {
+    "value": "8",
+    "source": "results/raw/e11_adaptive/best.json"
+  },
+  "EelevenInvalidSgNone": {
+    "value": "0.0015",
+    "source": "results/raw/e11_adaptive/runs.csv"
+  },
+  "EelevenFOneSgNone": {
+    "value": "0.00",
+    "source": "results/raw/e11_adaptive/runs.csv"
+  },
+  "EelevenRejectSgNone": {
+    "value": "0.000",
+    "source": "results/raw/e11_adaptive/runs.csv"
+  },
+  "EelevenSgBelowBoundBreach": {
+    "value": "0",
+    "source": "results/raw/e11_adaptive/runs.csv"
+  },
+  "EelevenSgBelowBoundRuns": {
+    "value": "120",
+    "source": "results/raw/e11_adaptive/runs.csv"
+  },
+  "EtwelveHalfRate": {
+    "value": "0.40",
+    "source": "results/raw/e12_lierate/runs.csv"
+  },
+  "EtwelveFOneLow": {
+    "value": "0.07",
+    "source": "results/raw/e12_lierate/runs.csv"
+  },
+  "EtwelveLowRate": {
+    "value": "0.05",
+    "source": "results/raw/e12_lierate/runs.csv"
+  },
+  "EtwelveFOneHigh": {
+    "value": "1.00",
+    "source": "results/raw/e12_lierate/runs.csv"
+  },
+  "EtwelveFqMax": {
+    "value": "0.30",
+    "source": "results/raw/e12_lierate/runs.csv"
   }
 }

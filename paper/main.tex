@@ -26,10 +26,11 @@ simulator whose trust updates read ground-truth labels overstates detection: re-
 raises a Beta-reputation model's F1 against a sleeper attack from \EzeroHonestTdp{} to \EzeroOracleTdp{}.
 On an oracle-free benchmark, where trust learns only from random audits, the same model never flags a sleeper
 (median F1 \EoneTdpFive{}). We propose SleeperGuard (two-timescale Beta evidence, CUSUM change detection with
-quarantine, and an exactly enforced per-delegate weight-share cap). It detects sleepers that lie often, but a
-damage-maximising coalition that lies below its alarm rate is not detected, so SleeperGuard has clear limits.
-The cap yields a safety bound on what a coalition can commit, which we prove, test with an adversarial search
-and test directly against that coalition. We also implement the trust-weighted tally under CKKS homomorphic
+quarantine, and an exactly enforced per-delegate weight-share cap). It detects sleepers that lie often, but coalitions lying on fewer than \EtwelveHalfRate{} of their votes are
+detected less than half the time, and a damage-maximising coalition found by search is detected with median F1 only
+\EelevenFOneSgFull{}. What keeps such coalitions from committing invalid transactions is the cap: we prove a safety
+bound on coalition size, find no counter-example in an adversarial weight search, and observe no invalid commit below the
+bound in \EtenEnvRunsSafeFive{} runs against the adaptive coalition with honest faults. We also implement the trust-weighted tally under CKKS homomorphic
 encryption: it reproduces the plaintext decisions at a measured cost, but its decryptor can recover every
 vote margin. A hypothesis that hiding trust weights hinders bribery was not supported.
 \end{abstract}

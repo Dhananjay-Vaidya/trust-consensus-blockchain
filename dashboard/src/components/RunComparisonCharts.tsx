@@ -55,9 +55,9 @@ export function RunComparisonCharts({ selectedRuns, comparison }: RunComparisonC
         <div className="chart-shell">
           <ResponsiveContainer width="100%" height={320}>
             <LineChart data={lineData}>
-              <CartesianGrid stroke="#243146" strokeDasharray="3 3" />
-              <XAxis dataKey="episode" stroke="#7f8ea3" />
-              <YAxis stroke="#7f8ea3" domain={[0, 1.05]} />
+              <CartesianGrid stroke="#e3ddd0" strokeDasharray="3 3" />
+              <XAxis dataKey="episode" stroke="#6e695e" />
+              <YAxis stroke="#6e695e" domain={[0, 1.05]} />
               <Tooltip />
               <Legend />
               {selectedRuns.map((run, index) => (
@@ -65,7 +65,7 @@ export function RunComparisonCharts({ selectedRuns, comparison }: RunComparisonC
                   key={run.run_id}
                   type="monotone"
                   dataKey={run.run_id}
-                  stroke={['#5cc7ff', '#6ee7b7', '#fbbf24', '#f472b6'][index % 4]}
+                  stroke={['#1f3a5f', '#3d6b4b', '#9a6f1c', '#7d4f5e'][index % 4]}
                   strokeWidth={2}
                   dot={false}
                 />
@@ -89,15 +89,15 @@ export function RunComparisonCharts({ selectedRuns, comparison }: RunComparisonC
               { metric: 'Episodes', ...Object.fromEntries(radarData.map((d) => [d.runId, d.normalizedEpisodes])) },
               { metric: 'Node Scale', ...Object.fromEntries(radarData.map((d) => [d.runId, d.nodes])) },
             ]}>
-              <PolarGrid stroke="#243146" />
-              <PolarAngleAxis dataKey="metric" stroke="#a7b6cb" />
+              <PolarGrid stroke="#e3ddd0" />
+              <PolarAngleAxis dataKey="metric" stroke="#6e695e" />
               {selectedRuns.map((run, index) => (
                 <Radar
                   key={run.run_id}
                   name={run.run_id}
                   dataKey={run.run_id}
-                  stroke={['#5cc7ff', '#6ee7b7', '#fbbf24', '#f472b6'][index % 4]}
-                  fill={['#5cc7ff', '#6ee7b7', '#fbbf24', '#f472b6'][index % 4]}
+                  stroke={['#1f3a5f', '#3d6b4b', '#9a6f1c', '#7d4f5e'][index % 4]}
+                  fill={['#1f3a5f', '#3d6b4b', '#9a6f1c', '#7d4f5e'][index % 4]}
                   fillOpacity={0.15}
                 />
               ))}

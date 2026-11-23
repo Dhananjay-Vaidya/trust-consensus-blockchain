@@ -523,7 +523,7 @@ def e10() -> None:
                          "max invalid-commit rate": f"{g.invalid_commit_rate.max():.4f}",
                          "median F1": f"{g.det_f1.median():.2f}"})
         tex_table(pd.DataFrame(rows), GEN / "tab_e10_env.tex",
-                  "E10b: full environment, exact cap ($k=16$, $c=2$, $\theta=0.667$; bound safe for $b\le5$), "
+                  r"E10b: full environment, exact cap ($k=16$, $c=2$, $\theta=0.667$; bound safe for $b\le5$), "
                   "damage-maximising coalition approving invalid transactions at lie rates 0.1/0.3/1.0, 30 seeds each.",
                   "tab:e10b")
 
@@ -549,7 +549,7 @@ def e11() -> None:
         macro(f"EelevenReject{tag}", float(g.valid_reject_rate.median()), "results/raw/e11_adaptive/runs.csv", "{:.3f}")
     tex_table(pd.DataFrame(rows), GEN / "tab_e11.tex",
               "E11: each defence against the damage-maximising coalition chosen by search on seeds 30-39 "
-              "(lie rate, coalition size b of 16, target), evaluated on seeds 100-129. Median [95\% CI].", "tab:e11")
+              r"(lie rate, coalition size b of 16, target), evaluated on seeds 100-129. Median [95\% CI].", "tab:e11")
     sg = df[df.variant == "sg_full"]
     macro("EelevenSgBelowBoundBreach", int((sg[sg.b <= 5].invalid_commit_rate > 0).sum()), "results/raw/e11_adaptive/runs.csv")
     macro("EelevenSgBelowBoundRuns", int((sg.b <= 5).sum()), "results/raw/e11_adaptive/runs.csv")
@@ -572,11 +572,14 @@ def e12() -> None:
              "--", marker="^", ms=3, color=OKABE[6], label="honest FQ/1000 (SG)")
     ax.set_xlabel("coalition lie rate")
     ax.set_ylabel("detection F1")
-    ax2.set_ylabel("honest false quarantines / 1000 node-steps")
+    fqmax = float(g.honest_quarantines_per_1000.median().max())
+    ax2.set_ylim(0, max(2.0, 1.5 * fqmax))
+    ax2.set_ylabel("honest FQ / 1000 node-steps")
     ax.set_xscale("log")
     h1, l1 = ax.get_legend_handles_labels()
     h2, l2 = ax2.get_legend_handles_labels()
-    ax.legend(h1 + h2, l1 + l2, frameon=False, fontsize=6, loc="center right")
+    ax.set_ylim(-0.02, 1.15)
+    ax.legend(h1 + h2, l1 + l2, frameon=False, fontsize=6, loc="upper left", ncol=1)
     fig.tight_layout()
     fig.savefig(FIGS / "e12_lierate.pdf")
     plt.close(fig)

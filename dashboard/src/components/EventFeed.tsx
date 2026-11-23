@@ -14,12 +14,18 @@ export function EventFeed() {
   const latest = useSimulationStore((s) => s.latestStep);
   const runId = useSimulationStore((s) => s.runId);
   const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
+  // Derive log lines while rendering when the inputs change (no setState inside effects).
+  const [prevRunId, setPrevRunId] = useState(runId);
+  const [prevLatest, setPrevLatest] = useState(latest);
+  if (runId !== prevRunId) {
+    setPrevRunId(runId);
     setLines([]);
-  }, [runId]);
-  useEffect(() => {
-    if (!latest || paused) return;
-    const e = latest;
+  }
+  if (latest !== prevLatest) {
+    setPrevLatest(latest);
+    if (latest && !paused) appendLine(latest);
+  }
+  function appendLine(e: NonNullable<typeof latest>) {
     const text =
       e.type === "episode_end"
         ? `Episode ${e.episode + 1} complete / F1 ${e.f1_score.toFixed(3)} / Reward ${e.reward.toFixed(2)}`
@@ -40,7 +46,7 @@ export function EventFeed() {
     setLines((prev) =>
       prev.some((l) => l.id === line.id) ? prev : [...prev, line].slice(-200),
     );
-  }, [latest, paused]);
+  }
   useEffect(() => {
     if (ref.current && !paused)
       ref.current.scrollTop = ref.current.scrollHeight;

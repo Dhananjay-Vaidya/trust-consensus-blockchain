@@ -44,7 +44,8 @@ def eval_window_start(env: HonestEnv, burn_in: int = 50) -> int:
     c = env.cfg
     if c.attack == "tdp":
         return c.t_switch
-    return min(burn_in, max(0, c.steps - 1))
+    # burn-in of 50 steps, but never more than a fifth of a short (e.g. dashboard) episode
+    return min(burn_in, max(0, c.steps // 5))
 
 
 def summarize(env: HonestEnv, window_start: Optional[int] = None, window_end: Optional[int] = None) -> Dict[str, Any]:

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ChartLine, DownloadSimple } from "@phosphor-icons/react";
 import {
@@ -39,9 +39,11 @@ export function MetricsExplorerPage() {
         )
       ).data,
   });
-  useEffect(() => {
+  const [prevRunId, setPrevRunId] = useState(runId);
+  if (runId !== prevRunId) {
+    setPrevRunId(runId);
     setWindow(100);
-  }, [runId]);
+  }
   const data = useMemo(
     () => rows.slice(0, Math.max(1, Math.ceil((rows.length * window) / 100))),
     [rows, window],

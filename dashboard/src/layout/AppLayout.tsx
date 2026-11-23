@@ -34,6 +34,15 @@ const descriptions: Record<string, [string, string]> = {
     "Prepare experiment data and supporting material for your presentation.",
   ],
 };
+const sections: Record<string, string> = {
+  "/metrics": "§2 · Part I, Workspace",
+  "/attack-lab": "§3 · Part I, Workspace",
+  "/scenarios": "§4 · Part I, Workspace",
+  "/experiments": "§5 · Part II, Research",
+  "/compare": "§6 · Part II, Research",
+  "/explainer": "§7 · Part II, Research",
+  "/export": "§8 · Part II, Research",
+};
 export function AppLayout() {
   const runId = useSimulationStore((s) => s.runId);
   const replay = useSimulationStore((s) => s.replayRunId);
@@ -59,7 +68,7 @@ export function AppLayout() {
         >
           {heading && (
             <div className="page-heading">
-              <div className="eyebrow">TDCB research platform</div>
+              <div className="eyebrow">{sections[pathname] ?? "TDCB laboratory"}</div>
               <h1>{heading[0]}</h1>
               <p>{heading[1]}</p>
             </div>

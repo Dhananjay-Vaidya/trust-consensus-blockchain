@@ -39,12 +39,12 @@ export function TrustDistributionChart() {
       <div className="chart-shell">
         <ResponsiveContainer width="100%" height={280}>
           <BarChart data={histogram}>
-            <CartesianGrid stroke="#243146" strokeDasharray="3 3" />
-            <XAxis dataKey="label" stroke="#7f8ea3" />
-            <YAxis stroke="#7f8ea3" allowDecimals={false} />
+            <CartesianGrid stroke="#e3ddd0" strokeDasharray="3 3" />
+            <XAxis dataKey="label" stroke="#6e695e" />
+            <YAxis stroke="#6e695e" allowDecimals={false} />
             <Tooltip />
-            <ReferenceLine x="0.4-0.5" stroke="#ef4444" strokeDasharray="4 4" />
-            <Bar dataKey="count" fill="#5cc7ff" radius={[4, 4, 0, 0]} />
+            <ReferenceLine x="0.4-0.5" stroke="#b0372a" strokeDasharray="4 4" />
+            <Bar dataKey="count" fill="#1f3a5f" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
