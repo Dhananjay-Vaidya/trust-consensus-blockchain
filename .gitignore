@@ -26,12 +26,14 @@ __pycache__/
 *.so
 
 .python-version
-.venv/
-venv/
-env/
-ENV/
-env.bak/
-venv.bak/
+# virtual environments: anchored to the repo root (an unanchored env/ or ENV/ also matched
+# src/env/ on case-insensitive filesystems and silently kept the simulator core out of git)
+/.venv/
+/venv/
+/env/
+/ENV/
+/env.bak/
+/venv.bak/
 
 .mypy_cache/
 .pytest_cache/
@@ -155,3 +157,4 @@ instance/
 # smoke outputs and logs are not part of the paper record
 results/raw/*_smoke/
 results/raw/*.log
+!/docs/*.csv

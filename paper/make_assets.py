@@ -594,6 +594,42 @@ def e12() -> None:
     _ = fq
 
 
+def e13() -> None:
+    df = load("e13_preprint_protocol")
+    if df is None:
+        return
+    src = "results/raw/e13_preprint_protocol/runs.csv"
+    rows = []
+    for be in ("legacy_beta", "sleeper_guard"):
+        g = df[df.backend == be]
+        rows.append({"trust": be.replace("_", " "), "adversaries": int(g.n_adversary.median()),
+                     "F1 episodes 1-25 (dormant)": med_ci(g.f1_pre_mean),
+                     "F1 episodes 26-50 (active)": med_ci(g.f1_post_mean),
+                     "F1 final episode": med_ci(g.f1_final)})
+        tag = "Legacy" if be == "legacy_beta" else "Sg"
+        macro(f"Ethirteen{tag}Pre", float(g.f1_pre_mean.median()), src)
+        macro(f"Ethirteen{tag}Post", float(g.f1_post_mean.median()), src)
+        macro(f"Ethirteen{tag}Final", float(g.f1_final.median()), src)
+    tex_table(pd.DataFrame(rows), GEN / "tab_e13.tex",
+              r"E13: the sleeper attack under the preprint's protocol (16 nodes, 4 adversaries, 50 episodes $\times$ 100 "
+              r"steps, activation after episode 25, intensity 0.75), F1 at the end of each episode with static labels as "
+              r"in the preprint, averaged over the dormant and active phases. Median [95\% CI], 30 seeds.", "tab:e13")
+
+
+def hardware() -> None:
+    p = RAW / "e4_he" / "meta.json"
+    if not p.exists():
+        return
+    m = json.loads(p.read_text())["machine"]
+    src = "results/raw/e4_he/meta.json"
+    macro("HwCpu", str(m.get("cpu_model") or m.get("processor")).replace("(R)", "").replace("(TM)", ""), src)
+    macro("HwCores", f"{m.get('physical_cores', 'n/a')} physical / {m.get('cpu_count')} logical", src)
+    macro("HwRam", f"{m.get('ram_gb')}~GB", src)
+    macro("HwOs", str(m.get("platform")).replace("_", " "), src)
+    macro("HwTenseal", str(m.get("tenseal")), src)
+    macro("HwPython", str(m.get("python")), src)
+
+
 # ===========================================================================================
 def main() -> None:
     global RAW
@@ -603,7 +639,7 @@ def main() -> None:
     RAW = Path(a.raw)
     GEN.mkdir(parents=True, exist_ok=True)
     FIGS.mkdir(parents=True, exist_ok=True)
-    for f in (e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12):
+    for f in (e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, hardware):
         try:
             f()
             print(f"[assets] {f.__name__} ok")

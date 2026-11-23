@@ -128,3 +128,23 @@ def summarize(env: HonestEnv, window_start: Optional[int] = None, window_end: Op
         "mean_reward": float(np.mean([recs[s].reward for s in win])) if s1 > s0 else math.nan,
         "mean_reward_all": float(np.mean([r.reward for r in recs])) if recs else math.nan,
     }
+
+
+def episode_snapshot_scores(env: HonestEnv, episode_len: int, static_labels: bool = True) -> List[Dict[str, float]]:
+    """Preprint-style scoring: node-classification metrics at the LAST step of each episode block.
+
+    static_labels=True reproduces the pre-audit simulator's labelling: a node is positive if it is in the
+    adversary coalition at all, including while a sleeper is still dormant. static_labels=False uses
+    "adversarial AND attack active" (D5).
+    """
+    out: List[Dict[str, float]] = []
+    co = env._world.coalition
+    for end in range(episode_len - 1, len(env.records), episode_len):
+        if static_labels:
+            y = np.array([n in co for n in env.nodes], dtype=int)
+        else:
+            y = node_labels(env, end).astype(int)
+        r = _prf(y, env.records[end].flagged.astype(int))
+        out.append({"episode": end // episode_len + 1, "f1": r["f1"], "precision": r["precision"],
+                    "recall": r["recall"], "mcc": r["mcc"]})
+    return out

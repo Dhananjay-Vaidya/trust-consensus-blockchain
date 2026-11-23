@@ -9,10 +9,8 @@ test:
 smoke:
 	$(PY) scripts/reproduce.py --smoke
 
-reproduce:
+reproduce:   # runs every experiment incl. E4 band/leakage, then regenerates paper assets
 	$(PY) scripts/reproduce.py
-	$(PY) -m experiments.exp_he_band
-	$(PY) paper/make_assets.py
 
 assets:
 	$(PY) paper/make_assets.py

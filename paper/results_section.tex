@@ -6,8 +6,8 @@ On the oracle-free environment, legacy Beta trust detects always-on collusion (m
 honest fault rate 0.05) but never flags a sleeper within the 300-step attack window (median F1 \EoneTdpFive{};
 \EoneTdpTwo{} and \EoneTdpTen{} at fault rates 0.02 and 0.10; Table~\ref{tab:e1}, Fig.~\ref{fig:e1}). Sleepers
 accumulate so much positive evidence before switching that the attack window is shorter than the time needed to
-pull their trust below 0.5. The collapse is more severe than the 0.11--0.16 reported
-in~\cite{padia2025adaptive}; we do not compare magnitudes because that simulator leaked ground truth (E0).
+pull their trust below 0.5. The preprint~\cite{padia2025adaptive} reported 0.11--0.16 after sleeper activation; E13 repeats its protocol on the
+oracle-free environment for a like-for-like comparison.
 \input{generated/tab_e1.tex}
 \begin{figure}[t]\centering\includegraphics[width=\columnwidth]{e1_collapse.pdf}
 \caption{E1: legacy Beta trust, node-detection F1 over the attack window (30 seeds).}\label{fig:e1}\end{figure}
@@ -131,3 +131,12 @@ detects nothing below lie rate 0.75. The honest false-quarantine rate on the sam
 \EtwelveHalfRate{} of its votes is therefore detected less than half the time.
 \begin{figure}[t]\centering\includegraphics[width=\columnwidth]{e12_lierate.pdf}
 \caption{E12: detection F1 (left axis, median and IQR) and honest false quarantines (right axis) vs.\ coalition lie rate.}\label{fig:e12}\end{figure}
+
+\subsection{E13: the preprint's sleeper protocol, without the oracle}
+Using the preprint's protocol (16 nodes, 4 adversaries, 50 episodes of 100 steps with trust carried over, activation after
+episode 25, intensity 0.75, F1 at the end of each episode with static labels), legacy Beta trust scores a median F1 of
+\EthirteenLegacyPre{} over the dormant episodes and \EthirteenLegacyPost{} over the active ones (Table~\ref{tab:e13}). The
+preprint reported 0.11--0.16 after activation from a simulator whose trust updates read ground truth (E0); without that
+feedback the legacy model never flags a sleeper. SleeperGuard scores \EthirteenSgPre{} while the sleepers are dormant
+(they behave honestly, so nothing can be detected) and \EthirteenSgPost{} after activation.
+\input{generated/tab_e13.tex}

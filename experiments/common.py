@@ -47,6 +47,26 @@ def base_parser(name: str, default_seeds: str) -> argparse.ArgumentParser:
     return p
 
 
+def _cpu_model() -> str:
+    """Marketing CPU name (platform.processor() only gives the family/model code on Windows)."""
+    try:
+        if sys.platform.startswith("win"):
+            out = subprocess.run(["powershell", "-NoProfile", "-Command",
+                                  "(Get-CimInstance Win32_Processor).Name"], capture_output=True, text=True, timeout=20)
+            name = out.stdout.strip().splitlines()[0].strip() if out.stdout.strip() else ""
+            if name:
+                return name
+        elif sys.platform == "darwin":
+            return subprocess.run(["sysctl", "-n", "machdep.cpu.brand_string"], capture_output=True, text=True).stdout.strip()
+        else:
+            for line in open("/proc/cpuinfo", encoding="utf-8"):
+                if line.startswith("model name"):
+                    return line.split(":", 1)[1].strip()
+    except Exception:
+        pass
+    return platform.processor()
+
+
 def machine_spec() -> Dict[str, Any]:
     import numpy
     import scipy
@@ -61,9 +81,11 @@ def machine_spec() -> Dict[str, Any]:
         "numpy": numpy.__version__, "scipy": scipy.__version__,
         "sklearn": sklearn.__version__, "torch": torch.__version__, "pandas": pd.__version__,
     }
+    spec["cpu_model"] = _cpu_model()
     try:
         import psutil
         spec["ram_gb"] = round(psutil.virtual_memory().total / 1e9, 2)
+        spec["physical_cores"] = psutil.cpu_count(logical=False)
     except Exception:  # pragma: no cover
         spec["ram_gb"] = None
     try:

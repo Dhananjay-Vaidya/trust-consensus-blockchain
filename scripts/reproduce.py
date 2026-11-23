@@ -30,6 +30,7 @@ STEPS = [
     ("e10", ["-m", "experiments.exp_e10_safety"]),
     ("e11", ["-m", "experiments.exp_e11_adaptive"]),
     ("e12", ["-m", "experiments.exp_e12_lierate"]),
+    ("e13", ["-m", "experiments.exp_e13_preprint_protocol"]),
 ]
 
 

@@ -23,4 +23,5 @@ Every finding has a regression test in `tests/audit/`; the test file is named in
 |---|---|---|---|
 | A12 | Checkpoints named `best_..._f1_1.0000.pth` were selected on the training stream using the oracle F1. | `simulation_manager.py:541-549` | Old checkpoints deleted; new agents never see F1. |
 | A13 | Committed paper numbers (`experiments/figures/f1_table.tex`, `results_summary.csv`) came from the oracle simulation. | those files | Deleted. All paper numbers now come from `results/raw/`. |
+| A15 | `.gitignore`'s unanchored `env/` / `ENV/` (virtual-env) rules matched `src/env/` on case-insensitive filesystems, so the simulator core (`honest_env.py`, `world.py`, `attacks.py`) was never committed; a fresh clone failed with `ModuleNotFoundError: src.env`. Found by the clean-checkout reproduction. | `.gitignore:29-32` @ 925906f | Rules anchored to the repo root (`/env/`, `/ENV/`, ...); `tests/test_repo_integrity.py` fails if any source file is ignored. |
 | A14 | Attack descriptions hard-code "Target F1" ranges, i.e. attacks were tuned to hit predetermined numbers. | `src/attacks/attack_util.py:142-170` | Deleted with the old attack modules. |

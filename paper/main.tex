@@ -140,7 +140,9 @@ precision, recall, F1 and MCC are computed over node-steps of the attack window.
 Wilcoxon signed-rank tests, Holm correction within each experiment family, 10\,000-resample percentile
 bootstrap CIs of the median, Cliff's $\delta$. Throughput and latency use an illustrative cost model
 ($5+0.05k^2+2\cdot\#\text{audits}$ ms per step plus measured HE time); they are not network measurements.
-Machine and library versions are recorded in every \texttt{meta.json}.
+All timings were measured on one machine: \HwCpu{} (\HwCores{} cores), \HwRam{} RAM, \HwOs{},
+Python \HwPython{}, TenSEAL \HwTenseal{} (source: \texttt{results/raw/e4\_he/meta.json}); every result file records its
+own machine and library versions in \texttt{meta.json}.
 
 \section{Results}
 % RESULTS-NARRATIVE: written after results/raw/ was regenerated; every number is a macro.
