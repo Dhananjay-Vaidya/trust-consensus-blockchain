@@ -26,7 +26,10 @@ simulator whose trust updates read ground-truth labels overstates detection: re-
 raises a Beta-reputation model's F1 against a sleeper attack from \EzeroHonestTdp{} to \EzeroOracleTdp{}.
 On an oracle-free benchmark, where trust learns only from random audits, the same model never flags a sleeper
 (median F1 \EoneTdpFive{}). We propose SleeperGuard (two-timescale Beta evidence, CUSUM change detection with
-quarantine, and an exactly enforced per-delegate weight-share cap). It detects sleepers that lie often, but coalitions lying on fewer than \EtwelveHalfRate{} of their votes are
+quarantine, and an exactly enforced per-delegate weight-share cap). It detects sleepers that lie often, but a
+textbook fixed-reference CUSUM detects stealthy sleepers better (median F1 \EfourteenCuStealthFOne{} vs.\
+\EfourteenSgStealthFOne{}); SleeperGuard's adaptive reference buys robustness to a misspecified honest fault rate
+instead. Coalitions lying on fewer than \EtwelveHalfRate{} of their votes are
 detected less than half the time, and a damage-maximising coalition found by search is detected with median F1 only
 \EelevenFOneSgFull{}. What keeps such coalitions from committing invalid transactions is the cap: we prove a safety
 bound on coalition size, find no counter-example in an adversarial weight search, and observe no invalid commit below the
@@ -50,7 +53,8 @@ not measure what they claim to measure, and this paper replaces them.
 \textbf{Contributions.} We
 (1) measure how much oracle access in a trust simulator overstates detection (E0) and give an oracle-free
 benchmark in which votes come from a noisy vote model and trust sees only audit evidence (E1);
-(2) propose SleeperGuard and report where it works and where it fails, including against a
+(2) propose SleeperGuard and report where it works and where it fails, including against standalone change
+detectors (E14) and a
 damage-maximising adaptive coalition chosen by search (E2, E3, E11, E12);
 (3) give an exact weight-share cap and a capped-influence safety bound (Proposition~\ref{prop:safety}),
 tested by adversarial weight search and directly against the adaptive coalition (E10);
@@ -164,6 +168,9 @@ re-calibrated for audit noise.
 detector tolerates (E11, E12); the share cap, not detection, is then the only protection.
 \item \textbf{Calibration.} SleeperGuard's CUSUM parameters depend on the nominal honest fault rate; E7 reports
 the cost of misspecification.
+\item \textbf{Simple detectors win on stealthy sleepers.} A fixed-reference CUSUM or EWMA detects the stealthy sleeper
+better than SleeperGuard when the fault rate is known (E14); SleeperGuard's detection contribution is robustness to
+misspecification, not detection power.
 \item \textbf{Prior work read from abstracts.} The relation to~\cite{muniswamy2025trust} must be checked
 against its full text.
 \end{itemize}

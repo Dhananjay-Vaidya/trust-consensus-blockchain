@@ -1,0 +1,16 @@
+{
+  "sg_full": {
+    "alarms_per_sleeper_after_switch": 6.183333333333334,
+    "sleeper_mu0_end": 0.28561957164573876,
+    "honest_mu0_end": 0.05736280159254517,
+    "seeds": 30
+  },
+  "cusum": {
+    "alarms_per_sleeper_after_switch": 13.425,
+    "sleeper_mu0_end": null,
+    "honest_mu0_end": null,
+    "seeds": 30
+  },
+  "cusum_reference": 0.1,
+  "sg_cusum_slack": 0.1
+}

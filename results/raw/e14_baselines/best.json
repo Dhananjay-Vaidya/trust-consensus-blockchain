@@ -1,0 +1,51 @@
+{
+  "cusum": {
+    "lie_rate": 0.2,
+    "b": 8,
+    "target": "invalid",
+    "search_invalid_commit": 0.00045958769496200723,
+    "search_valid_reject": 0.0006975819385598081
+  },
+  "ewma": {
+    "lie_rate": 0.15,
+    "b": 8,
+    "target": "invalid",
+    "search_invalid_commit": 0.0004595610081468566,
+    "search_valid_reject": 0.0005348573604327183
+  },
+  "legacy_beta": {
+    "lie_rate": 0.5,
+    "b": 8,
+    "target": "invalid",
+    "search_invalid_commit": 0.0028157905557512817,
+    "search_valid_reject": 9.748999006483032e-05
+  },
+  "legacy_thr": {
+    "lie_rate": 0.5,
+    "b": 8,
+    "target": "invalid",
+    "search_invalid_commit": 0.0028157905557512817,
+    "search_valid_reject": 9.748999006483032e-05
+  },
+  "sg_full": {
+    "lie_rate": 0.5,
+    "b": 8,
+    "target": "invalid",
+    "search_invalid_commit": 0.0011018615838097792,
+    "search_valid_reject": 0.004882035958178437
+  },
+  "sg_no_cap": {
+    "lie_rate": 0.5,
+    "b": 8,
+    "target": "invalid",
+    "search_invalid_commit": 0.0011018615838097792,
+    "search_valid_reject": 0.0006320986439900926
+  },
+  "window": {
+    "lie_rate": 0.2,
+    "b": 8,
+    "target": "invalid",
+    "search_invalid_commit": 0.0007647277574200133,
+    "search_valid_reject": 0.00038950951383658213
+  }
+}

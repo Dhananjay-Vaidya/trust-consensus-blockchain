@@ -236,7 +236,7 @@
     "source": "results/raw/e4_he/decisions.csv"
   },
   "EfourMsZero": {
-    "value": "32",
+    "value": "38",
     "source": "results/raw/e4_he/timings.csv"
   },
   "EfourBandZero": {
@@ -252,7 +252,7 @@
     "source": "results/raw/e4_he/decisions.csv"
   },
   "EfourMsOne": {
-    "value": "164",
+    "value": "221",
     "source": "results/raw/e4_he/timings.csv"
   },
   "EfourBandOne": {
@@ -268,7 +268,7 @@
     "source": "results/raw/e4_he/decisions.csv"
   },
   "EfourMsTwo": {
-    "value": "258",
+    "value": "304",
     "source": "results/raw/e4_he/timings.csv"
   },
   "EfourBandTwo": {
@@ -284,7 +284,7 @@
     "source": "results/raw/e4_he/decisions.csv"
   },
   "EfourMsThree": {
-    "value": "448",
+    "value": "451",
     "source": "results/raw/e4_he/timings.csv"
   },
   "EfourBandThree": {
@@ -304,7 +304,7 @@
     "source": "results/raw/e4_he/band.csv"
   },
   "EfourBandMinSafe": {
-    "value": "1e-07",
+    "value": "1e-08",
     "source": "results/raw/e4_he/band.csv"
   },
   "EfourDecisionsTotal": {
@@ -348,11 +348,11 @@
     "source": "results/raw/e4_he/consensus.csv"
   },
   "EfourConsWallThree": {
-    "value": "471",
+    "value": "422",
     "source": "results/raw/e4_he/consensus.csv"
   },
   "EfourConsWallPlain": {
-    "value": "0.40",
+    "value": "0.26",
     "source": "results/raw/e4_he/consensus.csv"
   },
   "EfiveSeeds": {
@@ -364,7 +364,7 @@
     "source": "results/raw/e5_scale/runs.csv"
   },
   "EfiveBigWall": {
-    "value": "12.4",
+    "value": "8.4",
     "source": "results/raw/e5_scale/runs.csv"
   },
   "EfiveBigMem": {
@@ -814,6 +814,1090 @@
   "EthirteenGridInside": {
     "value": "2",
     "source": "results/raw/e13_preprint_protocol/grid.csv"
+  },
+  "EfourteenLbStealthFOne": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbLieFOne": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbStealthPrec": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbStealthRec": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbDelay": {
+    "value": "300.0",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbLieDelay": {
+    "value": "300.0",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbFq": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbFlagged": {
+    "value": "0.0",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbVr": {
+    "value": "0.044",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbIc": {
+    "value": "0.0000",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbFOneBetterSg": {
+    "value": "0",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenLbFOneWorseSg": {
+    "value": "6",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenLbFqWorseSg": {
+    "value": "0",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenLbFqTests": {
+    "value": "7",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenLbVrBetterSg": {
+    "value": "0",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenLbDelayWorseSg": {
+    "value": "6",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenLbDelayBetterSg": {
+    "value": "0",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenLtStealthFOne": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtLieFOne": {
+    "value": "0.62",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtStealthPrec": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtStealthRec": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtDelay": {
+    "value": "300.0",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtLieDelay": {
+    "value": "163.9",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtFq": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtFlagged": {
+    "value": "0.0",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtVr": {
+    "value": "0.044",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtIc": {
+    "value": "0.0000",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtFOneBetterSg": {
+    "value": "0",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenLtFOneWorseSg": {
+    "value": "6",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenLtFqWorseSg": {
+    "value": "0",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenLtFqTests": {
+    "value": "7",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenLtVrBetterSg": {
+    "value": "0",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenLtDelayWorseSg": {
+    "value": "6",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenLtDelayBetterSg": {
+    "value": "0",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenSgStealthFOne": {
+    "value": "0.48",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgLieFOne": {
+    "value": "0.99",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgStealthPrec": {
+    "value": "0.95",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgStealthRec": {
+    "value": "0.32",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgDelay": {
+    "value": "5.6",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgLieDelay": {
+    "value": "0.0",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgFq": {
+    "value": "0.31",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgFlagged": {
+    "value": "5.1",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgVr": {
+    "value": "0.004",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgIc": {
+    "value": "0.0000",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncStealthFOne": {
+    "value": "0.48",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncLieFOne": {
+    "value": "0.99",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncStealthPrec": {
+    "value": "0.95",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncStealthRec": {
+    "value": "0.32",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncDelay": {
+    "value": "5.6",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncLieDelay": {
+    "value": "0.0",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncFq": {
+    "value": "0.31",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncFlagged": {
+    "value": "5.1",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncVr": {
+    "value": "0.004",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncIc": {
+    "value": "0.0000",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncFOneBetterSg": {
+    "value": "0",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenSncFOneWorseSg": {
+    "value": "0",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenSncFqWorseSg": {
+    "value": "0",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenSncFqTests": {
+    "value": "7",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenSncVrBetterSg": {
+    "value": "0",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenSncDelayWorseSg": {
+    "value": "0",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenSncDelayBetterSg": {
+    "value": "0",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenCuStealthFOne": {
+    "value": "0.80",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuLieFOne": {
+    "value": "0.98",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuStealthPrec": {
+    "value": "0.96",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuStealthRec": {
+    "value": "0.68",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuDelay": {
+    "value": "5.5",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuLieDelay": {
+    "value": "0.7",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuFq": {
+    "value": "0.47",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuFlagged": {
+    "value": "7.4",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuVr": {
+    "value": "0.002",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuIc": {
+    "value": "0.0000",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuFOneBetterSg": {
+    "value": "3",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenCuFOneWorseSg": {
+    "value": "2",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenCuFqWorseSg": {
+    "value": "3",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenCuFqTests": {
+    "value": "7",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenCuVrBetterSg": {
+    "value": "3",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenCuDelayWorseSg": {
+    "value": "0",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenCuDelayBetterSg": {
+    "value": "0",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenEwStealthFOne": {
+    "value": "0.79",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwLieFOne": {
+    "value": "0.97",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwStealthPrec": {
+    "value": "0.94",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwStealthRec": {
+    "value": "0.69",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwDelay": {
+    "value": "5.0",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwLieDelay": {
+    "value": "0.3",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwFq": {
+    "value": "0.73",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwFlagged": {
+    "value": "12.0",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwVr": {
+    "value": "0.002",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwIc": {
+    "value": "0.0000",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwFOneBetterSg": {
+    "value": "3",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenEwFOneWorseSg": {
+    "value": "3",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenEwFqWorseSg": {
+    "value": "7",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenEwFqTests": {
+    "value": "7",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenEwVrBetterSg": {
+    "value": "4",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenEwDelayWorseSg": {
+    "value": "0",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenEwDelayBetterSg": {
+    "value": "2",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenWiStealthFOne": {
+    "value": "0.77",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiLieFOne": {
+    "value": "0.98",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiStealthPrec": {
+    "value": "0.99",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiStealthRec": {
+    "value": "0.64",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiDelay": {
+    "value": "5.9",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiLieDelay": {
+    "value": "0.9",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiFq": {
+    "value": "0.21",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiFlagged": {
+    "value": "3.2",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiVr": {
+    "value": "0.002",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiIc": {
+    "value": "0.0000",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiFOneBetterSg": {
+    "value": "3",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenWiFOneWorseSg": {
+    "value": "2",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenWiFqWorseSg": {
+    "value": "0",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenWiFqTests": {
+    "value": "7",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenWiVrBetterSg": {
+    "value": "3",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenWiDelayWorseSg": {
+    "value": "2",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenWiDelayBetterSg": {
+    "value": "0",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenCells": {
+    "value": "6",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenStealthGainMin": {
+    "value": "0.29",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenStealthGainMax": {
+    "value": "0.32",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenStealthBetterAll": {
+    "value": "9",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenStealthTests": {
+    "value": "9",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenLieWorse": {
+    "value": "7",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenLieTests": {
+    "value": "9",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenLieLossMax": {
+    "value": "0.028",
+    "source": "results/raw/stats/e14_baselines.csv"
+  },
+  "EfourteenLbFOneTwoM": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbFqTwoM": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbFlaggedTwoM": {
+    "value": "0.0",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbFOneTwoF": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbFqTwoF": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbFlaggedTwoF": {
+    "value": "0.0",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbFOneTenM": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbFqTenM": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbFlaggedTenM": {
+    "value": "0.0",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbFOneTenF": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbFqTenF": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbFlaggedTenF": {
+    "value": "0.0",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbCraFOne": {
+    "value": "1.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbNmaFOne": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbBfiFOne": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbAdIc": {
+    "value": "0.0023",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLbAdB": {
+    "value": "8",
+    "source": "results/raw/e14_baselines/best.json"
+  },
+  "EfourteenLbAdFOne": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtFOneTwoM": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtFqTwoM": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtFlaggedTwoM": {
+    "value": "0.0",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtFOneTwoF": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtFqTwoF": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtFlaggedTwoF": {
+    "value": "0.0",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtFOneTenM": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtFqTenM": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtFlaggedTenM": {
+    "value": "0.0",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtFOneTenF": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtFqTenF": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtFlaggedTenF": {
+    "value": "0.0",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtCraFOne": {
+    "value": "1.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtNmaFOne": {
+    "value": "1.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtBfiFOne": {
+    "value": "1.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtAdIc": {
+    "value": "0.0023",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenLtAdB": {
+    "value": "8",
+    "source": "results/raw/e14_baselines/best.json"
+  },
+  "EfourteenLtAdFOne": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgFOneTwoM": {
+    "value": "0.67",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgFqTwoM": {
+    "value": "0.36",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgFlaggedTwoM": {
+    "value": "5.4",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgFOneTwoF": {
+    "value": "0.47",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgFqTwoF": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgFlaggedTwoF": {
+    "value": "0.0",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgFOneTenM": {
+    "value": "0.38",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgFqTenM": {
+    "value": "0.62",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgFlaggedTenM": {
+    "value": "9.8",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgFOneTenF": {
+    "value": "0.47",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgFqTenF": {
+    "value": "2.19",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgFlaggedTenF": {
+    "value": "34.6",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgCraFOne": {
+    "value": "1.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgNmaFOne": {
+    "value": "0.86",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgBfiFOne": {
+    "value": "0.87",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgAdIc": {
+    "value": "0.0007",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSgAdB": {
+    "value": "8",
+    "source": "results/raw/e14_baselines/best.json"
+  },
+  "EfourteenSgAdFOne": {
+    "value": "0.24",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncFOneTwoM": {
+    "value": "0.67",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncFqTwoM": {
+    "value": "0.36",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncFlaggedTwoM": {
+    "value": "5.4",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncFOneTwoF": {
+    "value": "0.47",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncFqTwoF": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncFlaggedTwoF": {
+    "value": "0.0",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncFOneTenM": {
+    "value": "0.38",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncFqTenM": {
+    "value": "0.62",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncFlaggedTenM": {
+    "value": "9.8",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncFOneTenF": {
+    "value": "0.47",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncFqTenF": {
+    "value": "2.19",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncFlaggedTenF": {
+    "value": "34.6",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncCraFOne": {
+    "value": "1.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncNmaFOne": {
+    "value": "0.86",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncBfiFOne": {
+    "value": "0.87",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncAdIc": {
+    "value": "0.0007",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenSncAdB": {
+    "value": "8",
+    "source": "results/raw/e14_baselines/best.json"
+  },
+  "EfourteenSncAdFOne": {
+    "value": "0.24",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuFOneTwoM": {
+    "value": "0.86",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuFqTwoM": {
+    "value": "0.52",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuFlaggedTwoM": {
+    "value": "8.2",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuFOneTwoF": {
+    "value": "0.80",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuFqTwoF": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuFlaggedTwoF": {
+    "value": "0.0",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuFOneTenM": {
+    "value": "0.73",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuFqTenM": {
+    "value": "0.73",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuFlaggedTenM": {
+    "value": "11.6",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuFOneTenF": {
+    "value": "0.63",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuFqTenF": {
+    "value": "11.82",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuFlaggedTenF": {
+    "value": "192.4",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuCraFOne": {
+    "value": "0.99",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuNmaFOne": {
+    "value": "0.95",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuBfiFOne": {
+    "value": "0.94",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuAdIc": {
+    "value": "0.0000",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuAdB": {
+    "value": "8",
+    "source": "results/raw/e14_baselines/best.json"
+  },
+  "EfourteenCuAdFOne": {
+    "value": "0.37",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwFOneTwoM": {
+    "value": "0.86",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwFqTwoM": {
+    "value": "0.52",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwFlaggedTwoM": {
+    "value": "9.0",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwFOneTwoF": {
+    "value": "0.80",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwFqTwoF": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwFlaggedTwoF": {
+    "value": "0.0",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwFOneTenM": {
+    "value": "0.72",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwFqTenM": {
+    "value": "0.83",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwFlaggedTenM": {
+    "value": "12.2",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwFOneTenF": {
+    "value": "0.64",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwFqTenF": {
+    "value": "11.41",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwFlaggedTenF": {
+    "value": "178.6",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwCraFOne": {
+    "value": "0.99",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwNmaFOne": {
+    "value": "0.95",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwBfiFOne": {
+    "value": "0.94",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwAdIc": {
+    "value": "0.0000",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenEwAdB": {
+    "value": "8",
+    "source": "results/raw/e14_baselines/best.json"
+  },
+  "EfourteenEwAdFOne": {
+    "value": "0.25",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiFOneTwoM": {
+    "value": "0.85",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiFqTwoM": {
+    "value": "0.73",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiFlaggedTwoM": {
+    "value": "12.0",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiFOneTwoF": {
+    "value": "0.76",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiFqTwoF": {
+    "value": "0.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiFlaggedTwoF": {
+    "value": "0.0",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiFOneTenM": {
+    "value": "0.68",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiFqTenM": {
+    "value": "0.62",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiFlaggedTenM": {
+    "value": "9.4",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiFOneTenF": {
+    "value": "0.71",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiFqTenF": {
+    "value": "5.36",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiFlaggedTenF": {
+    "value": "83.7",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiCraFOne": {
+    "value": "1.00",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiNmaFOne": {
+    "value": "0.93",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiBfiFOne": {
+    "value": "0.92",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiAdIc": {
+    "value": "0.0004",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenWiAdB": {
+    "value": "8",
+    "source": "results/raw/e14_baselines/best.json"
+  },
+  "EfourteenWiAdFOne": {
+    "value": "0.18",
+    "source": "results/raw/e14_baselines/runs.csv"
+  },
+  "EfourteenCuBudgetMetTwo": {
+    "value": "yes",
+    "source": "results/raw/e14_baselines/calibration.csv"
+  },
+  "EfourteenCuBudgetMetFive": {
+    "value": "yes",
+    "source": "results/raw/e14_baselines/calibration.csv"
+  },
+  "EfourteenCuBudgetMetTen": {
+    "value": "yes",
+    "source": "results/raw/e14_baselines/calibration.csv"
+  },
+  "EfourteenEwBudgetMetTwo": {
+    "value": "yes",
+    "source": "results/raw/e14_baselines/calibration.csv"
+  },
+  "EfourteenEwBudgetMetFive": {
+    "value": "yes",
+    "source": "results/raw/e14_baselines/calibration.csv"
+  },
+  "EfourteenEwBudgetMetTen": {
+    "value": "yes",
+    "source": "results/raw/e14_baselines/calibration.csv"
+  },
+  "EfourteenLtBudgetMetTwo": {
+    "value": "yes",
+    "source": "results/raw/e14_baselines/calibration.csv"
+  },
+  "EfourteenLtBudgetMetFive": {
+    "value": "yes",
+    "source": "results/raw/e14_baselines/calibration.csv"
+  },
+  "EfourteenLtBudgetMetTen": {
+    "value": "yes",
+    "source": "results/raw/e14_baselines/calibration.csv"
+  },
+  "EfourteenSncBudgetMetTwo": {
+    "value": "yes",
+    "source": "results/raw/e14_baselines/calibration.csv"
+  },
+  "EfourteenSncBudgetMetFive": {
+    "value": "yes",
+    "source": "results/raw/e14_baselines/calibration.csv"
+  },
+  "EfourteenSncBudgetMetTen": {
+    "value": "yes",
+    "source": "results/raw/e14_baselines/calibration.csv"
+  },
+  "EfourteenWiBudgetMetTwo": {
+    "value": "yes",
+    "source": "results/raw/e14_baselines/calibration.csv"
+  },
+  "EfourteenWiBudgetMetFive": {
+    "value": "yes",
+    "source": "results/raw/e14_baselines/calibration.csv"
+  },
+  "EfourteenWiBudgetMetTen": {
+    "value": "yes",
+    "source": "results/raw/e14_baselines/calibration.csv"
+  },
+  "EfourteenSgBudgetMetTwo": {
+    "value": "yes",
+    "source": "results/raw/e14_baselines/calibration.csv"
+  },
+  "EfourteenSgBudgetMetFive": {
+    "value": "yes",
+    "source": "results/raw/e14_baselines/calibration.csv"
+  },
+  "EfourteenSgBudgetMetTen": {
+    "value": "yes",
+    "source": "results/raw/e14_baselines/calibration.csv"
+  },
+  "EfourteenGridBudget": {
+    "value": "25",
+    "source": "results/raw/e14_baselines/calibration.csv"
+  },
+  "EfourteenMechSgAlarms": {
+    "value": "6.2",
+    "source": "results/raw/e14_baselines/mechanism.json"
+  },
+  "EfourteenMechCuAlarms": {
+    "value": "13.4",
+    "source": "results/raw/e14_baselines/mechanism.json"
+  },
+  "EfourteenMechSgMu": {
+    "value": "0.29",
+    "source": "results/raw/e14_baselines/mechanism.json"
+  },
+  "EfourteenMechSgMuHonest": {
+    "value": "0.06",
+    "source": "results/raw/e14_baselines/mechanism.json"
+  },
+  "EfourteenMechCuRef": {
+    "value": "0.10",
+    "source": "results/raw/e14_baselines/mechanism.json"
+  },
+  "EfourteenBudgetViolations": {
+    "value": "0",
+    "source": "results/raw/e14_baselines/calibration.csv"
   },
   "EfifteenBatchesMilliDirZero": {
     "value": "4",

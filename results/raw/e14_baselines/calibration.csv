@@ -1,0 +1,19 @@
+method,fault,grid_points,budget_met,feasible_points,calib_fp_per_1000,calib_delay,params,det_reference,det_threshold,det_lam,flag_threshold,sg_baseline_floor,sg_cusum_alarm,sg_cusum_slack,det_window
+cusum,0.02,25,True,24.0,0.59375,2.7,"{""det_reference"": 0.12, ""det_threshold"": 2.0}",0.12,2.0,,,,,,
+cusum,0.05,25,True,21.0,0.5833333333333334,4.0200000000000005,"{""det_reference"": 0.1, ""det_threshold"": 4.0}",0.1,4.0,,,,,,
+cusum,0.1,25,True,18.0,0.8125,5.779999999999999,"{""det_reference"": 0.25, ""det_threshold"": 3.0}",0.25,3.0,,,,,,
+ewma,0.02,25,True,14.0,0.7083333333333334,2.68,"{""det_lam"": 0.9, ""det_threshold"": 0.22}",,0.22,0.9,,,,,
+ewma,0.05,25,True,13.0,0.8229166666666666,3.9,"{""det_lam"": 0.95, ""det_threshold"": 0.2}",,0.2,0.95,,,,,
+ewma,0.1,25,True,11.0,0.90625,5.68,"{""det_lam"": 0.9, ""det_threshold"": 0.4}",,0.4,0.9,,,,,
+legacy_thr,0.02,25,True,25.0,0.0,300.0,"{""flag_threshold"": 0.68}",,,,0.68,,,,
+legacy_thr,0.05,25,True,25.0,0.0,300.0,"{""flag_threshold"": 0.68}",,,,0.68,,,,
+legacy_thr,0.1,25,True,25.0,0.0,300.0,"{""flag_threshold"": 0.68}",,,,0.68,,,,
+sg_no_cap,0.02,25,True,24.0,0.4166666666666667,2.7399999999999998,"{""sg_baseline_floor"": 0.02, ""sg_cusum_alarm"": 2.0, ""sg_cusum_slack"": 0.1}",,,,,0.02,2.0,0.1,
+sg_no_cap,0.05,25,True,21.0,0.3125,4.4799999999999995,"{""sg_baseline_floor"": 0.05, ""sg_cusum_alarm"": 3.0, ""sg_cusum_slack"": 0.1}",,,,,0.05,3.0,0.1,
+sg_no_cap,0.1,25,True,18.0,0.6458333333333333,6.0200000000000005,"{""sg_baseline_floor"": 0.1, ""sg_cusum_alarm"": 3.0, ""sg_cusum_slack"": 0.15}",,,,,0.1,3.0,0.15,
+window,0.02,25,True,19.0,0.9270833333333334,2.58,"{""det_threshold"": 0.22, ""det_window"": 10}",,0.22,,,,,,10.0
+window,0.05,25,True,14.0,0.25,4.88,"{""det_threshold"": 0.25, ""det_window"": 20}",,0.25,,,,,,20.0
+window,0.1,25,True,12.0,0.6979166666666667,7.18,"{""det_threshold"": 0.25, ""det_window"": 40}",,0.25,,,,,,40.0
+sg_full,0.02,25,True,,,,"{""sg_baseline_floor"": 0.02, ""sg_cusum_alarm"": 2.0, ""sg_cusum_slack"": 0.1}",,,,,0.02,2.0,0.1,
+sg_full,0.05,25,True,,,,"{""sg_baseline_floor"": 0.05, ""sg_cusum_alarm"": 3.0, ""sg_cusum_slack"": 0.1}",,,,,0.05,3.0,0.1,
+sg_full,0.1,25,True,,,,"{""sg_baseline_floor"": 0.1, ""sg_cusum_alarm"": 3.0, ""sg_cusum_slack"": 0.15}",,,,,0.1,3.0,0.15,

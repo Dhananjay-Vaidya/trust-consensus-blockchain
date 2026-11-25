@@ -38,6 +38,51 @@ or the share cap (\EthreeNoCapFOne{}) changes detection little; removing all thr
 The adaptive attacker that replaces the earlier on-off attacker is evaluated in E11.
 \input{generated/tab_e3.tex}
 
+\subsection{E14 (negative result for SleeperGuard): simple change detectors}
+Is SleeperGuard better than a textbook change detector? We compared it with three standalone detectors on the same
+audit indicator, each with SleeperGuard's quarantine and probation, a single-timescale Beta trust and no cap: a
+CUSUM with a fixed reference, an EWMA and a sliding-window disagreement rate; plus two controls, legacy Beta with a
+tuned flag threshold and SleeperGuard without the cap. Every method was tuned on seeds 20--29 with the same
+\EfourteenGridBudget{}-point grid and the same constraint (at most 1 honest false quarantine per 1000 node-steps
+without attack), which all of them met (Table~\ref{tab:e14}, Fig.~\ref{fig:e14}).
+\textbf{All three simple detectors detect the stealthy sleeper better than SleeperGuard:} median F1
+\EfourteenCuStealthFOne{} (CUSUM), \EfourteenEwStealthFOne{} (EWMA) and \EfourteenWiStealthFOne{} (window) versus
+\EfourteenSgStealthFOne{}. They are significantly better in \EfourteenStealthBetterAll{} of the
+\EfourteenStealthTests{} (detector $\times$ coalition) stealthy comparisons, by \EfourteenStealthGainMin{} to
+\EfourteenStealthGainMax{} in median F1 with Cliff's $\delta=1$ (Holm-corrected paired Wilcoxon), at the same precision
+(\EfourteenCuStealthPrec{} vs.\ \EfourteenSgStealthPrec{} for CUSUM) and twice the recall (\EfourteenCuStealthRec{} vs.\
+\EfourteenSgStealthRec{}). Against the always-lying sleeper all reach F1 of at least \EfourteenEwLieFOne{}, but
+SleeperGuard is significantly better in \EfourteenLieWorse{} of \EfourteenLieTests{} comparisons, by at most
+\EfourteenLieLossMax{}. Delay is similar (\EfourteenCuDelay{} vs.\ \EfourteenSgDelay{} steps for the stealthy sleeper).
+The simple detectors pay in false quarantines, though within the budget: without attack \EfourteenCuFq{} (CUSUM) and
+\EfourteenEwFq{} (EWMA) versus \EfourteenSgFq{} per 1000 node-steps, significantly more than SleeperGuard in
+\EfourteenCuFqWorseSg{} and \EfourteenEwFqWorseSg{} of \EfourteenCuFqTests{} cells (the window: \EfourteenWiFq{},
+\EfourteenWiFqWorseSg{} cells). They reject fewer valid transactions (significantly fewer in \EfourteenCuVrBetterSg{} and
+\EfourteenEwVrBetterSg{} of \EfourteenCells{} cells; valid-reject \EfourteenCuVr{} vs.\ \EfourteenSgVr{}); we did not
+isolate why.
+The reason is SleeperGuard's adaptive CUSUM reference $\mu_0=\max(\text{floor},1-\bar t_{\text{slow}})$: for a sleeper
+that keeps lying it rises to \EfourteenMechSgMu{} by the end of the run, close to the sleeper's own disagreement rate,
+so the detector stops re-alarming (\EfourteenMechSgAlarms{} alarms per sleeper after activation, versus
+\EfourteenMechCuAlarms{} for the fixed-reference CUSUM with reference \EfourteenMechCuRef{}).
+\textbf{What SleeperGuard still adds.} The same adaptivity makes it robust to a misspecified fault rate: calibrated for
+0.05 but run at 0.10, honest false quarantines are \EfourteenSgFqTenF{} per 1000 node-steps for SleeperGuard versus
+\EfourteenCuFqTenF{} (CUSUM), \EfourteenEwFqTenF{} (EWMA) and \EfourteenWiFqTenF{} (window) (Table~\ref{tab:e14sens}).
+The share cap never bound in these runs (SleeperGuard with and without it gave identical detection); its value is the
+safety bound of Proposition~\ref{prop:safety}, not detection. SleeperGuard does not add a consistent delay advantage
+(EWMA is significantly faster in \EfourteenEwDelayBetterSg{} cells, the window slower in \EfourteenWiDelayWorseSg{}), and against
+the E11 damage-maximising coalition searched per method it did not limit invalid commits better (median
+\EfourteenSgAdIc{} vs.\ \EfourteenCuAdIc{} for CUSUM). Legacy Beta with a tuned threshold still misses the stealthy
+sleeper entirely (F1 \EfourteenLtStealthFOne{}; always-lie \EfourteenLtLieFOne{}). On always-on attacks every
+detector works (CRA/NMA/BFI F1 \EfourteenCuCraFOne{}/\EfourteenCuNmaFOne{}/\EfourteenCuBfiFOne{} for CUSUM,
+\EfourteenSgCraFOne{}/\EfourteenSgNmaFOne{}/\EfourteenSgBfiFOne{} for SleeperGuard). A fixed-reference CUSUM is
+therefore the stronger detector when the honest fault rate is known; SleeperGuard's adaptive reference trades
+stealthy-sleeper recall for robustness when it is not.
+\input{generated/tab_e14.tex}
+\input{generated/tab_e14_sens.tex}
+\begin{figure}[t]\centering\includegraphics[width=\columnwidth]{e14_baselines.pdf}
+\caption{E14: detection F1 vs.\ number of sleepers for SleeperGuard, simple change detectors and legacy Beta
+(median over 30 seeds, honest fault 0.05). SleeperGuard with and without the cap coincide.}\label{fig:e14}\end{figure}
+
 \subsection{E4: cost and accuracy of the homomorphic tally}
 Over \EfourDecisionsTotal{} random-instance decisions HETally disagreed with the plaintext rule \EfourFlipsTotal{}
 times (one-sided 95\% Clopper--Pearson upper bound on the flip rate: \EfourFlipsTotalCp{}\%). In the guard-band stress test, decisions agreed for all $|m|\ge$\,\EfourBandMinSafe{} and flips occurred only at

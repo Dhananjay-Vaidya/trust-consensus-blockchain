@@ -917,6 +917,11 @@ def e14() -> None:
             f1 = st[(st.a == m) & (st.b == "sg_full") & st.metric.str.startswith("det_f1")]
             macro(f"Efourteen{t}FOneBetterSg", int((f1.significant & (f1.median_diff > 0)).sum()), ssrc)
             macro(f"Efourteen{t}FOneWorseSg", int((f1.significant & (f1.median_diff < 0)).sum()), ssrc)
+            fq = st[(st.a == m) & (st.b == "sg_full") & st.metric.str.startswith("honest_quarantines_per_1000")]
+            macro(f"Efourteen{t}FqWorseSg", int((fq.significant & (fq.median_diff > 0)).sum()), ssrc)
+            macro(f"Efourteen{t}FqTests", len(fq), ssrc)
+            vr = st[(st.a == m) & (st.b == "sg_full") & st.metric.str.startswith("valid_reject_rate")]
+            macro(f"Efourteen{t}VrBetterSg", int((vr.significant & (vr.median_diff < 0)).sum()), ssrc)
             dl = st[(st.a == m) & (st.b == "sg_full") & st.metric.str.startswith("delay_mean")]
             macro(f"Efourteen{t}DelayWorseSg", int((dl.significant & (dl.median_diff > 0)).sum()), ssrc)
             macro(f"Efourteen{t}DelayBetterSg", int((dl.significant & (dl.median_diff < 0)).sum()), ssrc)
@@ -928,6 +933,17 @@ def e14() -> None:
                              invalid_commit=med_ci(g.invalid_commit_rate)))
     pd.DataFrame(summ).to_csv(RAW / "stats" / "e14_summary.csv", index=False)
     macro("EfourteenCells", int(tdp.groupby(["coalition", "intensity"]).ngroups), src)
+    simple = st[st.a.isin(["cusum", "ewma", "window"]) & (st.b == "sg_full") & st.metric.str.startswith("det_f1")]
+    stealth = simple[simple.metric.str.contains("i=0.25")]
+    lie = simple[simple.metric.str.contains("i=1.0")]
+    macro("EfourteenStealthGainMin", float(stealth.median_diff.min()), ssrc)
+    macro("EfourteenStealthGainMax", float(stealth.median_diff.max()), ssrc)
+    macro("EfourteenStealthBetterAll", int((stealth.significant & (stealth.median_diff > 0)).sum()), ssrc)
+    macro("EfourteenStealthTests", len(stealth), ssrc)
+    worse = lie[lie.significant & (lie.median_diff < 0)]
+    macro("EfourteenLieWorse", len(worse), ssrc)
+    macro("EfourteenLieTests", len(lie), ssrc)
+    macro("EfourteenLieLossMax", float(-worse.median_diff.min()) if len(worse) else 0.0, ssrc, "{:.3f}")
     tex_table(pd.DataFrame(rows), GEN / "tab_e14.tex",
               r"E14: change-detection baselines vs.\ legacy Beta and SleeperGuard (sleeper attack, $t_s=300$, honest fault "
               r"0.05, coalitions 2/4/6 of 16, 30 paired seeds, every method calibrated on seeds 20--29 with the same 25-point "
@@ -976,6 +992,15 @@ def e14() -> None:
         tag = {0.02: "Two", 0.05: "Five", 0.1: "Ten"}[round(float(r.fault), 2)]
         macro(f"Efourteen{t}BudgetMet{tag}", "yes" if bool(r.budget_met) else "no", csrc)
     macro("EfourteenGridBudget", int(cal.grid_points.max()), csrc)
+    mp = RAW / "e14_baselines" / "mechanism.json"
+    if mp.exists():
+        mech = json.loads(mp.read_text())
+        msrc = "results/raw/e14_baselines/mechanism.json"
+        macro("EfourteenMechSgAlarms", float(mech["sg_full"]["alarms_per_sleeper_after_switch"]), msrc, "{:.1f}")
+        macro("EfourteenMechCuAlarms", float(mech["cusum"]["alarms_per_sleeper_after_switch"]), msrc, "{:.1f}")
+        macro("EfourteenMechSgMu", float(mech["sg_full"]["sleeper_mu0_end"]), msrc)
+        macro("EfourteenMechSgMuHonest", float(mech["sg_full"]["honest_mu0_end"]), msrc)
+        macro("EfourteenMechCuRef", float(mech["cusum_reference"]), msrc)
     macro("EfourteenBudgetViolations", int((~cal.budget_met.astype(bool)).sum()), csrc)
 
     # ---- figure -----------------------------------------------------------------------------------
@@ -995,7 +1020,7 @@ def e14() -> None:
     axes[0].set_ylim(-0.05, 1.05)
     h, lab = axes[0].get_legend_handles_labels()
     fig.legend(h, lab, loc="upper center", ncol=3, frameon=False, fontsize=5.5, bbox_to_anchor=(0.5, 1.0))
-    fig.tight_layout(rect=(0, 0, 1, 0.76))
+    fig.tight_layout(rect=(0, 0, 1, 0.81))
     save_fig(fig, "e14_baselines")
     plt.close(fig)
 

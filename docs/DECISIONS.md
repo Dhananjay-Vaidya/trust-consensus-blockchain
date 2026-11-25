@@ -193,3 +193,35 @@ four items.
   it tampered with the only mined block at difficulty 1, and a tampered last block is caught only by the
   proof-of-work prefix, which a random hash passes with probability 1/16. The test now mines a second block so the
   broken `previous_hash` link makes the check deterministic. `Blockchain` itself is unchanged.
+
+**D27 — E14 standalone change-detection baselines.**
+- *Backends* (`src/trust/detectors.py`, `trust_backend` = `cusum` / `ewma` / `window`, parameters via
+  `RunConfig.detector` / `det_*` overrides). Each sees only the audit indicator e. Shared with SleeperGuard on
+  purpose, so the comparison isolates the detector: quarantine of 50 and probation of 30 audited observations at
+  x0.25 weight, statistic frozen during quarantine and reset on an alarm, flag = quarantined or trust < 0.5.
+  Differences: a single-timescale discounted Beta trust (SleeperGuard's slow timescale, lambda 0.995) and no cap.
+  CUSUM uses a *fixed* reference r = f + slack (SleeperGuard's is adaptive per node). EWMA starts at z0 = 0 and resets
+  to 0 on an alarm. The window alarms only when full. The request specified quarantine/probation for CUSUM and EWMA
+  only; the window baseline uses the same quarantine for consistency.
+- *Equal budget.* SleeperGuard's calibration grid has 25 points (5 slack x 5 alarm), so every tuned method gets 25:
+  CUSUM slack x alarm (the same values), EWMA lambda {0.8..0.99} x (f + {0.05..0.3}), window W {10..160} x the same
+  levels, legacy threshold 0.20..0.68 (25 values), SleeperGuard-without-cap its own slack x alarm grid. SleeperGuard
+  itself keeps `results/raw/calibration/selected.json` (same grid, same seeds 20-29, same rule).
+- *Constraint and objective.* Mean honest false quarantines per 1000 node-steps without attack <= 1, then smallest
+  mean delay against the stealthy sleeper, ties to fewer false alarms. Legacy Beta has no quarantine, so its
+  constraint is on honest *flagged* node-steps, and since its delay is fully censored for every threshold (all ties),
+  ties go to the highest feasible threshold (fewest-false-alarms would pick a threshold that flags nothing). All 15
+  tuned (method, fault) pairs met the budget. Chosen parameters: `results/raw/e14_baselines/calibration.csv`.
+- *Evaluation.* Seeds 100-129, E2 environment (16 nodes, 600 steps, t_s = 300), coalitions 2/4/6 of 16, intensities
+  0.25/1.0 plus no attack, at f = 0.05 matched, 0.02/0.10 matched, 0.02/0.10 with the 0.05 calibration; CRA/NMA/BFI
+  at 5/16; the E11 search (8 lie rates x 7 sizes x 2 targets) per method on seeds 30-39, best config evaluated on
+  100-129. Paired tests per sleeper cell vs SleeperGuard and vs legacy Beta (Wilcoxon, Holm within the E14 family,
+  bootstrap CI, Cliff's delta): `results/raw/stats/e14_baselines.csv`.
+- *Outcome reported as a negative result (C30-C32).* The simple detectors beat SleeperGuard on the stealthy sleeper.
+  The mechanism diagnostic `experiments/diag_e14_mechanism.py` (added to `scripts/reproduce.py` after E14; its
+  output was produced by a standalone run of that script on the same code) shows why: SleeperGuard's adaptive
+  reference absorbs a persistent low-rate liar. The paper's abstract, contributions, limitations and the "must not
+  claim" list were updated accordingly. No SleeperGuard parameter or design was changed in response.
+- *Reproduction.* Full rerun with E14 included: every deterministic output identical to the previous commit; E4 and
+  E15 differ only in CKKS-noise-dependent columns (decoded outputs, recovery error magnitudes; E15 batch counts
+  unchanged) and timings.

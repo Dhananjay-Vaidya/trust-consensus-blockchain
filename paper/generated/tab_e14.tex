@@ -1,0 +1,19 @@
+\begin{table}[t]
+\centering\scriptsize
+\caption{E14: change-detection baselines vs.\ legacy Beta and SleeperGuard (sleeper attack, $t_s=300$, honest fault 0.05, coalitions 2/4/6 of 16, 30 paired seeds, every method calibrated on seeds 20--29 with the same 25-point budget). F1 median [95\% CI] pooled over coalitions; delay = median mean detection delay (steps, censored at the end of the run); FQ = honest false quarantines and flagged = honest flagged node-steps per 1000 without attack; valid-reject / invalid-commit pooled over all sleeper runs. Per-cell values: results/raw/stats/e14\_summary.csv; paired tests: e14\_baselines.csv.}\label{tab:e14}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llllllll}
+\toprule
+method & F1 stealthy & F1 always-lie & delay stealthy & FQ/1000 & flagged/1000 & valid-reject & invalid-commit \\
+\midrule
+legacy Beta & 0.00 [0.00, 0.00] & 0.00 [0.00, 0.00] & 300.0 & 0.00 & 0.0 & 0.044 & 0.0000 \\
+legacy Beta, tuned thr. & 0.00 [0.00, 0.00] & 0.62 [0.62, 0.64] & 300.0 & 0.00 & 0.0 & 0.044 & 0.0000 \\
+SleeperGuard & 0.48 [0.47, 0.49] & 0.99 [0.99, 0.99] & 5.6 & 0.31 & 5.1 & 0.004 & 0.0000 \\
+SleeperGuard, no cap & 0.48 [0.47, 0.49] & 0.99 [0.99, 0.99] & 5.6 & 0.31 & 5.1 & 0.004 & 0.0000 \\
+CUSUM only & 0.80 [0.79, 0.80] & 0.98 [0.98, 0.98] & 5.5 & 0.47 & 7.4 & 0.002 & 0.0000 \\
+EWMA only & 0.79 [0.78, 0.80] & 0.97 [0.97, 0.98] & 5.0 & 0.73 & 12.0 & 0.002 & 0.0000 \\
+window mean & 0.77 [0.77, 0.78] & 0.98 [0.98, 0.98] & 5.9 & 0.21 & 3.2 & 0.002 & 0.0000 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

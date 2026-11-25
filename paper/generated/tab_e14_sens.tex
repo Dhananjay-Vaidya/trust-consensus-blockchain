@@ -1,0 +1,19 @@
+\begin{table}[t]
+\centering\scriptsize
+\caption{E14 robustness: stealthy-sleeper F1 / honest false quarantines per 1000 (no attack) at honest fault 0.02 and 0.10, calibrated for the true rate (matched) or for 0.05 (misspecified); F1 against always-on attacks (coalition 5/16); and the E11 damage-maximising coalition searched per method on seeds 30--39 (coalition size $b$ of 16, lie rate, median invalid-commit rate on seeds 100--129).}\label{tab:e14sens}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lllllll}
+\toprule
+method & F1/FQ f=0.02 matched & F1/FQ f=0.02 cal. 0.05 & F1/FQ f=0.1 matched & F1/FQ f=0.1 cal. 0.05 & F1 CRA/NMA/BFI & adaptive: b, lie, invalid-commit \\
+\midrule
+legacy Beta & 0.00 / 0.00 & 0.00 / 0.00 & 0.00 / 0.00 & 0.00 / 0.00 & 1.00/0.00/0.00 & 8, 0.5, 0.0023 \\
+legacy Beta, tuned thr. & 0.00 / 0.00 & 0.00 / 0.00 & 0.00 / 0.00 & 0.00 / 0.00 & 1.00/1.00/1.00 & 8, 0.5, 0.0023 \\
+SleeperGuard & 0.67 / 0.36 & 0.47 / 0.00 & 0.38 / 0.62 & 0.47 / 2.19 & 1.00/0.86/0.87 & 8, 0.5, 0.0007 \\
+SleeperGuard, no cap & 0.67 / 0.36 & 0.47 / 0.00 & 0.38 / 0.62 & 0.47 / 2.19 & 1.00/0.86/0.87 & 8, 0.5, 0.0007 \\
+CUSUM only & 0.86 / 0.52 & 0.80 / 0.00 & 0.73 / 0.73 & 0.63 / 11.82 & 0.99/0.95/0.94 & 8, 0.2, 0.0000 \\
+EWMA only & 0.86 / 0.52 & 0.80 / 0.00 & 0.72 / 0.83 & 0.64 / 11.41 & 0.99/0.95/0.94 & 8, 0.15, 0.0000 \\
+window mean & 0.85 / 0.73 & 0.76 / 0.00 & 0.68 / 0.62 & 0.71 / 5.36 & 1.00/0.93/0.92 & 8, 0.2, 0.0004 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

@@ -19,19 +19,19 @@
     "ram_gb": 16.78,
     "physical_cores": 8,
     "tenseal": "0.3.16",
-    "git_commit": "b241fb9b050f6bf1c3344a0df6af9e13b54494a0",
+    "git_commit": "ee8fa9838907ac90d0f5e3ababdcf0cd2022251e",
     "git_dirty": false
   },
-  "written": "2026-11-25T12:21:48",
+  "written": "2026-11-25T13:25:32",
   "runtime_s": {
-    "runs.csv": 441.6
+    "runs.csv": 618.1
   },
   "train": {
     "rule_err_hi": 0.1,
     "rule_err_lo": 0.02,
-    "tabular_q_train_s": 25.2,
-    "d3p_train_s": 60.2,
-    "marl_factored_train_s": 119.4
+    "tabular_q_train_s": 36.7,
+    "d3p_train_s": 85.1,
+    "marl_factored_train_s": 178.1
   },
   "epochs": 10,
   "train_seeds": [

@@ -17,13 +17,13 @@
     "ram_gb": 16.78,
     "physical_cores": 8,
     "tenseal": "0.3.16",
-    "git_commit": "b241fb9b050f6bf1c3344a0df6af9e13b54494a0",
+    "git_commit": "ee8fa9838907ac90d0f5e3ababdcf0cd2022251e",
     "git_dirty": false
   },
-  "written": "2026-11-25T12:03:27",
+  "written": "2026-11-25T13:05:53",
   "runtime_s": {
-    "timings.csv": 102.3,
-    "consensus.csv": 375.9,
-    "band.csv": 2158.3
+    "timings.csv": 103.9,
+    "consensus.csv": 301.4,
+    "band.csv": 246.9
   }
 }
