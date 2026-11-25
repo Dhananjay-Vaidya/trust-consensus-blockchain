@@ -130,12 +130,18 @@ def summarize(env: HonestEnv, window_start: Optional[int] = None, window_end: Op
     }
 
 
-def episode_snapshot_scores(env: HonestEnv, episode_len: int, static_labels: bool = True) -> List[Dict[str, float]]:
+def episode_snapshot_scores(env: HonestEnv, episode_len: int, static_labels: bool = True,
+                            flag_threshold: float = 0.5,
+                            count_quarantine_as_flag: bool = True) -> List[Dict[str, float]]:
     """Preprint-style scoring: node-classification metrics at the LAST step of each episode block.
 
     static_labels=True reproduces the pre-audit simulator's labelling: a node is positive if it is in the
     adversary coalition at all, including while a sleeper is still dormant. static_labels=False uses
     "adversarial AND attack active" (D5).
+    A node is predicted malicious if trust < flag_threshold, or (if count_quarantine_as_flag) it is
+    quarantined. The defaults (0.5, True) equal the environment's own flag rule (RunConfig.flag_threshold
+    = 0.5), so existing results are unchanged; the pre-audit simulator used trust < 0.45 and had no
+    quarantine.
     """
     out: List[Dict[str, float]] = []
     co = env._world.coalition
@@ -144,7 +150,11 @@ def episode_snapshot_scores(env: HonestEnv, episode_len: int, static_labels: boo
             y = np.array([n in co for n in env.nodes], dtype=int)
         else:
             y = node_labels(env, end).astype(int)
-        r = _prf(y, env.records[end].flagged.astype(int))
+        rec = env.records[end]
+        pred = rec.trust < flag_threshold
+        if count_quarantine_as_flag:
+            pred = pred | rec.quarantined
+        r = _prf(y, pred.astype(int))
         out.append({"episode": end // episode_len + 1, "f1": r["f1"], "precision": r["precision"],
                     "recall": r["recall"], "mcc": r["mcc"]})
     return out

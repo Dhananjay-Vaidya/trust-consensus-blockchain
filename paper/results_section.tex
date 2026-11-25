@@ -84,7 +84,7 @@ after Holm correction. The ledger-based ranking beat random targeting in weight 
 All controllers were frozen and evaluated on unseen seeds. The factored independent learners obtained the highest
 median reward (\EnineBestLearnerReward{} vs.\ \EnineRuleReward{} for the tuned rule and \EnineFixedReward{} for the fixed
 SleeperGuard configuration; Table~\ref{tab:e9}, Fig.~\ref{fig:e9}), and \EnineLearnersBeatRule{} of the three learners beat the rule
-significantly. D3P was not significantly better than the rule (reward \EnineDthreeReward{}). \textbf{Caveat:} the reward
+significantly. D3P beat the rule only by a small margin (reward \EnineDthreeReward{}, median difference \EnineDthreeDiff{}, Cliff's $\delta=\EnineDthreeDelta{}$). \textbf{Caveat:} the reward
 (D8) values audited agreement, latency and audit cost, not detection. The best-reward learner shrinks committees and
 audits and pays for it with a median detection delay of \EnineBestLearnerDelay{} steps versus \EnineFixedDelay{} for the fixed
 configuration, and static DPoS, which detects nothing, scores \EnineDposReward{}. Higher reward here does not mean better

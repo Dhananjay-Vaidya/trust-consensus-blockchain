@@ -465,9 +465,25 @@ def e9() -> None:
     macro("EnineDthreeFOne", float(f1.get("d3p", math.nan)), "results/raw/e9_learning/runs.csv")
     macro("EnineFixedFOne", float(f1.get("sleeper_guard_fixed", math.nan)), "results/raw/e9_learning/runs.csv")
     macro("EnineDthreeReward", float(med.get("d3p", math.nan)), "results/raw/e9_learning/runs.csv", "{:.3f}")
-    vs_rule = st[st.b == "rule"]
-    macro("EnineLearnersBeatRule", int((vs_rule.significant & (vs_rule.median_diff > 0)).sum()), "results/raw/stats/e9_learning.csv")
-    macro("EnineLearnersLoseRule", int((vs_rule.significant & (vs_rule.median_diff < 0)).sum()), "results/raw/stats/e9_learning.csv")
+    # Text-facing E9 numbers come from the stats CSV on disk, so the paper cannot drift from it.
+    stats_path = RAW / "stats" / "e9_learning.csv"
+    sc = pd.read_csv(stats_path)
+    sc_rule = sc[sc.metric.str.endswith(" vs rule]")]
+    beat = int((sc_rule.significant & (sc_rule.median_diff > 0)).sum())
+    lose = int((sc_rule.significant & (sc_rule.median_diff < 0)).sum())
+    macro("EnineLearnersBeatRule", beat, "results/raw/stats/e9_learning.csv")
+    macro("EnineLearnersLoseRule", lose, "results/raw/stats/e9_learning.csv")
+    d3 = sc[sc.metric == "mean_reward_all[d3p vs rule]"]
+    assert len(d3) == 1, "row mean_reward_all[d3p vs rule] missing from results/raw/stats/e9_learning.csv"
+    macro("EnineDthreeDiff", float(d3.median_diff.iloc[0]), "results/raw/stats/e9_learning.csv", "{:.3f}")
+    macro("EnineDthreeDelta", float(d3.cliffs_delta.iloc[0]), "results/raw/stats/e9_learning.csv", "{:.2f}")
+    # Guard against text/statistics drift: every learner significant vs the rule must be counted as
+    # beating it (none may be significantly worse), and the CSV must agree with the in-memory tests.
+    n_sig = int(sc_rule.significant.sum())
+    assert n_sig == beat, (f"E9: {n_sig} learners differ significantly from the rule but EnineLearnersBeatRule={beat}; "
+                           "update the E9 text before building")
+    mem = st[st.b == "rule"]
+    assert int((mem.significant & (mem.median_diff > 0)).sum()) == beat, "E9: stats CSV disagrees with recomputed tests"
     fig, ax = plt.subplots(figsize=(3.4, 2.0))
     ax.boxplot([df[df.controller == c].mean_reward_all.values for c in order],
                tick_labels=[c.replace("_", "\n") for c in order], widths=0.6, showfliers=False)
@@ -594,31 +610,57 @@ def e12() -> None:
     _ = fq
 
 
+def _first_detect(x: pd.Series) -> str:
+    """Median first-detection episode over seeds; undetected runs count as later than any episode."""
+    v = x.fillna(np.inf)
+    m = float(np.median(v))
+    return "none" if math.isinf(m) else f"{m:.0f}"
+
+
 def e13() -> None:
-    df = load("e13_preprint_protocol")
-    if df is None:
+    runs, grid = load("e13_preprint_protocol"), load("e13_preprint_protocol", "grid.csv")
+    if runs is None or grid is None or "variant" not in runs.columns:
         return
     src = "results/raw/e13_preprint_protocol/runs.csv"
     rows = []
-    for be in ("legacy_beta", "sleeper_guard"):
-        g = df[df.backend == be]
-        rows.append({"trust": be.replace("_", " "), "adversaries": int(g.n_adversary.median()),
-                     "F1 episodes 1-25 (dormant)": med_ci(g.f1_pre_mean),
-                     "F1 episodes 26-50 (active)": med_ci(g.f1_post_mean),
-                     "F1 final episode": med_ci(g.f1_final)})
-        tag = "Legacy" if be == "legacy_beta" else "Sg"
-        macro(f"Ethirteen{tag}Pre", float(g.f1_pre_mean.median()), src)
-        macro(f"Ethirteen{tag}Post", float(g.f1_post_mean.median()), src)
-        macro(f"Ethirteen{tag}Final", float(g.f1_final.median()), src)
-        ep = load("e13_preprint_protocol", "episodes.csv")
-        if ep is not None:
-            h = ep[(ep.backend == be) & (ep.episode > 25)]
-            first = h[h.f1_static >= 0.5].groupby("seed").episode.min().reindex(sorted(h.seed.unique()))
-            macro(f"Ethirteen{tag}FirstEp", float(first.fillna(51).median()), "results/raw/e13_preprint_protocol/episodes.csv", "{:.0f}")
+    for variant, tagv in (("E13b_preprint_exact", "b"), ("E13a_as_before", "a")):
+        for be in ("legacy_beta", "sleeper_guard"):
+            g = runs[(runs.variant == variant) & (runs.backend == be)]
+            if g.empty:
+                continue
+            first = g.iloc[0]
+            rows.append({"variant": variant.replace("_", " "), "trust": be.replace("_", " "),
+                         "adversaries": int(first.adversaries), "episodes": int(first.episodes),
+                         "threshold": first.threshold, "window": first.window.replace("_", " "),
+                         "F1": med_ci(g.f1), "first detection (episode)": _first_detect(g.first_detect_episode),
+                         "runs detected": f"{int(g.detected.sum())}/{len(g)}"})
+            tag = "Legacy" if be == "legacy_beta" else "Sg"
+            macro(f"Ethirteen{tagv}{tag}FOne", float(g.f1.median()), src)
+            macro(f"Ethirteen{tagv}{tag}FirstEp", _first_detect(g.first_detect_episode), src)
     tex_table(pd.DataFrame(rows), GEN / "tab_e13.tex",
-              r"E13: the sleeper attack under the preprint's protocol (16 nodes, 4 adversaries, 50 episodes $\times$ 100 "
-              r"steps, activation after episode 25, intensity 0.75), F1 at the end of each episode with static labels as "
-              r"in the preprint, averaged over the dormant and active phases. Median [95\% CI], 30 seeds.", "tab:e13")
+              r"E13: the sleeper attack under the preprint's protocol on the oracle-free environment. E13b uses the "
+              r"settings the pre-audit code actually ran (D23): 4 of 16 adversaries, 100 episodes of 100 steps, activation "
+              r"after episode 25, intensity 0.75, flag if trust $<0.45$, static labels, F1 of the final episode. E13a is the "
+              r"earlier configuration. Median [95\% CI] over 30 seeds.", "tab:e13")
+    gsrc = "results/raw/e13_preprint_protocol/grid.csv"
+    g2 = grid.copy()
+    tab = pd.DataFrame({
+        "adv.": g2.adversaries, "episodes": g2.episodes, "threshold": g2.threshold,
+        "window": g2.window.str.replace("_", " "), "legacy F1": g2.legacy_f1, "SleeperGuard F1": g2.sg_f1,
+        "first det. (legacy / SG)": [
+            f"{'none' if pd.isna(a) else f'{a:.0f}'} / {'none' if pd.isna(b) else f'{b:.0f}'}"
+            for a, b in zip(g2.legacy_first_detect, g2.sg_first_detect)]})
+    tex_table(tab, GEN / "tab_e13_grid.tex",
+              r"E13 sensitivity grid over plausible readings of the preprint's protocol: adversaries, episodes, flag "
+              r"threshold and averaging window (all active episodes, final 10, final episode). F1 median [95\% CI] over 30 "
+              r"seeds; first detection = median first episode after activation with F1 $\ge 0.5$ (detected runs only).",
+              "tab:e13grid")
+    macro("EthirteenGridLegacyMin", float(g2.legacy_f1_median.min()), gsrc)
+    macro("EthirteenGridLegacyMax", float(g2.legacy_f1_median.max()), gsrc)
+    macro("EthirteenGridSgMin", float(g2.sg_f1_median.min()), gsrc)
+    macro("EthirteenGridCells", int(len(g2)), gsrc)
+    inside = g2[(g2.legacy_f1_median >= 0.11) & (g2.legacy_f1_median <= 0.16)]
+    macro("EthirteenGridInside", int(len(inside)), gsrc)
 
 
 def hardware() -> None:

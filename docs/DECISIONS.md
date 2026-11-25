@@ -100,3 +100,30 @@ i.e. 200 training episodes of 600 steps per learner; the rule's two thresholds t
 
 **D22 — E4 timings rerun alone.** The first full reproduction overlapped E4's timing phase with other
 work, so E4 was rerun on an otherwise idle machine and those files replace the first run's.
+
+**D23 — The preprint's real TDP protocol (E13).** Established from the pre-audit code at commit `c8bab2f`
+(in this repository's history) and the arXiv text (arxiv.org/html/2512.22860v1, read 2026-11-25; text
+after Section 3 was read only as a model-extracted summary and must be checked against the PDF). Where
+code and text disagree, the code is treated as ground truth for the as-run variant (E13b).
+
+| Item | Code @ c8bab2f (as run) | Paper text | Used in E13b |
+|---|---|---|---|
+| a) adversaries | `num_malicious = int(TOTAL_NODES * MALICIOUS_RATIO)` = int(16 x 0.30) = **4** (`src/simulation/simulation_manager.py:217`; `config/default.yaml:2-3`) | "randomly assign 5 as malicious" (§6.6, summary); "approximately 5" (§3.3, summary) | 4 (code); 5 in the grid |
+| b) episodes | TDP rows of `experiments/figures/results_summary.csv` have `Episodes = 100` (other attacks 50); `steps_per_episode: 100` (`config/default.yaml:22`). `run_all_experiments.sh` uses 100 episodes x 30 steps for every attack, but it cannot have produced that summary (its non-TDP rows have 50 episodes) | "50 for standard attacks, 100 for TDP" (§6.6, summary); 100 steps (Table 6, summary) | 100 episodes x 100 steps; 50 in the grid |
+| c) activation, intensity | dormant while `current_episode < activation_episode` (`src/attacks/tdp_attack.py:67`), defaults 25 and 0.75 (`src/attacks/attack_util.py:89-90`; `config/default.yaml:31-32`), episode index 0-based, so attacks start in the 26th episode | activation 25, intensity 0.75 (Table 8, summary); dormant phase stated inconsistently as episodes 11-25 (§3.4.5) and 1-25 (§5.5, §7.4.2) | dormant episodes 1-25, active from 26; intensity 0.75 |
+| d) flag threshold | `predicted_malicious = {n : trust < TRUST_THRESHOLD}` with `threshold: 0.45` (`simulation_manager.py:723`; `config/default.yaml:11`); no quarantine concept | θ = 0.45 (§3.3, §6.5.1, summary) | trust < 0.45 (quarantine still counts for SleeperGuard, its only flag mechanism besides trust) |
+| e) reported F1 window | `Final_F1 = df['F1 Score'].iloc[-1]`: the **last episode only** (`experiments/_generate_paper_figures_impl.py:529`); these are exactly the paper's TDP numbers (0.158 / 0.158 / 0.111 for RL / DRL / MARL in `results_summary.csv`) | "averaged over the final 10 episodes after convergence" (§6.5, summary) | final episode (code); final 10 and all active episodes in the grid |
+| f) labels | static: `y_true = [n in true_malicious_nodes]` (`simulation_manager.py:724`), so a dormant sleeper counts as malicious | not stated | static |
+
+Choices: the grid adds a third window level, "final1", beyond the requested {all active, final 10}, because
+the code's own reported number is the final episode. The environment computes the coalition size with
+`round()`, so 4 and 5 adversaries use `malicious_fraction` 0.25 and 0.3125; E13 asserts the realised
+count. The old simulator's attack wrote trust directly (A3) and fed trust ground truth (A1). E13 repeats
+only the *protocol* (sizes, timing, threshold, scoring) on the oracle-free environment, not those flaws.
+
+**D24 — E9 text corrected: D3P significantly beats the rule with a small effect.** The previous text
+("D3P does not" / "D3P was not significantly better than the rule") contradicted
+`results/raw/stats/e9_learning.csv` (d3p vs rule: median diff 0.014, Holm p 7.3e-10, Cliff's delta 0.297).
+That sentence had been written from the first full run and not updated after the clean-checkout rerun
+changed the result. `paper/make_assets.py` now reads the E9 text numbers from the stats CSV and fails the
+build if the number of learners significantly different from the rule differs from `\EnineLearnersBeatRule`.
