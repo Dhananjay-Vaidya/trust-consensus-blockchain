@@ -123,6 +123,70 @@
     "value": "0.0007",
     "source": "results/raw/e2_sleeperguard/runs.csv"
   },
+  "EtwoPrStealthSgPrec": {
+    "value": "0.96",
+    "source": "results/raw/stats/e2_precision_recall.csv"
+  },
+  "EtwoPrStealthSgRec": {
+    "value": "0.32",
+    "source": "results/raw/stats/e2_precision_recall.csv"
+  },
+  "EtwoPrStealthSgFOne": {
+    "value": "0.48",
+    "source": "results/raw/stats/e2_precision_recall.csv"
+  },
+  "EtwoPrStealthLgPrec": {
+    "value": "0.00",
+    "source": "results/raw/stats/e2_precision_recall.csv"
+  },
+  "EtwoPrStealthLgRec": {
+    "value": "0.00",
+    "source": "results/raw/stats/e2_precision_recall.csv"
+  },
+  "EtwoPrStealthLgFOne": {
+    "value": "0.00",
+    "source": "results/raw/stats/e2_precision_recall.csv"
+  },
+  "EtwoPrLieSgPrec": {
+    "value": "0.99",
+    "source": "results/raw/stats/e2_precision_recall.csv"
+  },
+  "EtwoPrLieSgRec": {
+    "value": "1.00",
+    "source": "results/raw/stats/e2_precision_recall.csv"
+  },
+  "EtwoPrLieSgFOne": {
+    "value": "0.99",
+    "source": "results/raw/stats/e2_precision_recall.csv"
+  },
+  "EtwoPrLieLgPrec": {
+    "value": "0.00",
+    "source": "results/raw/stats/e2_precision_recall.csv"
+  },
+  "EtwoPrLieLgRec": {
+    "value": "0.00",
+    "source": "results/raw/stats/e2_precision_recall.csv"
+  },
+  "EtwoPrLieLgFOne": {
+    "value": "0.00",
+    "source": "results/raw/stats/e2_precision_recall.csv"
+  },
+  "EsixPrLowPrec": {
+    "value": "1.00",
+    "source": "results/raw/stats/e6_precision_recall.csv"
+  },
+  "EsixPrLowRec": {
+    "value": "0.47",
+    "source": "results/raw/stats/e6_precision_recall.csv"
+  },
+  "EsixPrFullPrec": {
+    "value": "0.95",
+    "source": "results/raw/stats/e6_precision_recall.csv"
+  },
+  "EsixPrFullRec": {
+    "value": "0.23",
+    "source": "results/raw/stats/e6_precision_recall.csv"
+  },
   "EthreeFullFOne": {
     "value": "0.48",
     "source": "results/raw/e3_ablation/runs.csv"
@@ -172,7 +236,7 @@
     "source": "results/raw/e4_he/decisions.csv"
   },
   "EfourMsZero": {
-    "value": "23",
+    "value": "32",
     "source": "results/raw/e4_he/timings.csv"
   },
   "EfourBandZero": {
@@ -188,7 +252,7 @@
     "source": "results/raw/e4_he/decisions.csv"
   },
   "EfourMsOne": {
-    "value": "147",
+    "value": "164",
     "source": "results/raw/e4_he/timings.csv"
   },
   "EfourBandOne": {
@@ -204,7 +268,7 @@
     "source": "results/raw/e4_he/decisions.csv"
   },
   "EfourMsTwo": {
-    "value": "296",
+    "value": "258",
     "source": "results/raw/e4_he/timings.csv"
   },
   "EfourBandTwo": {
@@ -220,7 +284,7 @@
     "source": "results/raw/e4_he/decisions.csv"
   },
   "EfourMsThree": {
-    "value": "478",
+    "value": "448",
     "source": "results/raw/e4_he/timings.csv"
   },
   "EfourBandThree": {
@@ -240,7 +304,7 @@
     "source": "results/raw/e4_he/band.csv"
   },
   "EfourBandMinSafe": {
-    "value": "1e-08",
+    "value": "1e-07",
     "source": "results/raw/e4_he/band.csv"
   },
   "EfourDecisionsTotal": {
@@ -251,8 +315,20 @@
     "value": "0",
     "source": "results/raw/e4_he/decisions.csv"
   },
+  "EfourFlipsTotalCp": {
+    "value": "0.022",
+    "source": "results/raw/e4_he/decisions.csv"
+  },
   "EfourConsFlipsZero": {
     "value": "0",
+    "source": "results/raw/e4_he/consensus.csv"
+  },
+  "EfourConsDecisionsZero": {
+    "value": "8000",
+    "source": "results/raw/e4_he/consensus.csv"
+  },
+  "EfourConsFlipsZeroCp": {
+    "value": "0.037",
     "source": "results/raw/e4_he/consensus.csv"
   },
   "EfourConsWallZero": {
@@ -263,20 +339,32 @@
     "value": "0",
     "source": "results/raw/e4_he/consensus.csv"
   },
+  "EfourConsDecisionsThree": {
+    "value": "4800",
+    "source": "results/raw/e4_he/consensus.csv"
+  },
+  "EfourConsFlipsThreeCp": {
+    "value": "0.062",
+    "source": "results/raw/e4_he/consensus.csv"
+  },
   "EfourConsWallThree": {
-    "value": "436",
+    "value": "471",
     "source": "results/raw/e4_he/consensus.csv"
   },
   "EfourConsWallPlain": {
-    "value": "0.31",
+    "value": "0.40",
     "source": "results/raw/e4_he/consensus.csv"
+  },
+  "EfiveSeeds": {
+    "value": "30",
+    "source": "results/raw/e5_scale/runs.csv"
   },
   "EfiveMaxNodes": {
     "value": "1024",
     "source": "results/raw/e5_scale/runs.csv"
   },
   "EfiveBigWall": {
-    "value": "14.4",
+    "value": "12.4",
     "source": "results/raw/e5_scale/runs.csv"
   },
   "EfiveBigMem": {
@@ -284,7 +372,7 @@
     "source": "results/raw/e5_scale/runs.csv"
   },
   "EfiveBigFOne": {
-    "value": "0.43",
+    "value": "0.42",
     "source": "results/raw/e5_scale/runs.csv"
   },
   "EfiveBigCensoredPct": {
@@ -296,7 +384,7 @@
     "source": "results/raw/e5_scale/runs.csv"
   },
   "EfiveMinFOne": {
-    "value": "0.07",
+    "value": "0.06",
     "source": "results/raw/e5_scale/runs.csv"
   },
   "EsixSgFOneLowAudit": {
@@ -309,6 +397,10 @@
   },
   "EsixSgDelayFullAudit": {
     "value": "0.9",
+    "source": "results/raw/e6_audit_budget/runs.csv"
+  },
+  "EsixSgFOneFullAudit": {
+    "value": "0.36",
     "source": "results/raw/e6_audit_budget/runs.csv"
   },
   "EsixLowAudit": {
@@ -435,6 +527,14 @@
     "value": "0",
     "source": "results/raw/e10_safety/search.csv"
   },
+  "EtenIterSafeCells": {
+    "value": "152",
+    "source": "results/raw/e10_safety/search.csv"
+  },
+  "EtenIterViolationsCp": {
+    "value": "2",
+    "source": "results/raw/e10_safety/search.csv"
+  },
   "EtenExactAbortFrac": {
     "value": "0.241",
     "source": "results/raw/e10_safety/search.csv"
@@ -445,6 +545,18 @@
   },
   "EtenViolations": {
     "value": "0",
+    "source": "results/raw/e10_safety/search.csv"
+  },
+  "EtenSafeCells": {
+    "value": "152",
+    "source": "results/raw/e10_safety/search.csv"
+  },
+  "EtenViolationsCp": {
+    "value": "2",
+    "source": "results/raw/e10_safety/search.csv"
+  },
+  "EtenCapUnenforcedCp": {
+    "value": "0.59",
     "source": "results/raw/e10_safety/search.csv"
   },
   "EtenUnsafeCells": {
@@ -473,6 +585,14 @@
   },
   "EtenEnvBreachSafeFive": {
     "value": "0",
+    "source": "results/raw/e10_safety/env.csv"
+  },
+  "EtenEnvBreachSafeZeroCp": {
+    "value": "0.66",
+    "source": "results/raw/e10_safety/env.csv"
+  },
+  "EtenEnvBreachSafeFiveCp": {
+    "value": "0.66",
     "source": "results/raw/e10_safety/env.csv"
   },
   "EtenEnvMaxInvalidSafeFive": {
@@ -619,6 +739,10 @@
     "value": "120",
     "source": "results/raw/e11_adaptive/runs.csv"
   },
+  "EelevenSgBelowBoundBreachCp": {
+    "value": "2.5",
+    "source": "results/raw/e11_adaptive/runs.csv"
+  },
   "EtwelveHalfRate": {
     "value": "0.40",
     "source": "results/raw/e12_lierate/runs.csv"
@@ -690,6 +814,374 @@
   "EthirteenGridInside": {
     "value": "2",
     "source": "results/raw/e13_preprint_protocol/grid.csv"
+  },
+  "EfifteenBatchesMilliDirZero": {
+    "value": "4",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenRecoveredMilliDirZero": {
+    "value": "30",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenBatchesCentiDirZero": {
+    "value": "4",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenRecoveredCentiDirZero": {
+    "value": "30",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenErrDirZero": {
+    "value": "1e-07",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenBatchesMilliInvZero": {
+    "value": "4",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenRecoveredMilliInvZero": {
+    "value": "30",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenBatchesCentiInvZero": {
+    "value": "4",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenRecoveredCentiInvZero": {
+    "value": "30",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenErrInvZero": {
+    "value": "1e-07",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenBatchesMilliDirOne": {
+    "value": "never",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenRecoveredMilliDirOne": {
+    "value": "0",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenBatchesCentiDirOne": {
+    "value": "never",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenRecoveredCentiDirOne": {
+    "value": "0",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenErrDirOne": {
+    "value": "5e-01",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenBatchesMilliInvOne": {
+    "value": "4",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenRecoveredMilliInvOne": {
+    "value": "30",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenBatchesCentiInvOne": {
+    "value": "4",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenRecoveredCentiInvOne": {
+    "value": "30",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenErrInvOne": {
+    "value": "5e-06",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenBatchesMilliDirTwo": {
+    "value": "never",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenRecoveredMilliDirTwo": {
+    "value": "0",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenBatchesCentiDirTwo": {
+    "value": "never",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenRecoveredCentiDirTwo": {
+    "value": "0",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenErrDirTwo": {
+    "value": "1e+00",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenBatchesMilliInvTwo": {
+    "value": "4",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenRecoveredMilliInvTwo": {
+    "value": "30",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenBatchesCentiInvTwo": {
+    "value": "4",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenRecoveredCentiInvTwo": {
+    "value": "30",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenErrInvTwo": {
+    "value": "1e-05",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenBatchesMilliDirThree": {
+    "value": "never",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenRecoveredMilliDirThree": {
+    "value": "0",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenBatchesCentiDirThree": {
+    "value": "never",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenRecoveredCentiDirThree": {
+    "value": "0",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenErrDirThree": {
+    "value": "2e+00",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenBatchesMilliInvThree": {
+    "value": "4",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenRecoveredMilliInvThree": {
+    "value": "30",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenBatchesCentiInvThree": {
+    "value": "4",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenRecoveredCentiInvThree": {
+    "value": "30",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenErrInvThree": {
+    "value": "2e-05",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenTrials": {
+    "value": "30",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenInvBatchesMax": {
+    "value": "7",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenInvErrMax": {
+    "value": "2e-05",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EfifteenSatMaxPct": {
+    "value": "8.48",
+    "source": "results/raw/e15_weight_recovery/summary.csv"
+  },
+  "EsixteenStealthPerfectLgFOne": {
+    "value": "0.00",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenStealthPerfectLgDelay": {
+    "value": "300.0",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenStealthPerfectLgFq": {
+    "value": "0.00",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenStealthPerfectSgFOne": {
+    "value": "0.48",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenStealthPerfectSgDelay": {
+    "value": "6.3",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenStealthPerfectSgFq": {
+    "value": "0.30",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenStealthErrFiveLgFOne": {
+    "value": "0.00",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenStealthErrFiveLgDelay": {
+    "value": "300.0",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenStealthErrFiveLgFq": {
+    "value": "0.00",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenStealthErrFiveSgFOne": {
+    "value": "0.47",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenStealthErrFiveSgDelay": {
+    "value": "6.4",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenStealthErrFiveSgFq": {
+    "value": "1.97",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenStealthErrTenLgFOne": {
+    "value": "0.00",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenStealthErrTenLgDelay": {
+    "value": "300.0",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenStealthErrTenLgFq": {
+    "value": "0.00",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenStealthErrTenSgFOne": {
+    "value": "0.46",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenStealthErrTenSgDelay": {
+    "value": "5.9",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenStealthErrTenSgFq": {
+    "value": "4.77",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenStealthDelayLgFOne": {
+    "value": "0.00",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenStealthDelayLgDelay": {
+    "value": "300.0",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenStealthDelayLgFq": {
+    "value": "0.00",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenStealthDelaySgFOne": {
+    "value": "0.47",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenStealthDelaySgDelay": {
+    "value": "16.3",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenStealthDelaySgFq": {
+    "value": "0.30",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenLiePerfectLgFOne": {
+    "value": "0.00",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenLiePerfectLgDelay": {
+    "value": "300.0",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenLiePerfectLgFq": {
+    "value": "0.00",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenLiePerfectSgFOne": {
+    "value": "0.99",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenLiePerfectSgDelay": {
+    "value": "0.0",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenLiePerfectSgFq": {
+    "value": "0.30",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenLieErrFiveLgFOne": {
+    "value": "0.00",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenLieErrFiveLgDelay": {
+    "value": "300.0",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenLieErrFiveLgFq": {
+    "value": "0.00",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenLieErrFiveSgFOne": {
+    "value": "0.96",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenLieErrFiveSgDelay": {
+    "value": "0.0",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenLieErrFiveSgFq": {
+    "value": "1.97",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenLieErrTenLgFOne": {
+    "value": "0.00",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenLieErrTenLgDelay": {
+    "value": "300.0",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenLieErrTenLgFq": {
+    "value": "0.00",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenLieErrTenSgFOne": {
+    "value": "0.92",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenLieErrTenSgDelay": {
+    "value": "0.4",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenLieErrTenSgFq": {
+    "value": "4.77",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenLieDelayLgFOne": {
+    "value": "0.00",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenLieDelayLgDelay": {
+    "value": "300.0",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenLieDelayLgFq": {
+    "value": "0.00",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenLieDelaySgFOne": {
+    "value": "0.98",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenLieDelaySgDelay": {
+    "value": "10.0",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
+  },
+  "EsixteenLieDelaySgFq": {
+    "value": "0.30",
+    "source": "results/raw/e16_imperfect_audits/runs.csv"
   },
   "HwCpu": {
     "value": "Intel Core 5 210H",

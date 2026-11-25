@@ -1,9 +1,7 @@
 {
   "experiment": "e13_preprint_protocol",
   "argv": [
-    "C:\\Users\\Dhananjay Vaidya\\Downloads\\PopulationDataProject\\trust-consensus-blockchain\\experiments\\exp_e13_preprint_protocol.py",
-    "--workers",
-    "12"
+    "C:\\Users\\Dhananjay Vaidya\\Downloads\\PopulationDataProject\\trust-consensus-blockchain\\experiments\\exp_e13_preprint_protocol.py"
   ],
   "machine": {
     "python": "3.13.3",
@@ -19,12 +17,12 @@
     "ram_gb": 16.78,
     "physical_cores": 8,
     "tenseal": "0.3.16",
-    "git_commit": "276e6a9d2f6c1a11ef2c4e0e7c76740ccccc721d",
+    "git_commit": "b241fb9b050f6bf1c3344a0df6af9e13b54494a0",
     "git_dirty": false
   },
-  "written": "2026-11-25T07:07:39",
+  "written": "2026-11-25T12:31:30",
   "runtime_s": {
-    "runs.csv": 213.9
+    "runs.csv": 171.3
   },
   "protocol": {
     "nodes": 16,

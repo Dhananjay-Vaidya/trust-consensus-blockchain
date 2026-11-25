@@ -18,10 +18,15 @@ SleeperGuard is better than legacy Beta in detection F1 in \EtwoSigBetter{} of \
 Median detection delay is \EtwoSgDelayMed{} steps versus \EtwoLgDelayMed{} for legacy Beta. The gain is
 not uniform: against a \emph{stealthy} sleeper that inverts only 25\% of its votes, median F1 is about one half
 (lowest cell median \EtwoSgFOneMin{}; Table~\ref{tab:e2}, Fig.~\ref{fig:e2}), because a node that lies rarely keeps
-its Beta trust above 0.5 and is flagged only while quarantined. Invalid commits stayed rare for both
+its Beta trust above 0.5 and is flagged only while quarantined. Precision and recall separate the two failure modes
+(Table~\ref{tab:prf}): in the middle cell (5 of 16 sleepers) SleeperGuard's F1 of \EtwoPrStealthSgFOne{} is precision
+\EtwoPrStealthSgPrec{} with recall \EtwoPrStealthSgRec{}, so what it flags is almost always a sleeper, but it flags
+sleepers in only about a third of their node-steps. Against the always-lying sleeper both are high (precision
+\EtwoPrLieSgPrec{}, recall \EtwoPrLieSgRec{}); legacy Beta flags nothing (precision and recall \EtwoPrStealthLgRec{}). Invalid commits stayed rare for both
 (max per-run rate \EtwoSgInvalid{} vs.\ \EtwoLgInvalid{}): with $\theta=0.667$ and at most 6 of 16 adversaries, the
 main damage of this attack is to liveness (valid transactions rejected), which SleeperGuard reduces.
 \input{generated/tab_e2.tex}
+\input{generated/tab_prf.tex}
 \begin{figure}[t]\centering\includegraphics[width=\columnwidth]{e2_sleeperguard.pdf}
 \caption{E2: detection F1 vs.\ coalition fraction (median, IQR band), middle switch time.}\label{fig:e2}\end{figure}
 
@@ -35,11 +40,11 @@ The adaptive attacker that replaces the earlier on-off attacker is evaluated in 
 
 \subsection{E4: cost and accuracy of the homomorphic tally}
 Over \EfourDecisionsTotal{} random-instance decisions HETally disagreed with the plaintext rule \EfourFlipsTotal{}
-times. In the guard-band stress test, decisions agreed for all $|m|\ge$\,\EfourBandMinSafe{} and flips occurred only at
+times (one-sided 95\% Clopper--Pearson upper bound on the flip rate: \EfourFlipsTotalCp{}\%). In the guard-band stress test, decisions agreed for all $|m|\ge$\,\EfourBandMinSafe{} and flips occurred only at
 $|m|\le$\,\EfourBandMaxFlip{} (including exact ties). A tally of $k=16$, $T=32$ takes a median \EfourMsZero{}~ms with raw
 margins and \EfourMsThree{}~ms with three sign iterations (Table~\ref{tab:e4}, Fig.~\ref{fig:e4}); end-to-end, a step
 costs \EfourConsWallZero{}~ms with HE ($s=0$) versus \EfourConsWallPlain{}~ms in plaintext, with
-\EfourConsFlipsZero{} decision flips. \textbf{Negative result:} the sign iterations do not hide the margins.
+\EfourConsFlipsZero{} decision flips in \EfourConsDecisionsZero{} decisions (upper bound \EfourConsFlipsZeroCp{}\%). \textbf{Negative result:} the sign iterations do not hide the margins.
 Inverting $p^{(s)}$ recovers every margin to within \EfourLeakErrMax{}, and at most \EfourSatMaxPct{}\% of outputs are
 saturated, so the decryptor learns margins in every configuration. The extra iterations add cost without a
 measurable privacy gain at these margin magnitudes.
@@ -48,17 +53,35 @@ measurable privacy gain at these margin magnitudes.
 \begin{figure}[t]\centering\includegraphics[width=\columnwidth]{e4_he_latency.pdf}
 \caption{E4: HETally latency vs.\ committee size and per-transaction cost vs.\ batch size.}\label{fig:e4}\end{figure}
 
+\subsection{E15 (negative result): the decryptor recovers the trust weights}
+Margins leak more than margins. Each decrypted slot is one equation in the $k$ hidden weights, because the votes,
+$\theta$, $k$ and the number of sign iterations $s$ are public. Using the real HETally ($k=16$, $T=16$) on
+\EfifteenTrials{} random weight vectors, an attacker who first inverts $p^{(s)}$ and then solves least squares recovers
+every weight to within $10^{-3}$ after a median of \EfifteenBatchesMilliInvZero{} decrypted batches (at most
+\EfifteenInvBatchesMax{}) for every $s\in\{0,\dots,3\}$; after 16 batches the worst median error is \EfifteenInvErrMax{}
+(Table~\ref{tab:e15}). The number of batches is set by when the vote patterns reach full rank, not by CKKS noise: the
+$10^{-2}$ and $10^{-3}$ tolerances need the same number. Saturation does not stop recovery: at $s=3$ only
+\EfifteenSatMaxPct{}\% of outputs have $|\mathrm{out}|>0.9$ and none is so close to $\pm1$ that the inversion had to
+discard it. Treating the output as the margin without inverting fails for every $s\ge1$ (\EfifteenRecoveredMilliDirOne{}
+of \EfifteenTrials{} recovered), so the sign iterations only defeat an attacker who ignores the public circuit.
+\input{generated/tab_e15.tex}
+
 \subsection{E5: scale}
 Simulation cost stays small (\EfiveBigWall{}~ms per step and \EfiveBigMem{}~MB peak heap at \EfiveMaxNodes{} nodes, $k=64$),
 but \emph{detection does not scale with a fixed committee}: evidence about a node arrives only when it sits on the
 committee, so at \EfiveMaxNodes{} nodes \EfiveBigCensoredPct{}\% of sleepers were never flagged within 300 steps (vs.\
-\EfiveSmallCensoredPct{}\% at 16 nodes), and the worst cell has median F1 \EfiveMinFOne{} (Table~\ref{tab:e5}).
+\EfiveSmallCensoredPct{}\% at 16 nodes), and the worst cell has median F1 \EfiveMinFOne{} (Table~\ref{tab:e5};
+\EfiveSeeds{} seeds per cell).
 \input{generated/tab_e5.tex}
 
 \subsection{E6: audit budget}
-Detection degrades gracefully with the audit rate: at audit rate \EsixLowAudit{} SleeperGuard reaches median F1
-\EsixSgFOneLowAudit{} against the stealthy sleeper, with mean delay \EsixSgDelayLowAudit{} steps versus \EsixSgDelayFullAudit{}
-with every transaction audited (Fig.~\ref{fig:e6}).
+Fewer audits make SleeperGuard slower but, against the stealthy sleeper, not less accurate: mean delay grows from
+\EsixSgDelayFullAudit{} steps with every transaction audited to \EsixSgDelayLowAudit{} at audit rate \EsixLowAudit{}, while
+median F1 rises from \EsixSgFOneFullAudit{} to \EsixSgFOneLowAudit{} (Fig.~\ref{fig:e6}). The rise is in recall
+(\EsixPrFullRec{} to \EsixPrLowRec{}) at unchanged precision (\EsixPrFullPrec{} and \EsixPrLowPrec{}; Table~\ref{tab:prf}).
+It is a mechanism of the design, not better evidence: a quarantine lasts a fixed number of \emph{audited observations}
+of the node (50), so when audits are rare it spans more steps, and the stealthy sleeper's flagged node-steps are mostly
+quarantine.
 \begin{figure}[t]\centering\includegraphics[width=\columnwidth]{e6_audit.pdf}
 \caption{E6: detection F1 and delay vs.\ audit rate (median over 30 seeds).}\label{fig:e6}\end{figure}
 
@@ -95,7 +118,8 @@ security; a reward that prices detection delay is future work.
 
 \subsection{E10: the safety bound under adversarial search}
 Across \EtenCells{} (k, c, $\theta$, b) cells the search found \EtenViolations{} violations of
-Proposition~\ref{prop:safety} with the exact cap, and every one of the \EtenUnsafeCells{} cells the bound marks unsafe was
+Proposition~\ref{prop:safety} with the exact cap (\EtenViolations{} of the \EtenSafeCells{} cells the bound marks safe;
+one-sided 95\% Clopper--Pearson upper bound on the per-cell violation rate \EtenViolationsCp{}\%), and every one of the \EtenUnsafeCells{} cells the bound marks unsafe was
 broken, so the bound is tight on this grid (Table~\ref{tab:e10}). With the original iterative cap, the tally's cap check
 aborted \EtenIterAbortFrac{} of search candidates (exact cap: \EtenExactAbortFrac{}, all from infeasible weight
 vectors); safety held only because of the abort.
@@ -104,7 +128,8 @@ vectors); safety held only because of the abort.
 damage-maximising coalition of E11 approved invalid transactions in coordination at lie rates 0.1, 0.3 and 1.0.
 For coalitions the bound marks safe ($b\le5$ of 16), no run committed an invalid transaction: \EtenEnvBreachSafeZero{} of
 \EtenEnvRunsSafeZero{} runs without honest faults and \EtenEnvBreachSafeFive{} of \EtenEnvRunsSafeFive{} with honest fault
-rate 0.05. Above the bound ($b\ge6$), \EtenEnvBreachUnsafe{} of \EtenEnvRunsUnsafe{} runs committed at least one invalid
+rate 0.05 (95\% upper bounds on the per-run breach probability \EtenEnvBreachSafeZeroCp{}\% and
+\EtenEnvBreachSafeFiveCp{}\%). Above the bound ($b\ge6$), \EtenEnvBreachUnsafe{} of \EtenEnvRunsUnsafe{} runs committed at least one invalid
 transaction (max rate \EtenEnvMaxInvalidUnsafe{}), all of them with honest faults present: the faulty honest approvals
 are what carry an above-bound coalition over $\theta$, as the faults clause of the proposition predicts. The proposition
 therefore needed no change; its honest-fault term is not vacuous (Table~\ref{tab:e10b}).
@@ -120,7 +145,8 @@ was \EelevenInvalidSgFull{} with full SleeperGuard versus \EelevenInvalidLegacyB
 \EelevenInvalidSgNone{} with all SleeperGuard components removed. \textbf{SleeperGuard does not detect this attacker
 well}: median F1 \EelevenFOneSgFull{} (legacy Beta \EelevenFOneLegacyBeta{}; without CUSUM \EelevenFOneSgNoCusum{}). What
 limits the damage is coalition size, not detection: for coalitions below the bound, full SleeperGuard had
-\EelevenSgBelowBoundBreach{} invalid commits in \EelevenSgBelowBoundRuns{} runs.
+\EelevenSgBelowBoundBreach{} runs with an invalid commit out of \EelevenSgBelowBoundRuns{} (95\% upper bound
+\EelevenSgBelowBoundBreachCp{}\%).
 \input{generated/tab_e11.tex}
 
 \subsection{E12: detection versus lie rate}
@@ -154,3 +180,18 @@ threshold 0.5, all active episodes) gives \EthirteenaLegacyFOne{} for legacy Bet
 coincidence of window length.
 \input{generated/tab_e13.tex}
 \input{generated/tab_e13_grid.tex}
+
+\subsection{E16: imperfect audits}
+SleeperGuard assumes that audits are correct and immediate. We reran the E2 middle cell (5 of 16 sleepers, $t_s=300$,
+honest fault 0.05) with audit verdicts that are wrong with probability 0.05 or 0.10, and with verdicts delivered 10
+steps late, keeping SleeperGuard's perfect-audit calibration (Table~\ref{tab:e16}). Detection itself is robust: against
+the stealthy sleeper median F1 is \EsixteenStealthPerfectSgFOne{} with perfect audits, \EsixteenStealthErrFiveSgFOne{} and
+\EsixteenStealthErrTenSgFOne{} with 5\% and 10\% wrong verdicts, and \EsixteenStealthDelaySgFOne{} with delayed ones;
+against the always-lying sleeper it stays at or above \EsixteenLieErrTenSgFOne{}. A 10-step delay adds about 10 steps of
+detection delay (stealthy \EsixteenStealthPerfectSgDelay{} to \EsixteenStealthDelaySgDelay{}; always-lie
+\EsixteenLiePerfectSgDelay{} to \EsixteenLieDelaySgDelay{}). \textbf{The cost is false quarantines:} wrong verdicts look
+like honest disagreements, so honest false quarantines rise from \EsixteenStealthPerfectSgFq{} to
+\EsixteenStealthErrFiveSgFq{} and \EsixteenStealthErrTenSgFq{} per 1000 node-steps, above the budget of 1 that the
+calibration enforced. As in E7, CUSUM must be calibrated for the disagreement rate honest nodes actually show, which
+includes auditor error. Legacy Beta detects nothing in any audit condition.
+\input{generated/tab_e16.tex}

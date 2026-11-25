@@ -1,0 +1,21 @@
+\begin{table}[t]
+\centering\footnotesize\setlength{\tabcolsep}{3pt}
+\caption{Node-detection precision, recall and F1 (median over 30 seeds, attack window) for the sleeper attack: E2 middle cell (5 of 16 adversaries, t\_switch=300) and E6 audit-rate sweep (SleeperGuard, stealthy sleeper). 95\% CIs for every cell: results/raw/stats/e2\_precision\_recall.csv, e6\_precision\_recall.csv.}\label{tab:prf}
+\begin{tabular}{lllllll}
+\toprule
+source & attack & audit & trust & precision & recall & F1 \\
+\midrule
+E2 & TDP 0.25 & 0.2 & sleeper guard & 0.96 & 0.32 & 0.48 \\
+E2 & TDP 0.25 & 0.2 & legacy beta & 0.00 & 0.00 & 0.00 \\
+E2 & TDP 1 & 0.2 & sleeper guard & 0.99 & 1.00 & 0.99 \\
+E2 & TDP 1 & 0.2 & legacy beta & 0.00 & 0.00 & 0.00 \\
+E6 & TDP 0.25 & 0.05 & sleeper guard & 1.00 & 0.47 & 0.64 \\
+E6 & TDP 0.25 & 0.1 & sleeper guard & 1.00 & 0.40 & 0.57 \\
+E6 & TDP 0.25 & 0.2 & sleeper guard & 0.96 & 0.32 & 0.48 \\
+E6 & TDP 0.25 & 0.4 & sleeper guard & 0.95 & 0.27 & 0.42 \\
+E6 & TDP 0.25 & 0.7 & sleeper guard & 0.96 & 0.23 & 0.38 \\
+E6 & TDP 0.25 & 1 & sleeper guard & 0.95 & 0.23 & 0.36 \\
+\bottomrule
+\end{tabular}
+
+\end{table}

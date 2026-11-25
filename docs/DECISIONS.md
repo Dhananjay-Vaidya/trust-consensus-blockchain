@@ -156,3 +156,40 @@ four items.
   mutable config (A9; also forbidden by `tests/audit/test_a10_no_duplicates.py`); attack tests expecting
   attacks to lower trust scores directly (A3: attacks act only through votes); restoring
   `simulation_manager.py` / `compare_agents.py` at the root (A10).
+
+**D26 — Precision/recall, HE weight recovery (E15), imperfect audits (E16), Clopper-Pearson bounds, figures.**
+- *Precision/recall (E2, E6).* Already recorded per run by `summarize`; `paper/make_assets.py` now exports median
+  and bootstrap CI per cell to `results/raw/stats/e2_precision_recall.csv` and `e6_precision_recall.csv` and a compact
+  table `tab_prf.tex`. The E6 text "detection degrades gracefully with the audit rate" was wrong in direction for F1:
+  F1 rises as audits become rarer because SleeperGuard's quarantine is counted in audited observations (C26). Text
+  corrected.
+- *E15.* Weights U(0.05,1) normalised to max 1 (as TDCB does), env vote model (invalid 0.3, fault 0.05, all honest),
+  k = T = 16, seeds 100-129, n = 1..16 batches, real HETally for s = 0..3. Estimators: least squares on the raw output
+  ("direct") and after inverting p^(s) by bisection ("invert", outputs with |out| > 1-1e-6 dropped; none were).
+  Success = full rank and max |w_hat - w| below 1e-3 / 1e-2.
+- *E16.* New `RunConfig.audit_error_rate` (each audited verdict flipped independently, own RNG stream
+  `default_rng([seed, 2])` so error-free runs are unchanged) and `RunConfig.audit_delay` (verdicts, and every quantity
+  derived from them: trust evidence, disagreement statistics, audited error for the reward, arrive `audit_delay` steps
+  late). Defaults reproduce every earlier result bit for bit (env fingerprint test; all deterministic CSVs identical
+  after the full rerun). SleeperGuard keeps its perfect-audit calibration in E16 on purpose.
+- *Clopper-Pearson.* One-sided 95% upper bound, `scipy.stats.beta.ppf(0.95, k+1, n-k)`, reported in percent as
+  `\<name>Cp`. Trials: decisions (E4), bound-safe search cells (E10; a violation is only possible there), runs (E10b,
+  E11). `make_assets.py` asserts every required "0 of N" macro has a bound and that the bounded count equals the
+  printed count.
+- *Figures and tables.* Figures are written as PDF (used by LaTeX) and PNG (300 dpi preview). Fixes: E6 and E4
+  legends moved above the panels (they covered the F1 = 1 line and the s = 0 curve), E6 delay axis made symlog (delay
+  0 was dropped by the log axis) and its clipped label shortened; E9 controller labels rotated and shortened (they
+  overlapped); E7 h = 3 / h = 4 labels separated and h = 12 no longer clipped. The request named "Fig. 6", "Fig. 8"
+  and "Table VII". The source has 7 figures (in order E1, E2, E4, E6, E7, E9, E12), so there is no Fig. 8; every
+  figure with a legend-over-data or overlapping-label problem was fixed. Table VII in source order is E5 (scale): now
+  6 columns at footnotesize without scaling (F1 with 2-decimal CI, p95 latency, wall ms, heap MB; throughput and
+  p50/p99 stay in the CSV). The paper PDF itself was not compiled here (no LaTeX toolchain on this machine).
+- *E5.* Rerun with 30 seeds (8 min). Changed macros: worst-cell F1 0.07 to 0.06, 1024-node F1 0.43 to 0.42.
+- *Full reproduction for this change.* All deterministic outputs are identical to the previous commit. E4 differs
+  only where CKKS randomness or timing enters: decoded outputs, the guard band (agreement for |m| >= 1e-7, flips only
+  at |m| <= 1e-8; previously >= 1e-8) and per-tally latencies (e.g. 23 to 32 ms at s = 0, 478 to 448 ms at s = 3). The
+  E4c phase ran 36 min instead of 4 because the laptop slept mid-run (sleep after 5 min idle); E4c records no timings.
+- *Flaky test fixed.* `tests/test_blockchain.py::test_is_chain_valid_tampered_returns_false` failed once in this run:
+  it tampered with the only mined block at difficulty 1, and a tampered last block is caught only by the
+  proof-of-work prefix, which a random hash passes with probability 1/16. The test now mines a second block so the
+  broken `previous_hash` link makes the check deterministic. `Blockchain` itself is unchanged.

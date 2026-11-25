@@ -1,0 +1,20 @@
+\begin{table}[t]
+\centering\scriptsize
+\caption{E15: recovering the hidden trust weights from HETally outputs ($k=16$, $T=16$, real CKKS). Batches = decrypted tallies needed until every weight is within the error (median, max over 30 weight vectors); `direct' treats the output as the margin, `invert' first undoes $p^{(s)}$. err @16 = median over trials of $\max_i|\hat w_i-w_i|$ after 16 batches.}\label{tab:e15}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{rlllll}
+\toprule
+$s$ & estimator & batches, err $<10^{-3}$ & batches, err $<10^{-2}$ & recovered & err @16 \\
+\midrule
+0 & direct & 4 (max 7) & 4 (max 7) & 30/30 & 1.3e-07 \\
+0 & invert & 4 (max 7) & 4 (max 7) & 30/30 & 1.3e-07 \\
+1 & direct & never & never & 0/30 & 4.5e-01 \\
+1 & invert & 4 (max 7) & 4 (max 7) & 30/30 & 4.6e-06 \\
+2 & direct & never & never & 0/30 & 1.1e+00 \\
+2 & invert & 4 (max 7) & 4 (max 7) & 30/30 & 9.6e-06 \\
+3 & direct & never & never & 0/30 & 1.9e+00 \\
+3 & invert & 4 (max 7) & 4 (max 7) & 30/30 & 1.6e-05 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

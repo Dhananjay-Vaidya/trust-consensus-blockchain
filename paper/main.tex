@@ -30,9 +30,10 @@ quarantine, and an exactly enforced per-delegate weight-share cap). It detects s
 detected less than half the time, and a damage-maximising coalition found by search is detected with median F1 only
 \EelevenFOneSgFull{}. What keeps such coalitions from committing invalid transactions is the cap: we prove a safety
 bound on coalition size, find no counter-example in an adversarial weight search, and observe no invalid commit below the
-bound in \EtenEnvRunsSafeFive{} runs against the adaptive coalition with honest faults. We also implement the trust-weighted tally under CKKS homomorphic
+bound in \EtenEnvRunsSafeFive{} runs against the adaptive coalition with honest faults (95\% upper bound on the
+per-run breach probability \EtenEnvBreachSafeFiveCp{}\%). We also implement the trust-weighted tally under CKKS homomorphic
 encryption: it reproduces the plaintext decisions at a measured cost, but its decryptor can recover every
-vote margin. A hypothesis that hiding trust weights hinders bribery was not supported.
+vote margin and, from a few decrypted batches, the trust weights themselves. A hypothesis that hiding trust weights hinders bribery was not supported.
 \end{abstract}
 
 \section{Introduction}
@@ -153,9 +154,12 @@ own machine and library versions in \texttt{meta.json}.
 \item \textbf{Simulation only.} Votes, faults and attacks are synthetic; the cost model is illustrative.
 \item \textbf{Single key holder.} HETally runs all parties in one process with one secret key. A deployment
 needs threshold or multiparty CKKS.
-\item \textbf{Leakage.} The decryptor recovers the margins in every configuration we ran (E4), so the HE tally
-hides weights from the aggregator but not from the decryptor.
-\item \textbf{Perfect, unpredictable audits.} An adversary that predicts audits, or an imperfect auditor, is not modelled.
+\item \textbf{Leakage.} The decryptor recovers the margins in every configuration we ran (E4) and, from a few
+decrypted batches and the public votes, the trust weights themselves (E15), so the HE tally hides weights from the
+aggregator but not from the decryptor.
+\item \textbf{Unpredictable audits.} An adversary that predicts which transactions will be audited is not modelled.
+Imperfect audits (wrong verdicts, delayed verdicts) are tested only at the rates in E16, with SleeperGuard not
+re-calibrated for audit noise.
 \item \textbf{Sub-threshold attackers.} A coalition that knows the CUSUM parameters can lie at a rate the
 detector tolerates (E11, E12); the share cap, not detection, is then the only protection.
 \item \textbf{Calibration.} SleeperGuard's CUSUM parameters depend on the nominal honest fault rate; E7 reports

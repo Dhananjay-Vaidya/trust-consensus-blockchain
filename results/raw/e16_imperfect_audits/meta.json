@@ -1,0 +1,50 @@
+{
+  "experiment": "e16_imperfect_audits",
+  "argv": [
+    "C:\\Users\\Dhananjay Vaidya\\Downloads\\PopulationDataProject\\trust-consensus-blockchain\\experiments\\exp_e16_imperfect_audits.py"
+  ],
+  "machine": {
+    "python": "3.13.3",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "processor": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+    "cpu_count": 12,
+    "numpy": "2.2.6",
+    "scipy": "1.15.3",
+    "sklearn": "1.6.1",
+    "torch": "2.7.0+cpu",
+    "pandas": "2.2.3",
+    "cpu_model": "Intel(R) Core(TM) 5 210H",
+    "ram_gb": 16.78,
+    "physical_cores": 8,
+    "tenseal": "0.3.16",
+    "git_commit": "b241fb9b050f6bf1c3344a0df6af9e13b54494a0",
+    "git_dirty": false
+  },
+  "written": "2026-11-25T12:38:07",
+  "runtime_s": {
+    "runs.csv": 44.6
+  },
+  "audits": {
+    "perfect": {
+      "audit_error_rate": 0.0,
+      "audit_delay": 0
+    },
+    "error_0.05": {
+      "audit_error_rate": 0.05,
+      "audit_delay": 0
+    },
+    "error_0.10": {
+      "audit_error_rate": 0.1,
+      "audit_delay": 0
+    },
+    "delay_10": {
+      "audit_error_rate": 0.0,
+      "audit_delay": 10
+    }
+  },
+  "sleeper_guard": {
+    "sg_baseline_floor": 0.05,
+    "sg_cusum_slack": 0.1,
+    "sg_cusum_alarm": 3.0
+  }
+}

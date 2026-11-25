@@ -1,7 +1,7 @@
 {
   "experiment": "e2_sleeperguard",
   "argv": [
-    "C:\\Users\\Dhananjay Vaidya\\AppData\\Local\\Temp\\claude\\5a0c7a4aed12602c\\d4b5d0a2-48c5-4511-bd7e-bfe674a1cc61\\scratchpad\\clean\\experiments\\exp_e2_sleeperguard.py"
+    "C:\\Users\\Dhananjay Vaidya\\Downloads\\PopulationDataProject\\trust-consensus-blockchain\\experiments\\exp_e2_sleeperguard.py"
   ],
   "machine": {
     "python": "3.13.3",
@@ -17,11 +17,11 @@
     "ram_gb": 16.78,
     "physical_cores": 8,
     "tenseal": "0.3.16",
-    "git_commit": "4e588eb3763611bc691ccdeddc9589b2ec6a13bf",
+    "git_commit": "b241fb9b050f6bf1c3344a0df6af9e13b54494a0",
     "git_dirty": false
   },
-  "written": "2026-11-23T23:52:22",
+  "written": "2026-11-25T11:18:57",
   "runtime_s": {
-    "runs.csv": 86.8
+    "runs.csv": 83.7
   }
 }

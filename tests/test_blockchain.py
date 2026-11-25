@@ -33,6 +33,11 @@ def test_is_chain_valid_fresh_chain(bc):
 def test_is_chain_valid_tampered_returns_false(bc):
     bc.add_transaction({"sender": "X", "recipient": "Y", "amount": 3.0})
     bc.mine_pending_transactions(miner_address="miner")
+    # A second block makes the check deterministic: tampering with block 1 breaks block 2's previous_hash link.
+    # (A tampered *last* block is caught only by the proof-of-work prefix, which at difficulty 1 a random
+    # hash passes with probability 1/16 -- the source of an earlier flaky failure.)
+    bc.add_transaction({"sender": "Y", "recipient": "Z", "amount": 1.0})
+    bc.mine_pending_transactions(miner_address="miner")
     # Tamper with a block's transactions
     bc.chain[1].transactions = [{"sender": "HACKER", "recipient": "HACKER", "amount": 9999}]
     assert bc.is_chain_valid() is False

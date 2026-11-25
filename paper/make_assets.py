@@ -455,6 +455,7 @@ def e6() -> None:
     macro("EsixSgFOneLowAudit", float(sg.det_f1.median().iloc[0]), "results/raw/e6_audit_budget/runs.csv")
     macro("EsixSgDelayLowAudit", float(sg.delay_mean.median().iloc[0]), "results/raw/e6_audit_budget/runs.csv", "{:.1f}")
     macro("EsixSgDelayFullAudit", float(sg.delay_mean.median().iloc[-1]), "results/raw/e6_audit_budget/runs.csv", "{:.1f}")
+    macro("EsixSgFOneFullAudit", float(sg.det_f1.median().iloc[-1]), "results/raw/e6_audit_budget/runs.csv")
     macro("EsixLowAudit", float(df.audit_rate.min()), "results/raw/e6_audit_budget/runs.csv", "{:.2f}")
 
 

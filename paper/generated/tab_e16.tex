@@ -1,0 +1,26 @@
+\begin{table}[t]
+\centering\footnotesize\setlength{\tabcolsep}{3pt}
+\caption{E16: imperfect audits (5 of 16 sleepers, t\_switch=300, honest fault 0.05, 30 seeds). Audit verdicts wrong with probability 0.05/0.10, or delivered 10 steps late; SleeperGuard keeps its perfect-audit calibration. F1 median [95\% CI]; delay = median of per-run mean detection delay in steps (undetected sleepers count as the rest of the run); FQ = honest false quarantines per 1000 node-steps (median).}\label{tab:e16}
+\begin{tabular}{lllrrr}
+\toprule
+sleeper & audit & trust & F1 [95\% CI] & delay & FQ/1000 \\
+\midrule
+stealthy & perfect & legacy & 0.00 [0.00, 0.00] & 300.0 & 0.00 \\
+stealthy & perfect & SG & 0.48 [0.45, 0.50] & 6.3 & 0.30 \\
+stealthy & 5\% wrong & legacy & 0.00 [0.00, 0.00] & 300.0 & 0.00 \\
+stealthy & 5\% wrong & SG & 0.47 [0.46, 0.50] & 6.4 & 1.97 \\
+stealthy & 10\% wrong & legacy & 0.00 [0.00, 0.00] & 300.0 & 0.00 \\
+stealthy & 10\% wrong & SG & 0.46 [0.44, 0.47] & 5.9 & 4.77 \\
+stealthy & 10-step delay & legacy & 0.00 [0.00, 0.00] & 300.0 & 0.00 \\
+stealthy & 10-step delay & SG & 0.47 [0.44, 0.48] & 16.3 & 0.30 \\
+always-lie & perfect & legacy & 0.00 [0.00, 0.00] & 300.0 & 0.00 \\
+always-lie & perfect & SG & 0.99 [0.99, 0.99] & 0.0 & 0.30 \\
+always-lie & 5\% wrong & legacy & 0.00 [0.00, 0.00] & 300.0 & 0.00 \\
+always-lie & 5\% wrong & SG & 0.96 [0.96, 0.97] & 0.0 & 1.97 \\
+always-lie & 10\% wrong & legacy & 0.00 [0.00, 0.00] & 300.0 & 0.00 \\
+always-lie & 10\% wrong & SG & 0.92 [0.91, 0.94] & 0.4 & 4.77 \\
+always-lie & 10-step delay & legacy & 0.00 [0.00, 0.00] & 300.0 & 0.00 \\
+always-lie & 10-step delay & SG & 0.98 [0.97, 0.98] & 10.0 & 0.30 \\
+\bottomrule
+\end{tabular}
+\end{table}
