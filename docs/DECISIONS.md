@@ -132,3 +132,27 @@ previous E13 numbers bit for bit.
 That sentence had been written from the first full run and not updated after the clean-checkout rerun
 changed the result. `paper/make_assets.py` now reads the E9 text numbers from the stats CSV and fails the
 build if the number of learners significantly different from the rule differs from `\EnineLearnersBeatRule`.
+
+**D25 — Engineering request (old flat-layout spec): what was done, skipped and refused.** A 11-task spec
+written for the pre-audit layout (`main.py`, `simulation_manager.py`, `parameters.py`, ...) was trimmed to
+four items.
+- *Done.* (1) Block mining verified: `Blockchain.mine_pending_transactions` was **never called** by the
+  simulation loop; `HonestEnv` holds no ledger at all, and the API's `blockchain_length`
+  (`src/api/simulation_runner.py`) counts steps with at least one accepted transaction, not blocks.
+  The new `main.py` appends each step's committed transactions to a `Blockchain` outside the environment and
+  mines every `--mine-every` (default 5) steps, reporting confirmed blocks (excluding genesis) and pending
+  transactions separately, e.g. 8 nodes, 52 steps: 10 confirmed blocks, 27 pending. The ledger never feeds back
+  into decisions, so no result in `results/raw` changes. The API counter was left as is (not requested).
+  (2) `main.py` with `--seed`, `--log-level`, `--fhe`; `--fhe` sets `RunConfig.tally_backend="he"`, i.e. the
+  real CKKS `HETally`, and logs mean HE overhead per step and decisions differing from the plaintext rule.
+  (3) `tests/test_integration.py` smoke test (plain and `--fhe`). (4) `requirements.txt` pinned to the
+  installed versions.
+- *Skipped (already present elsewhere).* JSONL stream log (the API already writes `results/<run>_stream.jsonl`),
+  root `Dockerfile` / `docker-compose.yml` (`infra/`), `run_all_experiments.sh` (`scripts/reproduce.py`),
+  logger (`src/utils/logger.py`), seed control (RunConfig seeds, A6/A8), type hints, unit tests and CI.
+- *Refused (would reverse audit fixes).* Wiring `ABAC.enforce_policy_with_fhe` (A5: decrypt-and-compare FHE
+  with silent plaintext fallback); the 27-action map writing global `TRUST_DECAY_RATE` / `CONSENSUS_THRESHOLD`
+  (A4: knobs no decision read; the current 81-action space is fully wired); a global `parameters.py` shim and
+  mutable config (A9; also forbidden by `tests/audit/test_a10_no_duplicates.py`); attack tests expecting
+  attacks to lower trust scores directly (A3: attacks act only through votes); restoring
+  `simulation_manager.py` / `compare_agents.py` at the root (A10).
