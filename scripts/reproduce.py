@@ -1,6 +1,6 @@
 """Regenerate every result, table and figure from scratch (cross-platform `make reproduce`).
 
-  python scripts/reproduce.py            # full protocol (calibration, E0-E10, paper assets)
+  python scripts/reproduce.py            # full protocol (calibration, E0-E16, paper assets)
   python scripts/reproduce.py --smoke    # 3-seed shortened versions (CI)
   python scripts/reproduce.py --only e2,e3 / --skip e4
 """
@@ -31,6 +31,8 @@ STEPS = [
     ("e11", ["-m", "experiments.exp_e11_adaptive"]),
     ("e12", ["-m", "experiments.exp_e12_lierate"]),
     ("e13", ["-m", "experiments.exp_e13_preprint_protocol"]),
+    ("e15", ["-m", "experiments.exp_e15_weight_recovery"]),
+    ("e16", ["-m", "experiments.exp_e16_imperfect_audits"]),
 ]
 
 

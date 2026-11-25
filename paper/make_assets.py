@@ -71,10 +71,48 @@ def save_stats(name: str, res: List[PairedResult]) -> pd.DataFrame:
     return df
 
 
-def tex_table(df: pd.DataFrame, path: Path, caption: str, label: str, colfmt: str | None = None) -> None:
+def tex_table(df: pd.DataFrame, path: Path, caption: str, label: str, colfmt: str | None = None,
+              compact: bool = False) -> None:
+    """compact=False: \\scriptsize, scaled to the column width (wide tables).
+    compact=True: \\footnotesize at natural size with tight column spacing (stays readable at column width)."""
     body = df.to_latex(index=False, escape=True, column_format=colfmt or "l" * len(df.columns))
-    path.write_text("\\begin{table}[t]\n\\centering\\scriptsize\n\\caption{" + caption + "}\\label{" + label + "}\n"
-                    + "\\resizebox{\\columnwidth}{!}{%\n" + body + "}\n\\end{table}\n", encoding="utf-8")
+    size = "\\footnotesize\\setlength{\\tabcolsep}{3pt}" if compact else "\\scriptsize"
+    inner = body if compact else "\\resizebox{\\columnwidth}{!}{%\n" + body + "}"
+    path.write_text("\\begin{table}[t]\n\\centering" + size + "\n\\caption{" + caption + "}\\label{" + label + "}\n"
+                    + inner + "\n\\end{table}\n", encoding="utf-8")
+
+
+def med_ci2(x) -> str:
+    """Two-decimal median [95% bootstrap CI], for compact tables."""
+    x = pd.Series(x).dropna()
+    if x.empty:
+        return "n/a"
+    lo, hi = bootstrap_ci(x.values)
+    return f"{np.median(x):.2f} [{lo:.2f}, {hi:.2f}]"
+
+
+def cp_upper(k: int, n: int, conf: float = 0.95) -> float:
+    """One-sided Clopper-Pearson upper confidence bound on a binomial rate after k events in n trials."""
+    from scipy.stats import beta
+    if n <= 0:
+        return math.nan
+    return 1.0 if k >= n else float(beta.ppf(conf, k + 1, n - k))
+
+
+CP_CLAIMS: Dict[str, tuple] = {}
+
+
+def cp_macro(name: str, k: int, n: int, src: str) -> None:
+    """Register \\<name>Cp: one-sided 95% Clopper-Pearson upper bound, in percent, on the rate behind k of n."""
+    u = cp_upper(int(k), int(n))
+    CP_CLAIMS[name] = (int(k), int(n), u)
+    macro(f"{name}Cp", 100.0 * u, src, "{:.2g}")
+
+
+def save_fig(fig, name: str) -> None:
+    """Write paper/figs/<name>.pdf (vector, used by LaTeX) and <name>.png (300 dpi preview)."""
+    fig.savefig(FIGS / f"{name}.pdf")
+    fig.savefig(FIGS / f"{name}.png", dpi=300)
 
 
 def load(exp: str, name: str = "runs.csv") -> pd.DataFrame | None:
@@ -143,7 +181,7 @@ def e1() -> None:
     ax.set_ylabel("detection F1 (attack window)")
     ax.set_ylim(-0.05, 1.05)
     fig.tight_layout()
-    fig.savefig(FIGS / "e1_collapse.pdf")
+    save_fig(fig, "e1_collapse")
     plt.close(fig)
 
 
@@ -194,8 +232,60 @@ def e2() -> None:
     axes[0].set_ylabel("detection F1")
     axes[0].legend(frameon=False)
     fig.tight_layout()
-    fig.savefig(FIGS / "e2_sleeperguard.pdf")
+    save_fig(fig, "e2_sleeperguard")
     plt.close(fig)
+
+
+def _prf_summary(df: pd.DataFrame, keys: List[str]) -> pd.DataFrame:
+    out = []
+    for kv, g in df.groupby(keys):
+        rec = dict(zip(keys, kv if isinstance(kv, tuple) else (kv,)))
+        rec["runs"] = len(g)
+        for m, col in (("precision", "det_precision"), ("recall", "det_recall"), ("f1", "det_f1")):
+            x = g[col].dropna().values
+            lo, hi = bootstrap_ci(x) if len(x) else (math.nan, math.nan)
+            rec.update({f"{m}_median": float(np.median(x)) if len(x) else math.nan, f"{m}_ci_lo": lo, f"{m}_ci_hi": hi})
+        out.append(rec)
+    return pd.DataFrame(out)
+
+
+def prf() -> None:
+    """Node-detection precision and recall next to F1 for E2 and E6 (same runs, same attack window)."""
+    e2d, e6d = load("e2_sleeperguard"), load("e6_audit_budget")
+    if e2d is None or e6d is None:
+        return
+    (RAW / "stats").mkdir(parents=True, exist_ok=True)
+    s2 = _prf_summary(e2d, ["coalition", "t_switch", "intensity", "backend"])
+    s6 = _prf_summary(e6d, ["audit_rate", "intensity", "backend"])
+    s2.to_csv(RAW / "stats" / "e2_precision_recall.csv", index=False)
+    s6.to_csv(RAW / "stats" / "e6_precision_recall.csv", index=False)
+    mid = sorted(e2d.t_switch.unique())[len(e2d.t_switch.unique()) // 2]
+    src2, src6 = "results/raw/stats/e2_precision_recall.csv", "results/raw/stats/e6_precision_recall.csv"
+    rows = []
+    for it, name in ((0.25, "Stealth"), (1.0, "Lie")):
+        for be, tag in (("sleeper_guard", "Sg"), ("legacy_beta", "Lg")):
+            r = s2[(s2.coalition == 0.3125) & (s2.t_switch == mid) & (s2.intensity == it) & (s2.backend == be)].iloc[0]
+            macro(f"EtwoPr{name}{tag}Prec", r.precision_median, src2)
+            macro(f"EtwoPr{name}{tag}Rec", r.recall_median, src2)
+            macro(f"EtwoPr{name}{tag}FOne", r.f1_median, src2)
+            rows.append({"source": "E2", "attack": f"TDP {it:g}", "audit": "0.2", "trust": be.replace("_", " "),
+                         "precision": f"{r.precision_median:.2f}", "recall": f"{r.recall_median:.2f}",
+                         "F1": f"{r.f1_median:.2f}"})
+    sg6 = s6[(s6.intensity == 0.25) & (s6.backend == "sleeper_guard")].sort_values("audit_rate")
+    for _, r in sg6.iterrows():
+        rows.append({"source": "E6", "attack": "TDP 0.25", "audit": f"{r.audit_rate:g}", "trust": "sleeper guard",
+                     "precision": f"{r.precision_median:.2f}", "recall": f"{r.recall_median:.2f}",
+                     "F1": f"{r.f1_median:.2f}"})
+    lo, hi = sg6.iloc[0], sg6.iloc[-1]
+    macro("EsixPrLowPrec", lo.precision_median, src6)
+    macro("EsixPrLowRec", lo.recall_median, src6)
+    macro("EsixPrFullPrec", hi.precision_median, src6)
+    macro("EsixPrFullRec", hi.recall_median, src6)
+    tex_table(pd.DataFrame(rows), GEN / "tab_prf.tex",
+              f"Node-detection precision, recall and F1 (median over 30 seeds, attack window) for the sleeper attack: "
+              f"E2 middle cell (5 of 16 adversaries, t\\_switch={mid}) and E6 audit-rate sweep (SleeperGuard, stealthy "
+              "sleeper). 95\\% CIs for every cell: results/raw/stats/e2\\_precision\\_recall.csv, e6\\_precision\\_recall.csv.",
+              "tab:prf", compact=True)
 
 
 def e3() -> None:
@@ -251,10 +341,10 @@ def e4() -> None:
     tex_table(pd.DataFrame(rows), GEN / "tab_e4.tex",
               "E4: HETally accuracy and cost (CKKS, TenSEAL). Flips = decisions differing from the plaintext rule; "
               "m = normalised margin. Latency: median [95\\% CI] per tally on the machine in meta.json.", "tab:e4")
-    fig, axes = plt.subplots(1, 2, figsize=(3.4, 1.9))
+    fig, axes = plt.subplots(1, 2, figsize=(3.4, 2.15))
     for s, g in tim.groupby("sign_iters"):
         gg = g[g["T"] == 32].groupby("k").total_ms.median()
-        axes[0].plot(gg.index, gg.values, marker="o", ms=3, label=f"{s} sign iters")
+        axes[0].plot(gg.index, gg.values, marker="o", ms=3, label=f"s={s}")
         gt = g[g.k == 16].groupby("T").per_tx_ms.median()
         axes[1].plot(gt.index, gt.values, marker="s", ms=3, label=f"{s}")
     axes[0].set_xlabel("committee size k (T=32)")
@@ -264,9 +354,11 @@ def e4() -> None:
     axes[1].set_ylabel("ms per transaction")
     axes[1].set_yscale("log")
     axes[1].set_xscale("log", base=2)
-    axes[0].legend(frameon=False, fontsize=6)
-    fig.tight_layout()
-    fig.savefig(FIGS / "e4_he_latency.pdf")
+    h, lab = axes[0].get_legend_handles_labels()
+    fig.legend(h, lab, loc="upper center", ncol=4, frameon=False, fontsize=6, title="sign iterations",
+               title_fontsize=6, bbox_to_anchor=(0.5, 1.0))
+    fig.tight_layout(rect=(0, 0, 1, 0.84))
+    save_fig(fig, "e4_he_latency")
     plt.close(fig)
     lk, bd = load("e4_he", "leakage.csv"), load("e4_he", "band.csv")
     if lk is not None:
@@ -279,6 +371,7 @@ def e4() -> None:
         macro("EfourBandMinSafe", float(ok.margin.abs().min()), "results/raw/e4_he/band.csv", "{:.0e}")
         macro("EfourDecisionsTotal", int(len(dec)), "results/raw/e4_he/decisions.csv")
         macro("EfourFlipsTotal", int(dec.flip.sum()), "results/raw/e4_he/decisions.csv")
+        cp_macro("EfourFlipsTotal", int(dec.flip.sum()), int(len(dec)), "results/raw/e4_he/decisions.csv")
     if con is not None:
         crow = []
         for (s, be), g in con.groupby(["sign_iters", "backend"]):
@@ -291,6 +384,10 @@ def e4() -> None:
         for s in sorted(con.sign_iters.unique()):
             g = con[(con.sign_iters == s) & (con.backend == "he")]
             macro(f"EfourConsFlips{['Zero','One','Two','Three'][s]}", int(g.he_flips.sum()), "results/raw/e4_he/consensus.csv")
+            n_dec = int(((g.window_end - g.window_start) * 16).sum())   # tx_per_step = 16 decisions per step
+            macro(f"EfourConsDecisions{['Zero','One','Two','Three'][s]}", n_dec, "results/raw/e4_he/consensus.csv")
+            cp_macro(f"EfourConsFlips{['Zero','One','Two','Three'][s]}", int(g.he_flips.sum()), n_dec,
+                     "results/raw/e4_he/consensus.csv")
             macro(f"EfourConsWall{['Zero','One','Two','Three'][s]}", float(g.wall_ms_per_step.median()), "results/raw/e4_he/consensus.csv", "{:.0f}")
         p = con[con.backend == "plain"]
         macro("EfourConsWallPlain", float(p.wall_ms_per_step.median()), "results/raw/e4_he/consensus.csv", "{:.2f}")
@@ -302,12 +399,18 @@ def e5() -> None:
         return
     rows = []
     for (n, k), g in df.groupby(["nodes", "k"]):
-        rows.append({"nodes": n, "k": k, "F1": med_ci(g.det_f1), "throughput (tx/s, sim.)": f"{g.throughput_tps.median():.0f}",
-                     "p50/p95/p99 latency (ms, sim.)": f"{g.latency_p50_ms.median():.1f}/{g.latency_p95_ms.median():.1f}/{g.latency_p99_ms.median():.1f}",
-                     "wall ms/step": f"{g.wall_ms_per_step.median():.2f}", "peak MB": f"{g.peak_mem_mb.median():.1f}"})
-    tex_table(pd.DataFrame(rows), GEN / "tab_e5.tex",
-              "E5: scale. Throughput and latency use the simulated cost model (D7); wall-clock and peak Python heap "
-              "are measured. Median over seeds.", "tab:e5")
+        rows.append({"$N$": n, "$k$": k, r"F1 [95\% CI]": med_ci2(g.det_f1),
+                     "p95 ms": f"{g.latency_p95_ms.median():.1f}",
+                     "wall ms": f"{g.wall_ms_per_step.median():.2f}", "heap MB": f"{g.peak_mem_mb.median():.0f}"})
+    n_seeds = int(df.groupby(["nodes", "k"]).seed.nunique().min())
+    macro("EfiveSeeds", n_seeds, "results/raw/e5_scale/runs.csv")
+    body = pd.DataFrame(rows).to_latex(index=False, escape=False, column_format="rrlrrr")
+    caption = (f"E5: scale, median over {n_seeds} seeds. p95 = simulated step latency (cost model, D7); wall = measured "
+               "wall-clock per step; heap = peak Python heap of one run. Simulated throughput and p50/p99 latency: "
+               r"results/raw/e5\_scale/runs.csv.")
+    (GEN / "tab_e5.tex").write_text(
+        "\\begin{table}[t]\n\\centering\\footnotesize\\setlength{\\tabcolsep}{4pt}\n\\caption{" + caption
+        + "}\\label{tab:e5}\n" + body + "\\end{table}\n", encoding="utf-8")
     big = df[(df.nodes == df.nodes.max()) & (df.k == df.k.max())]
     macro("EfiveMaxNodes", int(df.nodes.max()), "results/raw/e5_scale/runs.csv")
     macro("EfiveBigWall", float(big.wall_ms_per_step.median()), "results/raw/e5_scale/runs.csv", "{:.1f}")
@@ -329,21 +432,24 @@ def e6() -> None:
         x, y = paired_on_seed(g, "backend", "sleeper_guard", "legacy_beta", "det_f1")
         res.append(paired_compare(f"det_f1[a={ar},i={it}]", "sleeper_guard", x, "legacy_beta", y))
     save_stats("e6_audit_budget", res)
-    fig, axes = plt.subplots(1, 2, figsize=(3.4, 1.9))
-    for be, mk in (("legacy_beta", "o"), ("sleeper_guard", "s")):
+    fig, axes = plt.subplots(1, 2, figsize=(3.4, 2.25))
+    for be, mk, col, short in (("legacy_beta", "o", OKABE[1], "legacy"), ("sleeper_guard", "s", OKABE[5], "SG")):
         for it, ls in ((0.25, "-"), (1.0, "--")):
             g = df[(df.backend == be) & (df.intensity == it)].groupby("audit_rate")
-            axes[0].plot(g.det_f1.median().index, g.det_f1.median().values, ls, marker=mk, ms=3,
-                         label=f"{be.split('_')[0]} i={it:g}")
-            axes[1].plot(g.delay_mean.median().index, g.delay_mean.median().values, ls, marker=mk, ms=3)
+            axes[0].plot(g.det_f1.median().index, g.det_f1.median().values, ls, marker=mk, ms=3, color=col,
+                         label=f"{short}, intensity {it:g}")
+            axes[1].plot(g.delay_mean.median().index, g.delay_mean.median().values, ls, marker=mk, ms=3, color=col)
     axes[0].set_xlabel("audit rate")
     axes[0].set_ylabel("detection F1")
+    axes[0].set_ylim(-0.05, 1.08)
     axes[1].set_xlabel("audit rate")
-    axes[1].set_ylabel("mean detection delay (steps)")
-    axes[1].set_yscale("log")
-    axes[0].legend(frameon=False, fontsize=6)
-    fig.tight_layout()
-    fig.savefig(FIGS / "e6_audit.pdf")
+    axes[1].set_ylabel("mean delay (steps)")
+    axes[1].set_yscale("symlog", linthresh=1.0)        # delay can be exactly 0, which a log axis drops
+    axes[1].set_ylim(bottom=0)
+    h, lab = axes[0].get_legend_handles_labels()
+    fig.legend(h, lab, loc="upper center", ncol=2, frameon=False, fontsize=6, bbox_to_anchor=(0.5, 1.0))
+    fig.tight_layout(rect=(0, 0, 1, 0.83))
+    save_fig(fig, "e6_audit")
     plt.close(fig)
     sg = df[(df.backend == "sleeper_guard") & (df.intensity == 0.25)].groupby("audit_rate")
     macro("EsixSgFOneLowAudit", float(sg.det_f1.median().iloc[0]), "results/raw/e6_audit_budget/runs.csv")
@@ -374,11 +480,15 @@ def e7() -> None:
     dl = sw[sw.attack == "tdp"].groupby("alarm").delay_mean.median()
     ax.plot(fp.values, dl.values, marker="o", ms=3, color=OKABE[5])
     for a, x, y in zip(fp.index, fp.values, dl.values):
-        ax.annotate(f"h={a:g}", (x, y), fontsize=6, xytext=(3, 3), textcoords="offset points")
+        # labels right of each point; the h=3 point sits just below h=4, so its label goes below-right
+        off = (4, -9) if a == 3.0 else (4, -2)
+        ax.annotate(f"h={a:g}", (x, y), fontsize=6, xytext=off, textcoords="offset points")
+    ax.set_ylim(bottom=-2, top=float(dl.max()) * 1.1)
+    ax.set_xlim(left=-0.6, right=float(fp.max()) * 1.15)
     ax.set_xlabel("honest false quarantines per 1000 node-steps")
     ax.set_ylabel("mean detection delay (steps)")
     fig.tight_layout()
-    fig.savefig(FIGS / "e7_tradeoff.pdf")
+    save_fig(fig, "e7_tradeoff")
     plt.close(fig)
     m = main[(main.calibration == "matched") & (main.attack == "none")].groupby("fault").honest_quarantines_per_1000.median()
     for f, v in m.items():
@@ -484,13 +594,16 @@ def e9() -> None:
                            "update the E9 text before building")
     mem = st[st.b == "rule"]
     assert int((mem.significant & (mem.median_diff > 0)).sum()) == beat, "E9: stats CSV disagrees with recomputed tests"
-    fig, ax = plt.subplots(figsize=(3.4, 2.0))
+    fig, ax = plt.subplots(figsize=(3.4, 2.5))
+    short = {"pbft": "PBFT", "static_dpos": "static DPoS", "majority": "majority", "random_delegates": "random deleg.",
+             "legacy_beta": "legacy Beta", "sleeper_guard": "SleeperGuard", "sleeper_guard_fixed": "SG fixed",
+             "rule": "rule", "tabular_q": "tabular Q", "d3p": "D3P", "marl_factored": "factored MARL"}
     ax.boxplot([df[df.controller == c].mean_reward_all.values for c in order],
-               tick_labels=[c.replace("_", "\n") for c in order], widths=0.6, showfliers=False)
+               tick_labels=[short.get(c, c) for c in order], widths=0.6, showfliers=False)
     ax.set_ylabel("mean reward (observable)")
-    plt.setp(ax.get_xticklabels(), fontsize=5)
+    plt.setp(ax.get_xticklabels(), fontsize=6, rotation=40, ha="right", rotation_mode="anchor")
     fig.tight_layout()
-    fig.savefig(FIGS / "e9_controllers.pdf")
+    save_fig(fig, "e9_controllers")
     plt.close(fig)
 
 
@@ -501,11 +614,17 @@ def e10() -> None:
     it = s[s.method == "verified_iterative"]
     macro("EtenIterAbortFrac", float(it.n_aborts.sum() / it.n_candidates.sum()), "results/raw/e10_safety/search.csv", "{:.3f}")
     macro("EtenIterViolations", int(it.violation.sum()), "results/raw/e10_safety/search.csv")
+    macro("EtenIterSafeCells", int(it.predicted_safe.sum()), "results/raw/e10_safety/search.csv")
+    cp_macro("EtenIterViolations", int(it.violation.sum()), int(it.predicted_safe.sum()), "results/raw/e10_safety/search.csv")
     ex = s[s.method == "exact"]
     macro("EtenExactAbortFrac", float(ex.n_aborts.sum() / ex.n_candidates.sum()), "results/raw/e10_safety/search.csv", "{:.3f}")
     s = ex
     macro("EtenCells", len(s), "results/raw/e10_safety/search.csv")
     macro("EtenViolations", int(s.violation.sum()), "results/raw/e10_safety/search.csv")
+    # a violation can only occur in a cell the bound marks safe, so those cells are the trials
+    macro("EtenSafeCells", int(s.predicted_safe.sum()), "results/raw/e10_safety/search.csv")
+    cp_macro("EtenViolations", int(s.violation.sum()), int(s.predicted_safe.sum()), "results/raw/e10_safety/search.csv")
+    cp_macro("EtenCapUnenforced", int(s.cap_unenforced_not_aborted.sum()), len(s), "results/raw/e10_safety/search.csv")
     macro("EtenUnsafeCells", int((~s.predicted_safe).sum()), "results/raw/e10_safety/search.csv")
     macro("EtenUnsafeBroken", int(((~s.predicted_safe) & s.any_commit).sum()), "results/raw/e10_safety/search.csv")
     macro("EtenCapUnenforced", int(s.cap_unenforced_not_aborted.sum()), "results/raw/e10_safety/search.csv")
@@ -528,6 +647,8 @@ def e10() -> None:
         macro("EtenEnvBreachSafeZero", int((safe0.invalid_commit_rate > 0).sum()), src)
         macro("EtenEnvRunsSafeFive", len(safe5), src)
         macro("EtenEnvBreachSafeFive", int((safe5.invalid_commit_rate > 0).sum()), src)
+        cp_macro("EtenEnvBreachSafeZero", int((safe0.invalid_commit_rate > 0).sum()), len(safe0), src)
+        cp_macro("EtenEnvBreachSafeFive", int((safe5.invalid_commit_rate > 0).sum()), len(safe5), src)
         macro("EtenEnvMaxInvalidSafeFive", float(safe5.invalid_commit_rate.max()), src, "{:.4f}")
         macro("EtenEnvBreachUnsafe", int((unsafe.invalid_commit_rate > 0).sum()), src)
         macro("EtenEnvRunsUnsafe", len(unsafe), src)
@@ -569,6 +690,8 @@ def e11() -> None:
     sg = df[df.variant == "sg_full"]
     macro("EelevenSgBelowBoundBreach", int((sg[sg.b <= 5].invalid_commit_rate > 0).sum()), "results/raw/e11_adaptive/runs.csv")
     macro("EelevenSgBelowBoundRuns", int((sg.b <= 5).sum()), "results/raw/e11_adaptive/runs.csv")
+    cp_macro("EelevenSgBelowBoundBreach", int((sg[sg.b <= 5].invalid_commit_rate > 0).sum()), int((sg.b <= 5).sum()),
+             "results/raw/e11_adaptive/runs.csv")
 
 
 def e12() -> None:
@@ -597,7 +720,7 @@ def e12() -> None:
     ax.set_ylim(-0.02, 1.15)
     ax.legend(h1 + h2, l1 + l2, frameon=False, fontsize=6, loc="upper left", ncol=1)
     fig.tight_layout()
-    fig.savefig(FIGS / "e12_lierate.pdf")
+    save_fig(fig, "e12_lierate")
     plt.close(fig)
     sg = df[df.backend == "sleeper_guard"].groupby("lie_rate").det_f1.median()
     half = sg[sg >= 0.5]
@@ -663,6 +786,75 @@ def e13() -> None:
     macro("EthirteenGridInside", int(len(inside)), gsrc)
 
 
+def e15() -> None:
+    summ = load("e15_weight_recovery", "summary.csv")
+    if summ is None:
+        return
+    src = "results/raw/e15_weight_recovery/summary.csv"
+    words = ["Zero", "One", "Two", "Three"]
+    rows = []
+    for _, r in summ.sort_values(["sign_iters", "estimator"]).iterrows():
+        def nb(tol: str) -> str:
+            n = r[f"batches_median_{tol}"]
+            return "never" if pd.isna(n) else f"{n:.0f} (max {r[f'batches_max_{tol}']:.0f})"
+        rows.append({"$s$": int(r.sign_iters), "estimator": r.estimator,
+                     "batches, err $<10^{-3}$": nb("1e-03"), "batches, err $<10^{-2}$": nb("1e-02"),
+                     "recovered": f"{int(r['recovered_1e-03'])}/{int(r.trials)}",
+                     "err @16": f"{r.max_abs_err_at_max_batches_median:.1e}"})
+        tag = f"{'Inv' if r.estimator == 'invert' else 'Dir'}{words[int(r.sign_iters)]}"
+        for tol, tt in (("1e-03", "Milli"), ("1e-02", "Centi")):
+            n = r[f"batches_median_{tol}"]
+            macro(f"EfifteenBatches{tt}{tag}", "never" if pd.isna(n) else f"{n:.0f}", src)
+            macro(f"EfifteenRecovered{tt}{tag}", int(r[f"recovered_{tol}"]), src)
+        macro(f"EfifteenErr{tag}", float(r.max_abs_err_at_max_batches_median), src, "{:.0e}")
+    macro("EfifteenTrials", int(summ.trials.max()), src)
+    inv = summ[summ.estimator == "invert"]
+    macro("EfifteenInvBatchesMax", float(inv["batches_max_1e-03"].max()), src, "{:.0f}")
+    macro("EfifteenInvErrMax", float(inv.max_abs_err_at_max_batches_median.max()), src, "{:.0e}")
+    macro("EfifteenSatMaxPct", 100.0 * float(summ.saturated_frac_mean.max()), src, "{:.2f}")
+    body = pd.DataFrame(rows).to_latex(index=False, escape=False, column_format="rlllll")
+    caption = (r"E15: recovering the hidden trust weights from HETally outputs ($k=16$, $T=16$, real CKKS). "
+               r"Batches = decrypted tallies needed until every weight is within the error (median, max over "
+               f"{int(summ.trials.max())} weight vectors); `direct' treats the output as the margin, `invert' first undoes "
+               r"$p^{(s)}$. err @16 = median over trials of $\max_i|\hat w_i-w_i|$ after 16 batches.")
+    (GEN / "tab_e15.tex").write_text("\\begin{table}[t]\n\\centering\\scriptsize\n\\caption{" + caption
+                                     + "}\\label{tab:e15}\n\\resizebox{\\columnwidth}{!}{%\n" + body
+                                     + "}\n\\end{table}\n", encoding="utf-8")
+
+
+def e16() -> None:
+    df = load("e16_imperfect_audits")
+    if df is None:
+        return
+    src = "results/raw/e16_imperfect_audits/runs.csv"
+    order = ["perfect", "error_0.05", "error_0.10", "delay_10"]
+    label = {"perfect": "perfect", "error_0.05": r"5\% wrong", "error_0.10": r"10\% wrong", "delay_10": "10-step delay"}
+    tagm = {"perfect": "Perfect", "error_0.05": "ErrFive", "error_0.10": "ErrTen", "delay_10": "Delay"}
+    rows = []
+    for sl, stag in (("stealthy", "Stealth"), ("always_lie", "Lie")):
+        for a in order:
+            for be, btag in (("legacy_beta", "Lg"), ("sleeper_guard", "Sg")):
+                g = df[(df.sleeper == sl) & (df.audit == a) & (df.backend == be)]
+                if g.empty:
+                    continue
+                rows.append({"sleeper": sl.replace("_", "-"), "audit": label[a],
+                             "trust": "legacy" if btag == "Lg" else "SG",
+                             "F1 [95\\% CI]": med_ci2(g.det_f1), "delay": f"{g.delay_mean.median():.1f}",
+                             "FQ/1000": f"{g.honest_quarantines_per_1000.median():.2f}"})
+                name = f"Esixteen{stag}{tagm[a]}{btag}"
+                macro(f"{name}FOne", float(g.det_f1.median()), src)
+                macro(f"{name}Delay", float(g.delay_mean.median()), src, "{:.1f}")
+                macro(f"{name}Fq", float(g.honest_quarantines_per_1000.median()), src)
+    body = pd.DataFrame(rows).to_latex(index=False, escape=False, column_format="lllrrr")
+    caption = (r"E16: imperfect audits (5 of 16 sleepers, t\_switch=300, honest fault 0.05, 30 seeds). Audit verdicts "
+               r"wrong with probability 0.05/0.10, or delivered 10 steps late; SleeperGuard keeps its perfect-audit "
+               r"calibration. F1 median [95\% CI]; delay = median of per-run mean detection delay in steps (undetected "
+               r"sleepers count as the rest of the run); FQ = honest false quarantines per 1000 node-steps (median).")
+    (GEN / "tab_e16.tex").write_text("\\begin{table}[t]\n\\centering\\footnotesize\\setlength{\\tabcolsep}{3pt}\n"
+                                     "\\caption{" + caption + "}\\label{tab:e16}\n" + body + "\\end{table}\n",
+                                     encoding="utf-8")
+
+
 def hardware() -> None:
     p = RAW / "e4_he" / "meta.json"
     if not p.exists():
@@ -686,13 +878,20 @@ def main() -> None:
     RAW = Path(a.raw)
     GEN.mkdir(parents=True, exist_ok=True)
     FIGS.mkdir(parents=True, exist_ok=True)
-    for f in (e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, hardware):
+    for f in (e0, e1, e2, prf, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e15, e16, hardware):
         try:
             f()
             print(f"[assets] {f.__name__} ok")
         except Exception as exc:  # report and continue; a missing table is visible in the PDF
             print(f"[assets] {f.__name__} FAILED: {exc!r}")
             raise
+    # every "0 of N" safety / correctness claim must carry a Clopper-Pearson upper bound (drift guard)
+    required_cp = {"EfourFlipsTotal", "EtenViolations", "EtenIterViolations", "EtenCapUnenforced",
+                   "EtenEnvBreachSafeZero", "EtenEnvBreachSafeFive", "EelevenSgBelowBoundBreach"}
+    missing = required_cp - set(CP_CLAIMS)
+    assert not missing, f"Clopper-Pearson bound missing for {sorted(missing)}"
+    for k in required_cp:
+        assert NUM[k] == str(CP_CLAIMS[k][0]), f"{k}: count macro {NUM[k]} != bounded count {CP_CLAIMS[k][0]}"
     lines = ["% AUTO-GENERATED by paper/make_assets.py from results/raw/ -- do not edit"]
     for k in sorted(NUM):
         lines.append(f"\\newcommand{{\\{k}}}{{{NUM[k]}}}  % {SOURCES[k]}")

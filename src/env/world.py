@@ -32,6 +32,8 @@ class World:
     _truth: List[_StepTruth] = field(default_factory=list)
     _validity: Optional[np.ndarray] = None
     bribed_at: Dict[str, int] = field(default_factory=dict)
+    audit_error_rate: float = 0.0         # imperfect audits: each verdict is wrong with this probability
+    audit_rng: Optional[np.random.Generator] = None   # separate stream, so error-free runs are unchanged
 
     # -- called by HonestEnv ---------------------------------------------------------------
     def new_transactions(self, t_count: int) -> int:
@@ -55,9 +57,14 @@ class World:
 
     def audit(self, audited: np.ndarray) -> np.ndarray:
         """Independent re-verification (signature / rule check) of the sampled transactions.
-        Returns the audited validity; entries for non-audited tx are 0 and must be ignored."""
+        Returns the audited validity; entries for non-audited tx are 0 and must be ignored.
+        With ``audit_error_rate`` > 0 each audited verdict is flipped independently with that probability."""
         assert self._validity is not None
-        return np.where(audited, self._validity, False)
+        verdict = self._validity
+        if self.audit_error_rate > 0.0:
+            assert self.audit_rng is not None, "audit_error_rate > 0 needs audit_rng"
+            verdict = verdict ^ (self.audit_rng.random(len(verdict)) < self.audit_error_rate)
+        return np.where(audited, verdict, False)
 
     def publish(self, view: PublicView) -> None:
         member = np.array([n in self.coalition for n in view.committee], dtype=bool)

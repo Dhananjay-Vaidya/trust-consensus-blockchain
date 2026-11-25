@@ -40,6 +40,8 @@ class RunConfig:
 
     # ---- audit evidence -------------------------------------------------------------------
     audit_rate: float = 0.2                 # fraction of decided transactions re-verified
+    audit_error_rate: float = 0.0           # prob. an audit verdict is wrong (imperfect audits, E16)
+    audit_delay: int = 0                    # steps until an audit verdict becomes available (E16)
 
     # ---- consensus ------------------------------------------------------------------------
     theta: float = 0.667                    # commit threshold on weighted approval share
@@ -90,6 +92,10 @@ class RunConfig:
             raise ValueError("audit_rate must be in [0, 1]")
         if self.attack not in ATTACKS:
             raise ValueError(f"unknown attack {self.attack!r}")
+        if not 0.0 <= self.audit_error_rate < 0.5:
+            raise ValueError("audit_error_rate must be in [0, 0.5)")
+        if self.audit_delay < 0:
+            raise ValueError("audit_delay must be >= 0")
         if self.committee_size < 1:
             raise ValueError("committee_size must be >= 1")
 

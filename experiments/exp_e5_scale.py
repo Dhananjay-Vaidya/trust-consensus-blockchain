@@ -15,7 +15,7 @@ from experiments.runner import calibrated_sg, run_one
 
 
 def main() -> None:
-    args = base_parser("E5 scale", "100-109").parse_args()
+    args = base_parser("E5 scale", "100-129").parse_args()
     seeds = parse_seeds(args.seeds)
     steps, nodes, ks = 600, (16, 64, 256, 1024), (8, 16, 32, 64)
     if args.smoke:

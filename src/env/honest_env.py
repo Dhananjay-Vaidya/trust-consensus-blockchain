@@ -137,7 +137,9 @@ class HonestEnv:
         self._world = World(self.nodes, coalition,
                             make_attack(cfg.attack, cfg.t_switch, cfg.attack_intensity, cfg.aaa_cooldown,
                                         cfg.attack_target),
-                            cfg.invalid_tx_rate, cfg.honest_fault_rate, world_rng)
+                            cfg.invalid_tx_rate, cfg.honest_fault_rate, world_rng,
+                            audit_error_rate=cfg.audit_error_rate,
+                            audit_rng=np.random.default_rng([cfg.seed, 2]) if cfg.audit_error_rate > 0 else None)
         self.trust = make_trust_backend(cfg.trust_backend, self.nodes, cfg.sleeper_guard,
                                         random.Random(cfg.seed * 7919 + 17), cfg.cap_method)
         self.tdcb = TDCB(cfg.theta, cfg.tally_backend, cfg.he_sign_iters)
@@ -152,6 +154,8 @@ class HonestEnv:
         self._dis_num = np.zeros(cfg.num_nodes)
         self._dis_den = np.zeros(cfg.num_nodes)
         self.on_step: Optional[Callable[[StepRecord], None]] = None
+        # audit verdicts in flight: (available_at_step, committee idx, votes, accept, outcome) for audited tx
+        self._pending_audits: Deque[Tuple[int, np.ndarray, np.ndarray, np.ndarray, np.ndarray]] = deque()
 
     # -----------------------------------------------------------------------------------------
     @property
@@ -230,21 +234,29 @@ class HonestEnv:
 
         audited = self.rng.random(t_count) < audit_rate
         outcome = self._world.audit(audited)
-        a_idx = np.flatnonzero(audited)
+        n_aud = int(audited.sum())
+        # Audit verdicts become available ``audit_delay`` steps later (0 = this step, the default).
+        self._pending_audits.append((self.t + c.audit_delay, cidx, votes[audited], out.accept[audited],
+                                     outcome[audited]))
         alarms: List[int] = []
-        for j, node in enumerate(committee):
-            gi = cidx[j]
-            for ti in a_idx:
-                inc = bool(votes[ti, j] != float(outcome[ti]))
-                self._dis_num[gi] = 0.98 * self._dis_num[gi] + inc
-                self._dis_den[gi] = 0.98 * self._dis_den[gi] + 1.0
-                if self.trust.observe(node, inc):
-                    alarms.append(int(gi))
+        n_arrived = 0
+        wrong = 0
+        while self._pending_audits and self._pending_audits[0][0] <= self.t:
+            _, a_cidx, a_votes, a_accept, a_out = self._pending_audits.popleft()
+            for j, gi in enumerate(a_cidx):
+                node = self.nodes[gi]
+                for ti in range(len(a_out)):
+                    inc = bool(a_votes[ti, j] != float(a_out[ti]))
+                    self._dis_num[gi] = 0.98 * self._dis_num[gi] + inc
+                    self._dis_den[gi] = 0.98 * self._dis_den[gi] + 1.0
+                    if self.trust.observe(node, inc):
+                        alarms.append(int(gi))
+            n_arrived += len(a_out)
+            wrong += int((a_accept != a_out).sum())
         self.trust.end_step(self.t)
 
-        n_aud = int(audited.sum())
-        err = float((out.accept[audited] != outcome[audited]).mean()) if n_aud else float("nan")
-        if n_aud:
+        err = wrong / n_arrived if n_arrived else float("nan")
+        if n_arrived:
             self._err_hist.append(err)
         self._commit_hist.append(float(out.accept.mean()))
         self._alarm_hist.append(len(alarms))
@@ -262,7 +274,7 @@ class HonestEnv:
             self.briber.observe(view)
 
         # reward: audited agreement - latency cost - audit cost (all observable)
-        agree = 1.0 - (err if n_aud else (self._err_hist[-1] if self._err_hist else 0.0))
+        agree = 1.0 - (err if n_arrived else (self._err_hist[-1] if self._err_hist else 0.0))
         lat_norm = (c.latency_per_msg_ms * len(committee) ** 2) / max(1e-9, c.latency_per_msg_ms * c.num_nodes ** 2)
         reward = agree - self.rw.latency * lat_norm - self.rw.audit_cost * audit_rate
 
