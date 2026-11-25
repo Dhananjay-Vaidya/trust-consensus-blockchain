@@ -856,6 +856,153 @@ def e16() -> None:
                                      encoding="utf-8")
 
 
+E14_METHODS = ["legacy_beta", "legacy_thr", "sg_full", "sg_no_cap", "cusum", "ewma", "window"]
+E14_TAG = {"legacy_beta": "Lb", "legacy_thr": "Lt", "sg_full": "Sg", "sg_no_cap": "Snc", "cusum": "Cu",
+           "ewma": "Ew", "window": "Wi"}
+E14_NAME = {"legacy_beta": "legacy Beta", "legacy_thr": "legacy Beta, tuned thr.", "sg_full": "SleeperGuard",
+            "sg_no_cap": "SleeperGuard, no cap", "cusum": "CUSUM only", "ewma": "EWMA only", "window": "window mean"}
+
+
+def e14() -> None:
+    df, cal = load("e14_baselines"), load("e14_baselines", "calibration.csv")
+    if df is None or cal is None:
+        return
+    src, csrc = "results/raw/e14_baselines/runs.csv", "results/raw/e14_baselines/calibration.csv"
+    main = df[(df.phase == "sleeper") & (df.fault == 0.05) & (df.calibration == "matched")]
+    tdp, none = main[main.attack == "tdp"], main[main.attack == "none"]
+
+    # ---- paired tests: every method vs SleeperGuard and vs legacy Beta, per sleeper cell ------------
+    res = []
+    metrics = ("det_f1", "delay_mean", "honest_quarantines_per_1000", "valid_reject_rate", "invalid_commit_rate")
+    for (mf, it), g in tdp.groupby(["coalition", "intensity"]):
+        for m in E14_METHODS:
+            for ref in ("sg_full", "legacy_beta"):
+                if m == ref:
+                    continue
+                for met in metrics:
+                    x, y = paired_on_seed(g, "method", m, ref, met)
+                    res.append(paired_compare(f"{met}[b={mf},i={it}]", m, x, ref, y))
+    for m in E14_METHODS:
+        if m != "sg_full":
+            x, y = paired_on_seed(none, "method", m, "sg_full", "honest_quarantines_per_1000")
+            res.append(paired_compare("honest_quarantines_per_1000[none]", m, x, "sg_full", y))
+    st = save_stats("e14_baselines", res)
+    ssrc = "results/raw/stats/e14_baselines.csv"
+
+    # ---- main table (fault 0.05, matched calibration) ---------------------------------------------
+    rows, summ = [], []
+    for m in E14_METHODS:
+        t = E14_TAG[m]
+        st_ = tdp[(tdp.method == m) & (tdp.intensity == 0.25)]
+        al = tdp[(tdp.method == m) & (tdp.intensity == 1.0)]
+        allm = tdp[tdp.method == m]
+        nm = none[none.method == m]
+        rows.append({"method": E14_NAME[m], "F1 stealthy": med_ci2(st_.det_f1), "F1 always-lie": med_ci2(al.det_f1),
+                     "delay stealthy": f"{st_.delay_mean.median():.1f}",
+                     "FQ/1000": f"{nm.honest_quarantines_per_1000.median():.2f}",
+                     "flagged/1000": f"{1000 * nm.honest_flagged_frac.median():.1f}",
+                     "valid-reject": f"{allm.valid_reject_rate.median():.3f}",
+                     "invalid-commit": f"{allm.invalid_commit_rate.median():.4f}"})
+        macro(f"Efourteen{t}StealthFOne", float(st_.det_f1.median()), src)
+        macro(f"Efourteen{t}LieFOne", float(al.det_f1.median()), src)
+        macro(f"Efourteen{t}StealthPrec", float(st_.det_precision.median()), src)
+        macro(f"Efourteen{t}StealthRec", float(st_.det_recall.median()), src)
+        macro(f"Efourteen{t}Delay", float(st_.delay_mean.median()), src, "{:.1f}")
+        macro(f"Efourteen{t}LieDelay", float(al.delay_mean.median()), src, "{:.1f}")
+        macro(f"Efourteen{t}Fq", float(nm.honest_quarantines_per_1000.median()), src)
+        macro(f"Efourteen{t}Flagged", 1000 * float(nm.honest_flagged_frac.median()), src, "{:.1f}")
+        macro(f"Efourteen{t}Vr", float(allm.valid_reject_rate.median()), src, "{:.3f}")
+        macro(f"Efourteen{t}Ic", float(allm.invalid_commit_rate.median()), src, "{:.4f}")
+        if m != "sg_full":
+            f1 = st[(st.a == m) & (st.b == "sg_full") & st.metric.str.startswith("det_f1")]
+            macro(f"Efourteen{t}FOneBetterSg", int((f1.significant & (f1.median_diff > 0)).sum()), ssrc)
+            macro(f"Efourteen{t}FOneWorseSg", int((f1.significant & (f1.median_diff < 0)).sum()), ssrc)
+            dl = st[(st.a == m) & (st.b == "sg_full") & st.metric.str.startswith("delay_mean")]
+            macro(f"Efourteen{t}DelayWorseSg", int((dl.significant & (dl.median_diff > 0)).sum()), ssrc)
+            macro(f"Efourteen{t}DelayBetterSg", int((dl.significant & (dl.median_diff < 0)).sum()), ssrc)
+        for (mf, it), g in allm.groupby(["coalition", "intensity"]):
+            summ.append(dict(method=m, coalition=mf, intensity=it, f1=med_ci(g.det_f1),
+                             precision=med_ci(g.det_precision), recall=med_ci(g.det_recall),
+                             delay=med_ci(g.delay_mean), censored=f"{int(g.delay_censored.sum())}/{int(g.n_adversary.sum())}",
+                             honest_fq=med_ci(g.honest_quarantines_per_1000), valid_reject=med_ci(g.valid_reject_rate),
+                             invalid_commit=med_ci(g.invalid_commit_rate)))
+    pd.DataFrame(summ).to_csv(RAW / "stats" / "e14_summary.csv", index=False)
+    macro("EfourteenCells", int(tdp.groupby(["coalition", "intensity"]).ngroups), src)
+    tex_table(pd.DataFrame(rows), GEN / "tab_e14.tex",
+              r"E14: change-detection baselines vs.\ legacy Beta and SleeperGuard (sleeper attack, $t_s=300$, honest fault "
+              r"0.05, coalitions 2/4/6 of 16, 30 paired seeds, every method calibrated on seeds 20--29 with the same 25-point "
+              r"budget). F1 median [95\% CI] pooled over coalitions; delay = median mean detection delay (steps, censored at "
+              r"the end of the run); FQ = honest false quarantines and flagged = honest flagged node-steps per 1000 without "
+              r"attack; valid-reject / invalid-commit pooled over all sleeper runs. Per-cell values: "
+              r"results/raw/stats/e14\_summary.csv; paired tests: e14\_baselines.csv.", "tab:e14")
+
+    # ---- sensitivity, sanity, adaptive ------------------------------------------------------------
+    srows = []
+    for m in E14_METHODS:
+        t = E14_TAG[m]
+        rec = {"method": E14_NAME[m]}
+        for f, ftag in ((0.02, "Two"), (0.10, "Ten")):
+            for cal_, ctag in (("matched", "M"), ("fixed_0.05", "F")):
+                g = df[(df.phase == "sleeper") & (df.method == m) & (df.fault == f) & (df.calibration == cal_)]
+                gs = g[(g.attack == "tdp") & (g.intensity == 0.25)]
+                gn = g[g.attack == "none"]
+                macro(f"Efourteen{t}FOne{ftag}{ctag}", float(gs.det_f1.median()), src)
+                macro(f"Efourteen{t}Fq{ftag}{ctag}", float(gn.honest_quarantines_per_1000.median()), src)
+                macro(f"Efourteen{t}Flagged{ftag}{ctag}", 1000 * float(gn.honest_flagged_frac.median()), src, "{:.1f}")
+                rec[f"F1/FQ f={f:g} {'matched' if ctag == 'M' else 'cal. 0.05'}"] = (
+                    f"{gs.det_f1.median():.2f} / {gn.honest_quarantines_per_1000.median():.2f}")
+        san = df[(df.phase == "sanity") & (df.method == m)]
+        rec["F1 CRA/NMA/BFI"] = "/".join(f"{san[san.attack == a].det_f1.median():.2f}" for a in ("cra", "nma", "bfi"))
+        for a in ("cra", "nma", "bfi"):
+            macro(f"Efourteen{t}{a.capitalize()}FOne", float(san[san.attack == a].det_f1.median()), src)
+        ad = df[(df.phase == "adaptive") & (df.method == m)]
+        rec["adaptive: b, lie, invalid-commit"] = (f"{int(round(ad.coalition.iloc[0] * 16))}, {ad.intensity.iloc[0]:g}, "
+                                                   f"{ad.invalid_commit_rate.median():.4f}")
+        macro(f"Efourteen{t}AdIc", float(ad.invalid_commit_rate.median()), src, "{:.4f}")
+        macro(f"Efourteen{t}AdB", int(round(ad.coalition.iloc[0] * 16)), "results/raw/e14_baselines/best.json")
+        macro(f"Efourteen{t}AdFOne", float(ad.det_f1.median()), src)
+        srows.append(rec)
+    tex_table(pd.DataFrame(srows), GEN / "tab_e14_sens.tex",
+              r"E14 robustness: stealthy-sleeper F1 / honest false quarantines per 1000 (no attack) at honest fault 0.02 and "
+              r"0.10, calibrated for the true rate (matched) or for 0.05 (misspecified); F1 against always-on attacks "
+              r"(coalition 5/16); and the E11 damage-maximising coalition searched per method on seeds 30--39 (coalition "
+              r"size $b$ of 16, lie rate, median invalid-commit rate on seeds 100--129).", "tab:e14sens")
+
+    # ---- calibration summary ----------------------------------------------------------------------
+    for r in cal.itertuples():
+        t = E14_TAG.get(r.method)
+        if t is None:
+            continue
+        tag = {0.02: "Two", 0.05: "Five", 0.1: "Ten"}[round(float(r.fault), 2)]
+        macro(f"Efourteen{t}BudgetMet{tag}", "yes" if bool(r.budget_met) else "no", csrc)
+    macro("EfourteenGridBudget", int(cal.grid_points.max()), csrc)
+    macro("EfourteenBudgetViolations", int((~cal.budget_met.astype(bool)).sum()), csrc)
+
+    # ---- figure -----------------------------------------------------------------------------------
+    fig, axes = plt.subplots(1, 2, figsize=(3.4, 2.4), sharey=True)
+    styles = {"legacy_beta": ("o", OKABE[0], ":"), "legacy_thr": ("o", OKABE[7], "--"), "sg_full": ("s", OKABE[5], "-"),
+              "sg_no_cap": ("s", OKABE[2], "--"), "cusum": ("^", OKABE[6], "-"), "ewma": ("v", OKABE[3], "-"),
+              "window": ("D", OKABE[1], "-")}
+    for ax, it in zip(axes, INTENSITY_ORDER):
+        for m in E14_METHODS:
+            mk, col, ls = styles[m]
+            g = tdp[(tdp.method == m) & (tdp.intensity == it)].groupby("coalition").det_f1.median()
+            ax.plot(g.index * 16, g.values, ls, marker=mk, ms=3, color=col, label=E14_NAME[m])
+        ax.set_title("stealthy (0.25)" if it == 0.25 else "always-lie (1.0)")
+        ax.set_xlabel("sleepers (of 16)")
+        ax.set_xticks([2, 4, 6])
+    axes[0].set_ylabel("detection F1")
+    axes[0].set_ylim(-0.05, 1.05)
+    h, lab = axes[0].get_legend_handles_labels()
+    fig.legend(h, lab, loc="upper center", ncol=3, frameon=False, fontsize=5.5, bbox_to_anchor=(0.5, 1.0))
+    fig.tight_layout(rect=(0, 0, 1, 0.76))
+    save_fig(fig, "e14_baselines")
+    plt.close(fig)
+
+
+INTENSITY_ORDER = (0.25, 1.0)
+
+
 def hardware() -> None:
     p = RAW / "e4_he" / "meta.json"
     if not p.exists():
@@ -879,7 +1026,7 @@ def main() -> None:
     RAW = Path(a.raw)
     GEN.mkdir(parents=True, exist_ok=True)
     FIGS.mkdir(parents=True, exist_ok=True)
-    for f in (e0, e1, e2, prf, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e15, e16, hardware):
+    for f in (e0, e1, e2, prf, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, hardware):
         try:
             f()
             print(f"[assets] {f.__name__} ok")

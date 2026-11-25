@@ -31,6 +31,7 @@ STEPS = [
     ("e11", ["-m", "experiments.exp_e11_adaptive"]),
     ("e12", ["-m", "experiments.exp_e12_lierate"]),
     ("e13", ["-m", "experiments.exp_e13_preprint_protocol"]),
+    ("e14", ["-m", "experiments.exp_e14_baselines"]),
     ("e15", ["-m", "experiments.exp_e15_weight_recovery"]),
     ("e16", ["-m", "experiments.exp_e16_imperfect_audits"]),
 ]

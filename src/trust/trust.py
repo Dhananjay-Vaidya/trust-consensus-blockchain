@@ -302,6 +302,29 @@ class SleeperGuardBackend(TrustBackend):
         return w
 
 
+class DetectorBackend(TrustBackend):
+    """Standalone change-detection baseline (E14): CUSUM-only, EWMA-only or sliding-window mean, with
+    SleeperGuard's quarantine/probation and a single-timescale Beta trust; no share cap."""
+
+    def __init__(self, nodes: List[str], method: str, cfg: Any) -> None:
+        from src.trust.detectors import ChangeDetector
+
+        self.name = method
+        self.det = ChangeDetector(nodes, method, cfg)
+
+    def observe(self, node: str, inconsistent: bool) -> bool:
+        return self.det.observe(node, inconsistent)
+
+    def trust(self, node: str) -> float:
+        return self.det.trust(node)
+
+    def is_quarantined(self, node: str) -> bool:
+        return self.det.is_quarantined(node)
+
+    def weights(self, committee: List[str]) -> np.ndarray:
+        return self.det.weights(committee)
+
+
 class NoTrustBackend(TrustBackend):
     """Uniform weights; used by PBFT / DPoS / majority / random baselines."""
 
@@ -321,11 +344,13 @@ class NoTrustBackend(TrustBackend):
 
 
 def make_trust_backend(name: str, nodes: List[str], sg_cfg: Any, rng: random.Random,
-                       cap_method: str = "exact") -> TrustBackend:
+                       cap_method: str = "exact", det_cfg: Any = None) -> TrustBackend:
     if name == "sleeper_guard":
         return SleeperGuardBackend(nodes, sg_cfg, cap_method)
     if name == "legacy_beta":
         return LegacyBetaBackend(nodes, rng)
     if name == "none":
         return NoTrustBackend(nodes)
+    if name in ("cusum", "ewma", "window"):
+        return DetectorBackend(nodes, name, det_cfg)
     raise ValueError(f"unknown trust_backend {name!r}")

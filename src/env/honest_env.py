@@ -141,7 +141,7 @@ class HonestEnv:
                             audit_error_rate=cfg.audit_error_rate,
                             audit_rng=np.random.default_rng([cfg.seed, 2]) if cfg.audit_error_rate > 0 else None)
         self.trust = make_trust_backend(cfg.trust_backend, self.nodes, cfg.sleeper_guard,
-                                        random.Random(cfg.seed * 7919 + 17), cfg.cap_method)
+                                        random.Random(cfg.seed * 7919 + 17), cfg.cap_method, cfg.detector)
         self.tdcb = TDCB(cfg.theta, cfg.tally_backend, cfg.he_sign_iters)
         self.fixed_committee = np.sort(self.rng.choice(cfg.num_nodes, size=cfg.k, replace=False))
         self.briber = briber

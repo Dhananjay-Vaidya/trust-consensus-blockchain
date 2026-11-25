@@ -19,7 +19,7 @@ jobs:
       - name: Lint (touched modules)
         run: ruff check main.py src experiments scripts paper/make_assets.py tests
       - name: Type check (touched modules)
-        run: mypy main.py src/config src/crypto src/trust/sleeper_guard.py src/trust/capping.py src/env src/metrics src/stats src/consensus
+        run: mypy main.py src/config src/crypto src/trust/sleeper_guard.py src/trust/capping.py src/trust/detectors.py src/env src/metrics src/stats src/consensus
       - name: Unit + audit regression tests
         run: pytest -q tests
       - name: 3-seed smoke version of every experiment

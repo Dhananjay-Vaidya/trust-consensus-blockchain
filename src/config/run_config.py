@@ -12,10 +12,11 @@ from typing import Any, Dict, Literal, Mapping
 
 import yaml
 
+from src.trust.detectors import DetectorConfig
 from src.trust.sleeper_guard import SleeperGuardConfig
 
 AttackName = Literal["none", "nma", "cra", "aaa", "bfi", "tdp", "mda"]
-TrustBackend = Literal["sleeper_guard", "legacy_beta", "none"]
+TrustBackend = Literal["sleeper_guard", "legacy_beta", "none", "cusum", "ewma", "window"]
 TallyBackend = Literal["plain", "he"]
 Selection = Literal["trust_softmax", "random", "fixed", "all"]
 
@@ -57,6 +58,7 @@ class RunConfig:
     trust_backend: TrustBackend = "sleeper_guard"
     sleeper_guard: SleeperGuardConfig = field(default_factory=SleeperGuardConfig)
     cap_method: Literal["exact", "verified_iterative"] = "exact"   # see src/trust/capping.py
+    detector: DetectorConfig = field(default_factory=DetectorConfig)   # E14 baselines (cusum/ewma/window)
     flag_threshold: float = 0.5             # node is *flagged* if trust < this (or quarantined)
 
     # ---- attack ---------------------------------------------------------------------------
@@ -75,7 +77,13 @@ class RunConfig:
     def with_overrides(self, **kw: Any) -> "RunConfig":
         sg = kw.pop("sleeper_guard", None)
         sg_over = {k[3:]: kw.pop(k) for k in list(kw) if k.startswith("sg_")}
+        det = kw.pop("detector", None)
+        det_over = {k[4:]: kw.pop(k) for k in list(kw) if k.startswith("det_")}
         cfg = dataclasses.replace(self, **kw)
+        if det is not None:
+            cfg = dataclasses.replace(cfg, detector=det)
+        if det_over:
+            cfg = dataclasses.replace(cfg, detector=dataclasses.replace(cfg.detector, **det_over))
         if sg is not None:
             cfg = dataclasses.replace(cfg, sleeper_guard=sg)
         if sg_over:
@@ -110,7 +118,10 @@ class RunConfig:
     def from_dict(d: Mapping[str, Any]) -> "RunConfig":
         d = dict(d)
         sg = d.pop("sleeper_guard", None)
+        det = d.pop("detector", None)
         cfg = RunConfig(**d)
+        if det is not None:
+            cfg = dataclasses.replace(cfg, detector=DetectorConfig(**det))
         if sg is not None:
             cfg = dataclasses.replace(cfg, sleeper_guard=SleeperGuardConfig(**sg))
         cfg.validate()
