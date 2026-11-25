@@ -133,13 +133,24 @@ detects nothing below lie rate 0.75. The honest false-quarantine rate on the sam
 \caption{E12: detection F1 (left axis, median and IQR) and honest false quarantines (right axis) vs.\ coalition lie rate.}\label{fig:e12}\end{figure}
 
 \subsection{E13: the preprint's sleeper protocol, without the oracle}
-Using the preprint's protocol (16 nodes, 4 adversaries, 50 episodes of 100 steps with trust carried over, activation after
-episode 25, intensity 0.75, F1 at the end of each episode with static labels), legacy Beta trust scores a median F1 of
-\EthirteenLegacyPre{} over the dormant episodes and \EthirteenLegacyPost{} averaged over the 25 active ones
-(Table~\ref{tab:e13}), which falls inside the 0.11--0.16 the preprint reported. The average hides the dynamics: legacy Beta
-flags no sleeper until episode \EthirteenLegacyFirstEp{} (median over seeds), about 20 episodes after activation, and then
-catches them (final-episode F1 \EthirteenLegacyFinal{}). SleeperGuard first flags them in episode \EthirteenSgFirstEp{},
-the first episode after activation, and averages \EthirteenSgPost{} over the active phase; before activation both score
-\EthirteenSgPre{}, because dormant sleepers behave honestly. The preprint's headline number therefore survives removing the
-oracle under its own protocol, but it measures a long detection lag, not a permanent failure.
+We re-ran the sleeper experiment with the settings the pre-audit code actually used (E13b; docs/DECISIONS.md D23):
+4 of 16 adversaries, 100 episodes of 100 steps with trust carried over, activation after episode 25, intensity 0.75,
+a node flagged if its trust is below 0.45, static labels, and F1 taken from the final episode, which is how the
+preprint's reported numbers were computed. On the oracle-free environment, legacy Beta reaches F1 \EthirteenbLegacyFOne{}
+(Table~\ref{tab:e13}), \textbf{not} the 0.11--0.16 the preprint reported: it first flags the sleepers at episode
+\EthirteenbLegacyFirstEp{} (median), long after activation, but well before the final episode. SleeperGuard flags them at
+episode \EthirteenbSgFirstEp{}, the first episode after activation (F1 \EthirteenbSgFOne{}). The preprint's low post-activation
+number therefore does not follow from its protocol once ground-truth feedback and trust-writing attacks are removed
+(A1, A3); it is a property of the audited simulator.
+
+Across \EthirteenGridCells{} plausible readings of the protocol (4 or 5 adversaries, 50 or 100 episodes, threshold 0.45 or
+0.5, averaging over all active episodes, the final 10 or the final episode; Table~\ref{tab:e13grid}), legacy Beta's median
+F1 ranges from \EthirteenGridLegacyMin{} to \EthirteenGridLegacyMax{}, and only \EthirteenGridInside{} cells fall inside
+0.11--0.16. Those are the 50-episode, all-active-episode readings, where the window ends before or shortly after legacy
+Beta's late detection. SleeperGuard's median F1 is at least \EthirteenGridSgMin{} in every cell. What separates the two
+trust models robustly is detection lag (about \EthirteenbLegacyFirstEp{} vs.\ \EthirteenbSgFirstEp{} episodes), not the F1 at
+any single reporting point, which depends on when one stops counting. Our earlier configuration (E13a: 50 episodes,
+threshold 0.5, all active episodes) gives \EthirteenaLegacyFOne{} for legacy Beta; that agreement with the preprint was a
+coincidence of window length.
 \input{generated/tab_e13.tex}
+\input{generated/tab_e13_grid.tex}

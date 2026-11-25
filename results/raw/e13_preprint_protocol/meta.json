@@ -1,7 +1,9 @@
 {
   "experiment": "e13_preprint_protocol",
   "argv": [
-    "C:\\Users\\Dhananjay Vaidya\\AppData\\Local\\Temp\\claude\\5a0c7a4aed12602c\\d4b5d0a2-48c5-4511-bd7e-bfe674a1cc61\\scratchpad\\clean\\experiments\\exp_e13_preprint_protocol.py"
+    "C:\\Users\\Dhananjay Vaidya\\Downloads\\PopulationDataProject\\trust-consensus-blockchain\\experiments\\exp_e13_preprint_protocol.py",
+    "--workers",
+    "12"
   ],
   "machine": {
     "python": "3.13.3",
@@ -17,20 +19,91 @@
     "ram_gb": 16.78,
     "physical_cores": 8,
     "tenseal": "0.3.16",
-    "git_commit": "4e588eb3763611bc691ccdeddc9589b2ec6a13bf",
+    "git_commit": "276e6a9d2f6c1a11ef2c4e0e7c76740ccccc721d",
     "git_dirty": false
   },
-  "written": "2026-11-24T00:38:33",
+  "written": "2026-11-25T07:07:39",
   "runtime_s": {
-    "runs.csv": 38.5
+    "runs.csv": 213.9
   },
   "protocol": {
     "nodes": 16,
-    "adversaries": 4,
-    "episodes": 50,
     "episode_len": 100,
     "activation_episode": 25,
     "intensity": 0.75,
-    "note": "int(16*0.30)=4 adversaries as in the pre-audit code"
+    "honest_fault_rate": 0.05,
+    "seeds": [
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129
+    ],
+    "adversaries": [
+      4,
+      5
+    ],
+    "episodes": [
+      50,
+      100
+    ],
+    "thresholds": [
+      0.45,
+      0.5
+    ],
+    "windows": [
+      "all_active",
+      "final10",
+      "final1"
+    ],
+    "fractions": {
+      "4": 0.25,
+      "5": 0.3125
+    },
+    "sleeper_guard": {
+      "sg_baseline_floor": 0.05,
+      "sg_cusum_slack": 0.1,
+      "sg_cusum_alarm": 3.0
+    },
+    "variants": {
+      "E13a_as_before": {
+        "adversaries": 4,
+        "episodes": 50,
+        "threshold": 0.5,
+        "window": "all_active"
+      },
+      "E13b_preprint_exact": {
+        "adversaries": 4,
+        "episodes": 100,
+        "threshold": 0.45,
+        "window": "final1"
+      }
+    },
+    "source": "docs/DECISIONS.md D23 (pre-audit code @ c8bab2f)"
   }
 }

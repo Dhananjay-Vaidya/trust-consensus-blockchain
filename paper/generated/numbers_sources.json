@@ -419,6 +419,14 @@
     "value": "0",
     "source": "results/raw/stats/e9_learning.csv"
   },
+  "EnineDthreeDiff": {
+    "value": "0.014",
+    "source": "results/raw/stats/e9_learning.csv"
+  },
+  "EnineDthreeDelta": {
+    "value": "0.30",
+    "source": "results/raw/stats/e9_learning.csv"
+  },
   "EtenIterAbortFrac": {
     "value": "0.306",
     "source": "results/raw/e10_safety/search.csv"
@@ -631,37 +639,57 @@
     "value": "0.30",
     "source": "results/raw/e12_lierate/runs.csv"
   },
-  "EthirteenLegacyPre": {
-    "value": "0.00",
+  "EthirteenbLegacyFOne": {
+    "value": "1.00",
     "source": "results/raw/e13_preprint_protocol/runs.csv"
   },
-  "EthirteenLegacyPost": {
+  "EthirteenbLegacyFirstEp": {
+    "value": "53",
+    "source": "results/raw/e13_preprint_protocol/runs.csv"
+  },
+  "EthirteenbSgFOne": {
+    "value": "1.00",
+    "source": "results/raw/e13_preprint_protocol/runs.csv"
+  },
+  "EthirteenbSgFirstEp": {
+    "value": "26",
+    "source": "results/raw/e13_preprint_protocol/runs.csv"
+  },
+  "EthirteenaLegacyFOne": {
     "value": "0.16",
     "source": "results/raw/e13_preprint_protocol/runs.csv"
   },
-  "EthirteenLegacyFinal": {
-    "value": "1.00",
-    "source": "results/raw/e13_preprint_protocol/runs.csv"
-  },
-  "EthirteenLegacyFirstEp": {
+  "EthirteenaLegacyFirstEp": {
     "value": "47",
-    "source": "results/raw/e13_preprint_protocol/episodes.csv"
-  },
-  "EthirteenSgPre": {
-    "value": "0.00",
     "source": "results/raw/e13_preprint_protocol/runs.csv"
   },
-  "EthirteenSgPost": {
+  "EthirteenaSgFOne": {
     "value": "1.00",
     "source": "results/raw/e13_preprint_protocol/runs.csv"
   },
-  "EthirteenSgFinal": {
-    "value": "1.00",
-    "source": "results/raw/e13_preprint_protocol/runs.csv"
-  },
-  "EthirteenSgFirstEp": {
+  "EthirteenaSgFirstEp": {
     "value": "26",
-    "source": "results/raw/e13_preprint_protocol/episodes.csv"
+    "source": "results/raw/e13_preprint_protocol/runs.csv"
+  },
+  "EthirteenGridLegacyMin": {
+    "value": "0.00",
+    "source": "results/raw/e13_preprint_protocol/grid.csv"
+  },
+  "EthirteenGridLegacyMax": {
+    "value": "1.00",
+    "source": "results/raw/e13_preprint_protocol/grid.csv"
+  },
+  "EthirteenGridSgMin": {
+    "value": "0.99",
+    "source": "results/raw/e13_preprint_protocol/grid.csv"
+  },
+  "EthirteenGridCells": {
+    "value": "24",
+    "source": "results/raw/e13_preprint_protocol/grid.csv"
+  },
+  "EthirteenGridInside": {
+    "value": "2",
+    "source": "results/raw/e13_preprint_protocol/grid.csv"
   },
   "HwCpu": {
     "value": "Intel Core 5 210H",

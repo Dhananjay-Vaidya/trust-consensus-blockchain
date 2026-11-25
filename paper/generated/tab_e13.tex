@@ -1,13 +1,15 @@
 \begin{table}[t]
 \centering\scriptsize
-\caption{E13: the sleeper attack under the preprint's protocol (16 nodes, 4 adversaries, 50 episodes $\times$ 100 steps, activation after episode 25, intensity 0.75), F1 at the end of each episode with static labels as in the preprint, averaged over the dormant and active phases. Median [95\% CI], 30 seeds.}\label{tab:e13}
+\caption{E13: the sleeper attack under the preprint's protocol on the oracle-free environment. E13b uses the settings the pre-audit code actually ran (D23): 4 of 16 adversaries, 100 episodes of 100 steps, activation after episode 25, intensity 0.75, flag if trust $<0.45$, static labels, F1 of the final episode. E13a is the earlier configuration. Median [95\% CI] over 30 seeds.}\label{tab:e13}
 \resizebox{\columnwidth}{!}{%
-\begin{tabular}{lllll}
+\begin{tabular}{lllllllll}
 \toprule
-trust & adversaries & F1 episodes 1-25 (dormant) & F1 episodes 26-50 (active) & F1 final episode \\
+variant & trust & adversaries & episodes & threshold & window & F1 & first detection (episode) & runs detected \\
 \midrule
-legacy beta & 4 & 0.000 [0.000, 0.000] & 0.160 [0.136, 0.160] & 1.000 [1.000, 1.000] \\
-sleeper guard & 4 & 0.000 [0.000, 0.016] & 0.996 [0.991, 0.996] & 1.000 [1.000, 1.000] \\
+E13b preprint exact & legacy beta & 4 & 100 & 0.450000 & final1 & 1.000 [1.000, 1.000] & 53 & 30/30 \\
+E13b preprint exact & sleeper guard & 4 & 100 & 0.450000 & final1 & 1.000 [1.000, 1.000] & 26 & 30/30 \\
+E13a as before & legacy beta & 4 & 50 & 0.500000 & all active & 0.160 [0.136, 0.160] & 47 & 30/30 \\
+E13a as before & sleeper guard & 4 & 50 & 0.500000 & all active & 0.996 [0.991, 0.996] & 26 & 30/30 \\
 \bottomrule
 \end{tabular}
 }

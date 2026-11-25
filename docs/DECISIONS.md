@@ -121,6 +121,11 @@ the code's own reported number is the final episode. The environment computes th
 count. The old simulator's attack wrote trust directly (A3) and fed trust ground truth (A1). E13 repeats
 only the *protocol* (sizes, timing, threshold, scoring) on the oracle-free environment, not those flaws.
 
+**D23 outcome.** Under E13b (preprint-exact), legacy Beta's F1 is 1.00, **not** inside the preprint's reported
+0.11-0.16; nothing was tuned to land in that range. Across the 24-cell grid, legacy median F1 spans 0.00-1.00 and
+only the two 50-episode / threshold-0.5 / all-active-episodes cells (0.16) fall inside it. E13a reproduces the
+previous E13 numbers bit for bit.
+
 **D24 — E9 text corrected: D3P significantly beats the rule with a small effect.** The previous text
 ("D3P does not" / "D3P was not significantly better than the rule") contradicted
 `results/raw/stats/e9_learning.csv` (d3p vs rule: median diff 0.014, Holm p 7.3e-10, Cliff's delta 0.297).
